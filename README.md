@@ -6,11 +6,12 @@ Do all things on `source` branch.
 
 # Configuration
 
-1. Fork this repo and rename it to `your-username.github.io`.
-2. Delete the `source/_drafts/` and `source/_posts/` folders.
-3. Modify other configurations as needed, especially `_config.yml` in the root folder and the `source/_data/melody.yml`(Follow the [hexo-theme-melody-doc](https://molunerfinn.com/hexo-theme-melody-doc/#/?id=hexo-theme-melody)).
-4. Modify `.travis.yml` and `.gitlab-ci.yml` for continuous integration build your blog. See [this post](https://upupming.site/2018/04/08/beautify-hexo-SEO-travis/) for more information.
-5. Sync and activate your repo on https://travis-ci.com/.
+1. Fork this repo, rename it to `your-username.github.io`.
+2. Delete `source/CNAME` or change its content to your own custom domain.
+3. Delete the `source/_drafts/` and `source/_posts/` folders.
+4. Modify other configurations as needed, especially `_config.yml` in the root folder and the `source/_data/melody.yml`(Follow the [hexo-theme-melody-doc](https://molunerfinn.com/hexo-theme-melody-doc/#/?id=hexo-theme-melody)).
+5. Modify `.travis.yml` and `.gitlab-ci.yml` for continuous integration build your blog. See [this post](https://upupming.site/2018/04/08/beautify-hexo-SEO-travis/) for more information.
+6. Sync and activate your repo on https://travis-ci.com/.
 
 # Environment variables you need to config
 
