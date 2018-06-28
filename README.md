@@ -20,11 +20,11 @@ For security, we should not publish our personal API keys on GitHub repo.
   
     See https://github.com/settings/tokens 
 
-2. `GL_TOKEN`
+2. `GL_TOKEN`(only if you use GitLab)
 
     See https://gitlab.com/profile/personal_access_tokens
 
-3. Algolia search(only if you use it)
+3. Algolia search(only if you use Algolia)
 
     See [hexo-algoliasearch/lib/algolia.js](https://github.com/LouisBarranqueiro/hexo-algoliasearch/blob/8b8fb278cb6027a56035adc5da001050cf9bf100/lib/algolia.js#L20)
 

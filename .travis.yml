@@ -31,15 +31,19 @@ script:
   ## 此过程包含了像百度直接提交链接的过程
   - hexo d 
 
+  ## 替换回来，防止泄露 github token
+  - sed -i'' "s~https://${GH_TOKEN}@github.com/upupming/upupming.github.io~repo-url~" _config.yml 
+
   ## 之前 travis 会新建一个分支，这里需要切换回 source 分支，以免出现
   ## HEAD detached at 8d636e5 错误
   - git checkout source
 
+  # 2. push soure 分支至 gitlab 仓库 master 分支  
   ## 替换 upupming.site 为 blog.upupming.site，用于后续向百度提交链接、生成 sitemap
   - sed -i'' "s~upupming.site~blog.upupming.site~" _config.yml 
   - git add .
   - git commit -m "Changed domain to blog.upupming.site"
-  # 2. push soure 分支至 gitlab 仓库 master 分支  
+  ## push
   - git push --force "https://gitlab-ci-token:${GL_TOKEN}@gitlab.com/upupming/upupming.gitlab.io.git" source:master 
 
 branches:
