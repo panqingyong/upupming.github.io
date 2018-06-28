@@ -1,0 +1,21 @@
+# gitlab 部署方式不同于 github ，必须要靠
+# 此文件指引服务端如何生成静态文件
+# Full project: https://gitlab.com/pages/hexo
+
+image: node:6.10.0
+
+pages:
+  script:
+  - npm install
+  - ./node_modules/hexo/bin/hexo clean && ./node_modules/hexo/bin/hexo algolia && ./node_modules/hexo/bin/hexo generate
+  artifacts:
+    paths:
+    - public
+  cache:
+    paths:
+      - node_modules
+    key: project
+  only:
+  - master
+
+

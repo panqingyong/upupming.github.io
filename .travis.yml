@@ -1,0 +1,52 @@
+language: node_js # 声明环境为node
+node_js: stable
+
+# sudo: required
+
+# Travis-CI Caching
+cache:
+  directories:
+    - node_modules # 缓存node_modules文件夹
+
+# S: Build Lifecycle
+install:
+  - npm install # 下载依赖
+
+before_script:
+
+
+script: 
+  ## 配置好全局 git 用户信息
+  - git config --global user.name "upupming"
+  - git config --global user.email "upupming@gmail.com"
+
+  # 1. push 到 upupming 仓库 
+  ## 将 _config.yml 中的字符串 "repo-url" 
+  ## 替换为 "https://${GH_TOKEN}@github.com/upupming/upupming.github.io.git" 
+  ## 使 Travis 服务器能顺利运行 hexo d 将 master 分支 push 到 github
+  - sed -i'' "s~repo-url~https://${GH_TOKEN}@github.com/upupming/upupming.github.io~" _config.yml 
+
+  ## 清除缓存、生成并在 Algolia 中索引、生成 service-worker.js
+  - hexo clean && hexo algolia && hexo g 
+  ## 此过程包含了像百度直接提交链接的过程
+  - hexo d 
+
+  ## 之前 travis 会新建一个分支，这里需要切换回 source 分支，以免出现
+  ## HEAD detached at 8d636e5 错误
+  - git checkout source
+
+  ## 替换 upupming.site 为 blog.upupming.site，用于后续向百度提交链接、生成 sitemap
+  - sed -i'' "s~upupming.site~blog.upupming.site~" _config.yml 
+  - git add .
+  - git commit -m "Changed domain to blog.upupming.site"
+  # 2. push soure 分支至 gitlab 仓库 master 分支  
+  - git push --force "https://gitlab-ci-token:${GL_TOKEN}@gitlab.com/upupming/upupming.gitlab.io.git" source:master 
+
+branches:
+  only:
+    - source # 只对 source 分支构建
+env: # 环境变量
+ global:
+   - GL_REF: gitlab.com/upupming/upupming.gitlab.io.git # gitlab 仓库地址
+   - GH_REF: github.com/upupming/upupming.github.io.git # github 仓库地址
+
