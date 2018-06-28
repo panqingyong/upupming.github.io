@@ -1,4 +1,11 @@
-# Continuous integration hexo blog
+# Continuous integration hexo blog [![Build Status](https://travis-ci.org/upupming/upupming.github.io.svg?branch=source)](https://travis-ci.org/upupming/upupming.github.io)
+
+<p align="center">
+  <a href="https://upupming.site"><img src="https://raw.githubusercontent.com/upupming/upupming.github.io/source/source/img/doraemon.jpeg" height="200"></a>
+  <a href="https://hexo.io"><img src="https://raw.githubusercontent.com/hexojs/awesome-hexo/master/hexo-logo.png" height="200"></a>
+  <a href="https://github.com/Molunerfinn/hexo-theme-melody"><img src="https://raw.githubusercontent.com/Molunerfinn/hexo-theme-melody-doc/master/docs/imgs/logo.png" height="200"></a>
+  <a href="https:travis-ci.com"><img src="https://travis-ci.com/images/logos/TravisCI-Mascot-pride-4.png" height="200"></a>
+</p>
 
 Using [hexo-theme-melody](https://github.com/Molunerfinn/hexo-theme-melody) and Travis CI to build a beautiful hexo blog in a fast and with-version-control way.
 
