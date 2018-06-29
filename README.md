@@ -4,7 +4,7 @@
   <a href="https://upupming.site"><img src="https://raw.githubusercontent.com/upupming/upupming.github.io/source/source/img/doraemon.jpeg" height="200"></a>
   <a href="https://hexo.io"><img src="https://raw.githubusercontent.com/hexojs/awesome-hexo/master/hexo-logo.png" height="200"></a>
   <a href="https://github.com/Molunerfinn/hexo-theme-melody"><img src="https://raw.githubusercontent.com/Molunerfinn/hexo-theme-melody-doc/master/docs/imgs/logo.png" height="200"></a>
-  <a href="https:travis-ci.com"><img src="https://travis-ci.com/images/logos/TravisCI-Mascot-pride-4.png" height="200"></a>
+  <a href="https://travis-ci.com"><img src="https://travis-ci.com/images/logos/TravisCI-Mascot-pride-4.png" height="200"></a>
 </p>
 
 Using [hexo-theme-melody](https://github.com/Molunerfinn/hexo-theme-melody) and Travis CI to build a beautiful hexo blog in a fast and with-version-control way.
@@ -13,7 +13,7 @@ Do all things on `source` branch.
 
 # Configuration
 
-1. Fork this repo, rename it to `your-username.github.io`.
+1. Fork this repo, rename it to `your-username.github.io` and `git clone` to your computer.
 2. Delete `source/CNAME` or change its content to your own custom domain.
 3. Delete the `source/_drafts/` and `source/_posts/` folders.
 4. Modify other configurations as needed, especially `_config.yml` in the root folder and the `source/_data/melody.yml`(Follow the [hexo-theme-melody-doc](https://molunerfinn.com/hexo-theme-melody-doc/#/?id=hexo-theme-melody)).
