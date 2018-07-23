@@ -1,25 +1,43 @@
-||周一|周二|周三|周四|周五|周六|周日|
-|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
-|时间段|6.18|6.19|6.20|6.21|6.22|6.23|6.24|
-|8:00-10:00|||||**算法**|||
-|10:00-12:00|||**算法**||||**软件构造考试 <br> 正心24**|
-|13:45-15:45||||**信安第 7 章作业**||||
-|剩余时间|||**信安第四次实验开始**|**信安第四次实验结束**||||
-|时间段|6.25|6.26|6.27|6.28|6.29|6.30|6.31|
-|8:00-10:00||||||||
-|10:00-12:00|**马原考试 <br> 致知 23**|**自动机考试 <br> 正心 43**|**英语考试** <br> 地点在通知群群文件查看|**信安考试 <br> 正心 13**||||
-|13:00-15:00|||||**算法考试 <br> 正心 23**||||
+---
+title: Gallery
+type: "gallery"
+copyright:
+  disable: true
+---
 
-## 我的
+## Title 1
 
-||周一|周二|周三|周四|周五|周六|周日|
-|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
-|时间段|6.18|6.19|6.20|6.21|6.22|6.23|6.24|
-|8:00-10:00|||||**算法**|||
-|10:00-12:00|||**算法**||||**软件构造考试 <br> 正心24**|
-|13:45-15:45||||**信安第 7 章作业**||||
-|剩余时间|||**信安第四次实验开始**|**信安第四次实验结束**||||
-|时间段|6.25|6.26|6.27|6.28|6.29|6.30|6.31|
-|8:00-10:00||||||||
-|10:00-12:00|**马原考试 <br> 致知 23**|**自动机考试 <br> 正心 43**|**英语考试 <br> 致知 21**|**信安考试 <br> 正心 13**||||
-|13:00-15:00|||||**算法考试 <br> 正心 23**||||
+这是相册的第一部分
+
+{% gallery https://ws1.sinaimg.cn/large/8700af19gy1fp5i6o2vghj20ea0eajse melody %}
+{% gallery https://user-images.githubusercontent.com/12621342/37325500-23e8f77c-26c9-11e8-8e24-eb4346f1fff5.png background %}
+{% gallery https://ws1.sinaimg.cn/large/8700af19gy1fp5i6o2vghj20ea0eajse melody %}
+{% gallery https://user-images.githubusercontent.com/12621342/37325500-23e8f77c-26c9-11e8-8e24-eb4346f1fff5.png background %}
+
+## Title 2
+
+这是相册的第二部分
+
+{% gallery https://ws1.sinaimg.cn/large/8700af19gy1fp5i6o2vghj20ea0eajse melody %}
+{% gallery https://user-images.githubusercontent.com/12621342/37325500-23e8f77c-26c9-11e8-8e24-eb4346f1fff5.png background %}
+{% gallery https://ws1.sinaimg.cn/large/8700af19gy1fp5i6o2vghj20ea0eajse melody %}
+{% gallery https://user-images.githubusercontent.com/12621342/37325500-23e8f77c-26c9-11e8-8e24-eb4346f1fff5.png background %}
+{% gallery https://ws1.sinaimg.cn/large/8700af19gy1fp5i6o2vghj20ea0eajse melody %}
+{% gallery https://user-images.githubusercontent.com/12621342/37325500-23e8f77c-26c9-11e8-8e24-eb4346f1fff5.png background %}
+{% gallery https://ws1.sinaimg.cn/large/8700af19gy1fp5i6o2vghj20ea0eajse melody %}
+{% gallery https://user-images.githubusercontent.com/12621342/37325500-23e8f77c-26c9-11e8-8e24-eb4346f1fff5.png background %}
+{% gallery https://ws1.sinaimg.cn/large/8700af19gy1fp5i6o2vghj20ea0eajse melody %}
+{% gallery https://user-images.githubusercontent.com/12621342/37325500-23e8f77c-26c9-11e8-8e24-eb4346f1fff5.png background %}
+{% gallery https://ws1.sinaimg.cn/large/8700af19gy1fp5i6o2vghj20ea0eajse melody %}
+{% gallery https://user-images.githubusercontent.com/12621342/37325500-23e8f77c-26c9-11e8-8e24-eb4346f1fff5.png background %}
+{% gallery https://ws1.sinaimg.cn/large/8700af19gy1fp5i6o2vghj20ea0eajse melody %}
+{% gallery https://user-images.githubusercontent.com/12621342/37325500-23e8f77c-26c9-11e8-8e24-eb4346f1fff5.png background %}
+
+## Title 3
+
+这是相册的第三部分
+
+{% gallery https://user-images.githubusercontent.com/12621342/37325500-23e8f77c-26c9-11e8-8e24-eb4346f1fff5.png background %}
+{% gallery https://ws1.sinaimg.cn/large/8700af19gy1fp5i6o2vghj20ea0eajse melody %}
+{% gallery https://user-images.githubusercontent.com/12621342/37325500-23e8f77c-26c9-11e8-8e24-eb4346f1fff5.png background %}
+

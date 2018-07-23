@@ -23,9 +23,7 @@ block content
     +slideArticle()
     if page.comments !== false
       include includes/comments/index.pug
-  //- 404 page don't need comments
-  //- TODO: design a beautiful 404 page
-  else if page.type !== 'error'
+  else
     article#page
       h1= page.title
       .article-container!= page.content
