@@ -280,10 +280,13 @@ Page({
 
 # 总结
 
-
-
 这样文章开头所说的两个方面都解决了：语言是全局变量方便调用，修改语言后进入其他页面时会更新语言，同时小程序还能记住用户的语言习惯。
 
 但是还有缺憾，就是 TabBar 和 NavigationBar 的语言无法切换，因为这是在 `app.json` 已经定义好了的，目前我还没有想到较好的解决办法。
 
 本项目的代码已经开源 https://github.com/upupming/HITMers ，欢迎前来交流。
+
+# 参考资料
+
+1. https://github.com/brandonxiang/weapp-weatherfine
+2. https://github.com/brandonxiang/weapp-i18n
