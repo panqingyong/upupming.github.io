@@ -262,8 +262,8 @@ Page({
     checkedIn: false
   },
   onLoad: function () {
-    this.setLanguage();
-    event.on("languageChanged", this, this.setLanguage); // (1)
+    this.setLanguage();	// (1)
+    event.on("languageChanged", this, this.setLanguage); // (2)
   },
   setLanguage() {
     this.setData({
@@ -274,15 +274,134 @@ Page({
 });
 ```
 
-在 (1) 处将 `setLanguage` 添加到事件处理函数中，这里的 `setLanguage` 不需要任何参数，在 `/pages/index/index.js` 使用 `emit` 触发事件时也没有必要传给数据，因为一切都在全局变量 `wx.T` 里面了，这样非常方便。
+(1) 处是为了在首次加载页面，但是没有接收到事件时，正确地设置语言。在 (2) 处将 `setLanguage` 添加到事件处理函数中，一旦在语言设置时触发 `languageChanged` 事件，这个页面的语言会做出相应改变。这里的 `setLanguage` 不需要任何参数，在 `/pages/index/index.js` 使用 `emit` 触发事件时也没有必要传给数据，因为一切都在全局变量 `wx.T` 里面了，这样非常方便。
+
+**测试结果**：
 
 <img src=work.gif height=400>
+
+#  NavigationBar 和 TabBar 的语言切换
+
+开始以为它们的语言是在 `app.json` 已经定义好了的，无法修改。查了查官方文档，看到了 [`wx.setNavigationBarTitle(OBJECT)`](https://developers.weixin.qq.com/miniprogram/dev/api/ui.html#wxsettopbartextobject0) 和 [`wx.setTabBarItem(OBJECT)`](https://developers.weixin.qq.com/miniprogram/dev/api/ui-tabbar.html#wxsettabbaritemobject) 这两个 API。我们可以把对 NavigationBar 和 TabBar 的修改集成到 `T.setLocaleByIndex` 中去，这样不管是每次加载小程序还是修改语言，NavigationBar 和 TabBar 的语言都将被切换。
+
+```js
+// /utils/i18n.js
+
+// ...
+T.setLocaleByIndex = function (index) {
+  lastLangIndex = index;
+  T.setLocale(T.langCode[index]);
+
+  setNavigationBarTitle(index);
+  setTabBarText(index);
+}
+
+
+T.getLanguage = function () {
+  setNavigationBarTitle(lastLangIndex);
+  return T.locales[T.locale];
+}
+
+
+let navigationBarTitles = [
+  '哈工大博物馆小助手',
+  'HIT Museum Assistant'
+];
+// 设置导航栏标题
+function setNavigationBarTitle(index) {
+  wx.setNavigationBarTitle({
+    title: navigationBarTitles[index]
+  })
+}
+
+let tabBarTexts = [
+  {
+    0: '工作',
+    1: '我'
+  },
+  {
+    0: 'Work',
+    1: 'Me'
+  }
+];
+// 设置 TabBar 语言
+function setTabBarText(index) {
+  for (let tabKey of Object.keys(tabBarTexts[index])) {
+    wx.setTabBarItem({
+      'index': Number(tabKey),
+      'text': tabBarTexts[index][tabKey]
+    })
+  }
+}
+// ...
+```
+
+但是这样还有一个问题，就是在 `index` 页面触发 `languageChanged` 事件时会调用 `work` 页面的 `setLanguage` 从而调用到 `T` 中的修改 NavigationBar Title 的函数，这样修改的也只是 `index` 页面的 Title，并不能修改 `work` 页面的 Title。考虑过不使用事件监听函数而是在每个页面 `onShow` 时设置语言，但是这样有许多重复操作，效率太低，考虑采用其他方法来解决。
+
+最终的实现添加了一个 `shouldChangeTitle` 标志，在 `onShow` 时加以判断即可。
+
+```js
+// /pages/work/index.js
+	
+  //....
+  onShow: function() {
+    if(this.data.shouldChangeTitle) {
+      wx.T.setNavigationBarTitle(); // (1)
+      this.data.shouldChangeTitle = false;
+    }
+  },
+  setLanguage() {
+    this.setData({
+      language: wx.T.getLanguage()
+    });
+    this.data.shouldChangeTitle = true; // (2)
+  }
+  // ...
+```
+
+`languageChanged` 事件触发后，只在 (2) 处做一个标记，在 (1) 处小程序切换到 `work` 页面时再修改 NavigationBar Title。
+
+相应地修改 `i18n.js` 将 `setNavigationBarTitle` 暴露出去:
+
+```js
+// /utils/i18n.js
+
+// ...
+let navigationBarTitles = [
+  '哈工大博物馆小助手',
+  'HIT Museum Assistant'
+];
+// 设置导航栏标题
+T.setNavigationBarTitle = function() {
+  wx.setNavigationBarTitle({
+    title: navigationBarTitles[lastLangIndex]
+  })
+}
+// ...
+```
+
+在 `index` 上也要显式地调用 `setNavigationBarTitle`：
+
+```js
+// /pages/index/index.js
+
+// ...
+  setLanguage() {
+    this.setData({
+      language: wx.T.getLanguage()
+    });
+    wx.T.setNavigationBarTitle();
+  },
+// ...
+```
+
+**测试结果**：
+
+<img src=tabbar-and-title.gif height=400>
 
 # 总结
 
 这样文章开头所说的两个方面都解决了：语言是全局变量方便调用，修改语言后进入其他页面时会更新语言，同时小程序还能记住用户的语言习惯。
-
-但是还有缺憾，就是 TabBar 和 NavigationBar 的语言无法切换，因为这是在 `app.json` 已经定义好了的，目前我还没有想到较好的解决办法。
 
 本项目的代码已经开源 https://github.com/upupming/HITMers ，欢迎前来交流。
 
