@@ -293,7 +293,7 @@ T.setLocaleByIndex = function (index) {
   T.setLocale(T.langCode[index]);
 
   setNavigationBarTitle(index);
-  setTabBarText(index);
+  setTabBarLang(index);
 }
 
 
@@ -314,24 +314,26 @@ function setNavigationBarTitle(index) {
   })
 }
 
-let tabBarTexts = [
-  {
-    0: '工作',
-    1: '我'
-  },
-  {
-    0: 'Work',
-    1: 'Me'
-  }
+let tabBarLangs = [
+  [
+    '工作',
+    '我'
+  ],
+  [
+    'Work',
+    'Me'
+  ]
 ];
 // 设置 TabBar 语言
-function setTabBarText(index) {
-  for (let tabKey of Object.keys(tabBarTexts[index])) {
+function setTabBarLang(index) {
+  let tabBarLang = tabBarLangs[index];
+  
+  tabBarLang.forEach((element, index) => {
     wx.setTabBarItem({
-      'index': Number(tabKey),
-      'text': tabBarTexts[index][tabKey]
+      'index': index,
+      'text': element
     })
-  }
+  })  
 }
 // ...
 ```
