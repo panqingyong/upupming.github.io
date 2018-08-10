@@ -240,3 +240,11 @@ links:
 # Code Wrap
 
 code_word_wrap: true
+
+# Ads
+# ---------------
+# Google Adsense
+google_adsense: 
+  js: //pagead2.googlesyndication.com/pagead/js/adsbygoogle.js
+  client: ca-pub-2188191456032650
+  enable_page_level_ads: true

@@ -36,8 +36,12 @@ See demo:
 * [Athrun's Blog](https://www.athrun.org/)
 * [Ykk's blog](https://ykksmile.top/)
 * [Mrjoe的博客](https://mrjoe.cc/)
+* [陆阿狸的博客](https://daialihexiaoniu.github.io/)
+* [Inno’s Blog](https://innofang.github.io/)
+* [YUGE'S BLOG](https://www.yugepower.com)
+* [SpiffyEight77's Blog](https://spiffyeight77.github.io/)
 
-If you are using `theme-melody` and want to be shown to others like above, please write down your site in this [issue](https://github.com/Molunerfinn/hexo-theme-melody/issues/1)!
+If you are using `theme-melody` and want to be shown to others like above (It will be stopped when the demo sites' number up to 25), please write down your site in this [issue](https://github.com/Molunerfinn/hexo-theme-melody/issues/1)!
 
 # Documentation
 
