@@ -39,7 +39,7 @@ if (theme.pwa && theme.pwa.enable)
     link(rel="mask-icon" href=theme.pwa.mask_icon color=theme.pwa.theme_color)
 
 if theme.google_adsense
-  script(src=theme.google_adsense.js)
+  script(async src=theme.google_adsense.js)
   script.
     (adsbygoogle = window.adsbygoogle || []).push({
       google_ad_client: '!{theme.google_adsense.client}',
