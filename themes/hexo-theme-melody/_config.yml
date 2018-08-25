@@ -264,6 +264,7 @@ busuanzi:
 # ---------------
 # Google Adsense
 google_adsense: 
+  enable: false
   js: //pagead2.googlesyndication.com/pagead/js/adsbygoogle.js
   client: ca-pub-...........
   enable_page_level_ads: true

@@ -93,7 +93,7 @@ scripts:
 # ---------------
 cdn:
   css:
-    fontawesome: https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css
+    fontawesome: https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css
   js:
     anime: /js/third-party/anime.min.js
     jquery: /js/third-party/jquery.min.js
@@ -245,6 +245,7 @@ code_word_wrap: true
 # ---------------
 # Google Adsense
 google_adsense: 
+  enable: true
   js: //pagead2.googlesyndication.com/pagead/js/adsbygoogle.js
   client: ca-pub-2188191456032650
   enable_page_level_ads: true
