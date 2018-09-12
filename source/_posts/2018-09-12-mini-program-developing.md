@@ -8,19 +8,18 @@ categories:
 date: 2018-09-12 03:15:18
 ---
 
-
 本文主要介绍了小程序客户端、服务器端开发（RESTful API）的相关经验。
 
 <!-- more -->
 
 <figure class="not-code">
 <img src="first-commit.png">
-<caption>第一个 commit</caption>
+<caption>HITMers 第一个 commit</caption>
 </figure>
 
 经过近两个月的学习和开发，目前为哈工大博物馆开发的小程序 HITMers 已经进入测试阶段，马上就要发布正式版啦！在此特意总结一下相关的经验，也希望可以帮助到更多的人！
 
-# 客户端
+# 客户端: [HITmers](https://github.com/upupming/HITMers)
 
 客户端算是比较简单的一部分，主要就是 UI 设计和逻辑交互两大块。
 
@@ -30,7 +29,7 @@ date: 2018-09-12 03:15:18
 
 1. [WeUI](https://github.com/Tencent/weui-wxss)
 
-  由微信官方设计团队开发，缺点是很久没有更新，但现在为止的重要 commit 停留在 2017 年 6 月前后，所以不打算使用。
+  由微信官方设计团队开发，缺点是很久没有更新，到现在为止的重要 commit 停留在 2017 年 6 月前后，所以不打算使用。
 
 2. [赞 UI](https://github.com/youzan/zanui-weapp)
 
@@ -38,11 +37,11 @@ date: 2018-09-12 03:15:18
 
 3. [Vant UI](https://github.com/youzan/vant-weapp)
 
-  在我开发到一半的时候，有赞将赞 UI 改名 Vant UI，新的 Vant UI 看起来比原来的赞 UI 确实要好许多。
+  在我开发到一半的时候，有赞将赞 UI 改名 Vant UI，新的 Vant UI 看起来比原来的赞 UI 确实要好许多，不过目前有一些组件还没有，比如 `dot` 类型的 loading 组件、dialog 组件等。
 
-组件的使用非常简单，建议直接将 Vant UI 的源代码克隆到本地，然后在开发者工具里面运行起来或者直接用微信搜索『Vant 组件库演示』，看到合适的组件 就可以再 `example/pages` 文件夹下对应组件的目录里面看一下使用方法。
+组件的使用非常简单，建议直接将 Vant UI 的源代码克隆到本地，然后在开发者工具里面运行起来或者直接用手机微信搜索『Vant 组件库演示』运行，看到合适的组件就可以在 `example/pages` 文件夹下对应组件的目录里面看一下使用方法。
 
-比如经常用到的 `cell` 组件，展示箭头的示例代码如下（实际使用时一定不要忘了在 `json` 文件中引入相应组件）：
+比如经常用到的 `cell` 组件，展示箭头的示例代码如下（使用时一定不要忘了在 `json` 文件中引入相应组件）：
 
 ```html
 <demo-block title="展示箭头">
@@ -77,7 +76,7 @@ import Notify from '../van-ui/notify/index';
 Notify('notify message);
 ```
 
-为了更高效的展示 Toast 和 Notify，封装一个 `util.js`：
+为了更高效地展示 Toast 和 Notify，封装一个 `util.js`：
 
 ```js
 import Toast from '../van-ui/toast/index';
@@ -98,7 +97,7 @@ module.exports = {
 };
 ```
 
-可以在页面 `js` 里面只调用封装好的辅助函数：
+可以在页面 `js` 里面调用封装好的辅助函数：
 
 ```js
 const util = require('../../utils/util');
@@ -137,7 +136,7 @@ const wxPromise = () => {
       if (/^on|^create|Sync$|Manager$|^pause/.test(key) && key !== 'createBLEConnection' || key === 'stopRecord' || key === 'stopVoice' || key === 'stopBackgroundAudio' || key === 'stopPullDownRefresh' || key === 'hideKeyboard' || key === 'hideToast' || key === 'hideLoading' || key === 'showNavigationBarLoading' || key === 'hideNavigationBarLoading' || key === 'canIUse' || key === 'navigateBack' || key === 'closeSocket' || key === 'closeSocket' || key === 'pageScrollTo' || key === 'drawCanvas') {
         wx.pro[key] = wx[key]
       } else {
-        // 遍历所有回调 API，将其异步化并 delegate 到 wx.pro 之下
+        // 遍历所有回调 API，将其异步化并放到 wx.pro 之下
         wx.pro[key] = promisify(wx[key])
       }
     }
@@ -200,11 +199,11 @@ module.exports = {
 
 小程序中的 `globalData` 在任何页面都可以修改，在其他页面访问时也会实时更新，建议将一些全局信息存到 `globalData` 中方便使用，还可以将 `globalData` 存储到用户缓存，下次加载时恢复。
 
-`globalData` 时常更新，如果要使用 `globalData` 中的值进行数据绑定，最好在页面 onLoad 或 onShow 时 `setData`。
+`globalData` 时常更新，如果要使用 `globalData` 中的值进行数据绑定，最好在页面 onLoad 或 onShow 时 `setData` 而不是单纯地将 `data` 里的数据委托到 `globalData` 上。
 
 ## 请求域名设置
 
-在开发模式下，使用本地运行的 Node.js 服务端作为 request 域名，在生产模式则使用真实的域名。
+在开发模式下，使用本地运行的 Node.js 监听地址作为 request 域名，在生产模式则使用真实的域名。
 
 ```js
 let host;
@@ -218,7 +217,7 @@ if(env === 'production') {
 }
 ```
 
-# 服务端
+# 服务端：[HITMers-node-js-server](https://github.com/upupming/HITMers-node-js-server)
 
 刚开始入门的时候一直在使用[腾讯云 wafer 解决方案](https://github.com/tencentyun/wafer2-quickstart-nodejs)，随着开发的进行，发现一些问题：
 
@@ -234,7 +233,7 @@ if(env === 'production') {
 
 现在主要流行的服务端一般都是采用 RESTful API，最经典的就是 GitHub API v3、豆瓣 API 等等。RESTful 使用 GET、POST、DELETE、PUT 等 HTTP 动词表示进行什么操作，而请求路径一般只包含名词。强烈推荐仔细读一读 [Building a RESTful API with Koa and Postgres](https://mherman.org/blog/building-a-restful-api-with-koa-and-postgres/)。另外还有一套状态码的规范，这些可以随时 Google。
 
-由于刚开始使用的 wafer，也就延续了 `koa` 框架和 `knex` query builder，主要使用了 `koa` 的中间件功能添加一些路由，`knex` 用起来也非常方便，不用了解太多 SQL 语言就能轻松上手，遇到不会的随时查阅 knexjs.org。 
+由于刚开始使用的 wafer，也就延续了 Koa 框架和 Knex query builder，主要使用了 Koa 的中间件功能添加一些路由，`knex` 则用于查询修改数据库，支持 MySQL、Postgres 各种数据库，不用了解太多 SQL 语言就能轻松上手，遇到不会的随时查阅 knexjs.org。 
 
 关于 Koa 的上手推荐读一读 [Koa 框架教程](http://www.ruanyifeng.com/blog/2017/08/koa.html)，『中间件』是在 Koa 中用到最多的了，及其简洁。
 
@@ -242,7 +241,7 @@ if(env === 'production') {
 
 ## 测试优先
 
-测试非常重要，我一般是一边测试一边写文档。首先写好测试文件，运行 `npm test` 不通过之后，然后再写相关的实现代码，如果遇到错误了就需要使用 Postman 这样的工具来帮助调试。
+测试非常重要，我一般是一边测试一边写文档。首先写好测试文件，运行 `npm test` 不通过之后，然后再写相关的实现代码，如果遇到错误了就需要使用 Postman 这样的工具来帮助调试，顺便把测试用例加到 API 文档中。
 
 测试使用的是 `mocha`、`chai`、`chai-http`。
 
@@ -260,15 +259,19 @@ node ./node_modules/mocha/bin/_mocha --timeout 10000
 nodemon --inspect --config nodemon.json src/app.js
 ```
 
-`--inspect` 参数用于在 `chrome://inspect` 中连接到 nodejs 进程进行调试。
+`--inspect` 参数用于在 `chrome://inspect` 中连接到 Node.js 进程进行调试。
 
 由于我使用的 MySQL 版本是 8.0，在运行 Knex 的时候遇到了一个关于授权机制 `caching_sha2_password` 小问题，我在 Stackoverflow 上总结了一下[解决方案](https://stackoverflow.com/questions/50093144/mysql-8-0-client-does-not-support-authentication-protocol-requested-by-server/51918364#51918364)。
 
 生产环境使用的是免费的 [Heroku](https://devcenter.heroku.com/)，它提供免费的 Postgres 数据库是唯一靠谱的数据库（其他如 MySQL 限制数据库连接数、数据库大小 5M 等等）。最棒的是 Heroku 支持自动构建，与 GitHub 仓库关联之后可以像 Travis 一样针对每个 commit 进行构建。唯一的缺点是在国内访问网速有点差。
 
-在开发过程中经常需要用到环境变量（密码等等），可以借助 `dotenv` 将这些变量存在 `.env` 文件中并让 git ignore 掉。
+在开发过程中经常需要用到环境变量（密码等等），可以借助 `dotenv` 将这些变量存在 `.env` 文件中并让 git ignore 掉。开发环境在 Heroku 后台中添加上即可。
+
+另外 Heroku 在运行 Node.js 时注意监听端口一定要使用 `process.env.PORT`，这是 Heroku 预留的环境变量，如果尝试监听在其他端口会运行出错，参见[这篇帮助](https://help.heroku.com/P1AVPANS/why-is-my-node-js-app-crashing-with-an-r10-error)。
 
 ## 授权机制
+
+虽然说小程序发布之后是闭源的，但实际上小程序包文件 `wxpkg` 是存储在 `/data/data/com.tencent.mm/MicroMsg/.../appbrand/pkg/` 之下的（安卓机型），而且解压之后经过一些处理源代码可以得到很好的复原，GitHub 上已经有了获取任何小程序源代码的项目 [wxappUnpacker](https://github.com/qwerty472123/wxappUnpacker)，我经过测试发现是完全可以复原源代码的，因此将 API 域名路径保密（比如使用 domain.com/v1/qwedcdgrtrfdss!@#de 作为 API 路径）防止非法数据访问的思想是不可取的。
 
 为了防止数据泄露，我们需要验证用户信息。一种简单的方法是使用 token 进行验证，HITMers 借鉴了 [Securing Node.js RESTful APIs with JSON Web Tokens](https://medium.freecodecamp.org/securing-node-js-restful-apis-with-json-web-tokens-9f811a92bb52)，基本思想是每次登陆返回给用户一个 token，以后用户每次发送请求都需要提供这个 token，否则返回 `401 Unauthorized`，这在 Koa 中实现起来非常简单，只需在所有 API 之前都加上一个 [`verify` 中间件](https://github.com/upupming/HITMers-node-js-server/blob/dev/src/controllers/verify.js)。
 
@@ -276,7 +279,7 @@ nodemon --inspect --config nodemon.json src/app.js
 
 Travis 持续集成很重要，能够确保之前的功能没有被破坏，Travis 的配置主要在 MySQL 的配置上有点问题，参见 [issue](https://github.com/travis-ci/docs-travis-ci-com/issues/1605)。为了数据库中的 `date_time` 跟本地调试结果一样，还要设置好时区为 `Asian/Shanghai`。其中还用到了一些 Knex migrate 和 seed 的命令初始化数据库加入测试数据。
 
-Coveralls 的配置参考了 [Node + Mocha + Travis + Istanbul + Coveralls: Unit tests & coverage for your open source project](http://dsernst.com/2015/09/02/node-mocha-travis-istanbul-coveralls-unit-tests-coverage-for-your-open-source-project/)。
+Coveralls 用来反馈代码测试覆盖率，配置过程参考了 [Node + Mocha + Travis + Istanbul + Coveralls: Unit tests & coverage for your open source project](http://dsernst.com/2015/09/02/node-mocha-travis-istanbul-coveralls-unit-tests-coverage-for-your-open-source-project/)。
 
 # 总结
 
