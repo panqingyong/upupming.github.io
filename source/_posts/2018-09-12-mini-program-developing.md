@@ -263,9 +263,9 @@ nodemon --inspect --config nodemon.json src/app.js
 
 由于我使用的 MySQL 版本是 8.0，在运行 Knex 的时候遇到了一个关于授权机制 `caching_sha2_password` 小问题，我在 Stackoverflow 上总结了一下[解决方案](https://stackoverflow.com/questions/50093144/mysql-8-0-client-does-not-support-authentication-protocol-requested-by-server/51918364#51918364)。
 
-生产环境使用的是免费的 [Heroku](https://devcenter.heroku.com/)，它提供免费的 Postgres 数据库是唯一靠谱的数据库（其他如 MySQL 限制数据库连接数、数据库大小 5M 等等）。最棒的是 Heroku 支持自动构建，与 GitHub 仓库关联之后可以像 Travis 一样针对每个 commit 进行构建。唯一的缺点是在国内访问网速有点差。
+生产环境使用的是免费的 [Heroku](https://devcenter.heroku.com/)，它提供免费的 Postgres 数据库是唯一靠谱的数据库（其他如 MySQL 限制数据库连接数、数据库大小 5M 等等）。最棒的是 Heroku 支持自动构建，与 GitHub 仓库关联之后可以像 Travis 一样针对每个 commit 进行构建。唯一的缺点是在国内访问网速有点差。但是可以通过使用 Heroku 的自定义域名功能，并使用 [360 网站卫士](https://wangzhan.360.com) 给网站加一个 CNAME 记录解析到 Heroku 应用域名（例如：hitmers.herokuapp.com），再上传自己申请的 SSL 证书就可以开启 https。实际测试 360 网站卫士可以很好地加速对 Heroku 的访问速度。
 
-在开发过程中经常需要用到环境变量（密码等等），可以借助 `dotenv` 将这些变量存在 `.env` 文件中并让 git ignore 掉。开发环境在 Heroku 后台中添加上即可。
+在开发过程中经常需要用到私密性的环境变量（密码等等），可以借助 `dotenv` 将这些变量存在 `.env` 文件中并让 git ignore 掉。生产环境在 Heroku 后台中添加上即可。
 
 另外 Heroku 在运行 Node.js 时注意监听端口一定要使用 `process.env.PORT`，这是 Heroku 预留的环境变量，如果尝试监听在其他端口会运行出错，参见[这篇帮助](https://help.heroku.com/P1AVPANS/why-is-my-node-js-app-crashing-with-an-r10-error)。
 
@@ -277,7 +277,7 @@ nodemon --inspect --config nodemon.json src/app.js
 
 ## Travis-CI & Coveralls
 
-Travis 持续集成很重要，能够确保之前的功能没有被破坏，Travis 的配置主要在 MySQL 的配置上有点问题，参见 [issue](https://github.com/travis-ci/docs-travis-ci-com/issues/1605)。为了数据库中的 `date_time` 跟本地调试结果一样，还要设置好时区为 `Asian/Shanghai`。其中还用到了一些 Knex migrate 和 seed 的命令初始化数据库加入测试数据。
+Travis 持续集成很重要，能够确保之前的功能没有被破坏，Travis 的配置主要在 MySQL 的配置上有点问题，参见 [issue](https://github.com/travis-ci/docs-travis-ci-com/issues/1605)。为了数据库中的 `date_time` 跟本地调试结果一样，还要设置好时区为 `Asian/Shanghai`。其中还用到了一些 Knex migrate 和 seed 的命令初始化数据库加入测试数据，参见 [package.json](https://github.com/upupming/HITMers-node-js-server/blob/dev/package.json) 中的 `knexinit` 命令。
 
 Coveralls 用来反馈代码测试覆盖率，配置过程参考了 [Node + Mocha + Travis + Istanbul + Coveralls: Unit tests & coverage for your open source project](http://dsernst.com/2015/09/02/node-mocha-travis-istanbul-coveralls-unit-tests-coverage-for-your-open-source-project/)。
 
