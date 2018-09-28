@@ -20,9 +20,8 @@ menu:
   #XXX: /xxx
 
 # Favicon
-# use my-favicon.ico to avoid duplicate favicon of melody theme
 # ---------------
-favicon: /my-favicon.ico
+favicon: /melody-favicon.ico
 
 # PWA
 # See https://github.com/JLHwung/hexo-offline
@@ -46,9 +45,12 @@ highlight_theme: default
 # code_word_wrap: true or false
 
 # Nav settings
+# see the icon_name in fontawesome website.
+# And you need to add the `fa` or `fab` prefix by your self.
 # ---------------
 #social:
-  #icon_name: url
+  #icon_name fa: url
+  #icon_name fab: url
 
 # Algolia search
 # ---------------
@@ -107,6 +109,7 @@ scripts:
 cdn:
   css:
     fontawesome: https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css
+    # fontawesomeV5: https://use.fontawesome.com/releases/v5.3.1/css/all.css
   js:
     anime: https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js
     jquery: https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js
@@ -203,7 +206,9 @@ disqus:
 #   repo:
 #   owner:
 #   admin:
-#   js: https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js
+####   Using this js for redirect to gitalk container after login
+####   See https://github.com/gitalk/gitalk/issues/125
+#   js: https://cdn.jsdelivr.net/gh/upupming/gitalk@36368e5dffd049e956cdbbd751ff96c28d8255cf/dist/gitalk.min.js
 
 # valine comment system. https://valine.js.org
 # valine:

@@ -39,9 +39,9 @@ highlight_theme: default
 # ---------------
 social:
     #icon_name: url
-    github: https://github.com/upupming
-    envelope-square: mailto:upupming@gmail.com
-    rss: /rss/
+    github fab: https://github.com/upupming
+    envelope-square fas: mailto:upupming@gmail.com
+    rss fas: /rss/
 
 # Algolia search
 # ---------------
@@ -93,7 +93,9 @@ scripts:
 # ---------------
 cdn:
   css:
-    fontawesome: https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css
+    fontawesome: https://cdn.jsdelivr.n et/npm/font-awesome@latest/css/font-awesome.min.css
+    fontawesomeV4: https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.min.css
+    fontawesomeV5: https://use.fontawesome.com/releases/v5.3.1/css/all.css
   js:
     anime: https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js
     jquery: https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js
@@ -224,7 +226,7 @@ busuanzi:
   site_pv_footer:
   # custom pv span for one page only
   page_pv: true
-  page_pv_header: <i class="fa fa-file-o"></i>
+  page_pv_header: <i class="fa fa-file"></i>
   page_pv_footer:
 
 
