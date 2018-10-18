@@ -43,7 +43,7 @@ pwa:
 
 <hr>2018.10.19 更新
 
-生成图标还可以到 [网页图标生成器](https://www.websiteplanet.com/zh-hans/webtools/favicon-generator/)，该网站支持多种语言，生成的图标支持多种平台，尺寸。
+生成图标还可以到 [Website Planet 网页图标生成器](https://www.websiteplanet.com/zh-hans/webtools/favicon-generator/)，该网站支持多种语言，生成的图标支持多种平台，尺寸。
 
 致谢：名为 Miriam 的网友
 <hr>
