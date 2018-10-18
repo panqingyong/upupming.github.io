@@ -73,6 +73,12 @@ mathjax:
   enable: false
   cdn: https://cdn.jsdelivr.net/npm/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML
 
+# KaTeX
+# ---------------
+katex:
+  enable: false
+  cdn:
+    css: https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css
 
 # Toggle fireworks (IE >= 10)
 # ---------------
@@ -206,7 +212,9 @@ disqus:
 #   repo:
 #   owner:
 #   admin:
-#   js: https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js
+####   Using this js for redirect to gitalk container after login
+####   See https://github.com/gitalk/gitalk/issues/125
+#   js: https://cdn.jsdelivr.net/gh/upupming/gitalk@36368e5dffd049e956cdbbd751ff96c28d8255cf/dist/gitalk.min.js
 
 # valine comment system. https://valine.js.org
 # valine:
@@ -245,7 +253,7 @@ busuanzi:
   site_pv_footer:
   # custom pv span for one page only
   page_pv: true
-  page_pv_header: <i class="fa fa-file"></i>
+  page_pv_header: <i class="fa fa-file-o"></i>
   page_pv_footer:
 
 

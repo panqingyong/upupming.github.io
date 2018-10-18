@@ -58,8 +58,15 @@ local_search:
 # MathJax
 # ---------------
 mathjax:
-  enable: true
+  enable: false
   cdn: https://cdn.jsdelivr.net/npm/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+
+# KaTeX
+# ---------------
+katex:
+  enable: true
+  cdn:
+    css: https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css
 
 
 # Toggle fireworks (IE >= 10)
@@ -93,7 +100,7 @@ scripts:
 # ---------------
 cdn:
   css:
-    fontawesome: https://cdn.jsdelivr.n et/npm/font-awesome@latest/css/font-awesome.min.css
+    fontawesome: https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css
     fontawesomeV4: https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.min.css
     fontawesomeV5: https://use.fontawesome.com/releases/v5.3.1/css/all.css
   js:
