@@ -41,6 +41,13 @@ pwa:
 
 生成 manifest.json 推荐到[Favicon Generator. For real.][7]，选择一张图片作为自己的 logo 就可以开始制作，接下来可以自定义在各个平台下图标的大小、颜色等属性。
 
+<hr>2018.10.19 更新
+
+生成图标还可以到 [网页图标生成器](https://www.websiteplanet.com/zh-hans/webtools/favicon-generator/)，该网站支持多种语言，生成的图标支持多种平台，尺寸。
+
+致谢：名为 Miriam 的网友
+<hr>
+
 <img src="custom-fav.png">
 
 上图是我针对 Android Chrome 的设置，其他的平台也是类似，生成之后将其下载下来，网站上建议做法是将解压后的文件放在网站根目录，并在`<head>`部分加入这些代码：
