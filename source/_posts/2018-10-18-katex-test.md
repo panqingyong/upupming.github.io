@@ -35,6 +35,8 @@ npm un hexo-renderer-kramed --save
 npm i hexo-renderer-markdown-it-plus --save
 ```
 
+<!-- more -->
+
 # Supported functions
 
 <!-- copied from https://raw.githubusercontent.com/Khan/KaTeX/master/docs/supported.md -->
