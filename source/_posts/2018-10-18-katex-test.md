@@ -12,7 +12,7 @@ categories:
 # Why $\KaTeX$
 
 1. Much more faster than MathJax.
-2. Nu issues such as [#93](https://github.com/Molunerfinn/hexo-theme-melody/issues/93), [#108](https://github.com/Molunerfinn/hexo-theme-melody/issues/108).
+2. No issues such as [#93](https://github.com/Molunerfinn/hexo-theme-melody/issues/93), [#108](https://github.com/Molunerfinn/hexo-theme-melody/issues/108).
 
 # How to configure $\KaTeX$
 
