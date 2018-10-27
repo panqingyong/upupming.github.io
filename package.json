@@ -6,6 +6,7 @@
     "version": "3.7.1"
   },
   "dependencies": {
+    "@upupming/hexo-renderer-markdown-it-plus": "^2.0.0",
     "hexo": "^3.7.1",
     "hexo-algoliasearch": "^0.3.0",
     "hexo-baidu-url-submit": "0.0.5",
@@ -21,7 +22,6 @@
     "hexo-generator-tag": "^0.2.0",
     "hexo-offline": "^0.2.3",
     "hexo-renderer-jade": "^0.4.1",
-    "hexo-renderer-markdown-it-plus": "^1.0.4",
     "hexo-renderer-stylus": "^0.3.3",
     "hexo-renderer-swig": "^1.1.0",
     "hexo-server": "^0.3.3",

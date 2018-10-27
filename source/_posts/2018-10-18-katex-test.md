@@ -32,7 +32,7 @@ To use $\KaTeX$ in melody, you need to uninstall your old hexo render, and then 
 # You can check your installed renderer in your package.json
 npm un hexo-renderer-kramed --save
 # install `hexo-renderer-markdown-it-plus`
-npm i hexo-renderer-markdown-it-plus --save
+npm i @upupming/hexo-renderer-markdown-it-plus --save
 ```
 
 <!-- more -->
