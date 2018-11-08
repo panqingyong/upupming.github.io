@@ -197,6 +197,7 @@ gitalk:
     owner: upupming
     admin: upupming
     language: zh-CN
+    js: https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js
 
 # valine comment system. https://valine.js.org
 # valine:
