@@ -15,7 +15,7 @@ categories:
 
 # 仓库内克隆其他仓库遇到的问题
 
-在仓库内部克隆一个仓库：
+在仓库内部克隆一个仓库 `Spring2018_HITCS_SC_Lab5`：
 ```
 $ tree | more
 .
@@ -120,7 +120,7 @@ Untracked files:
 	src/txt/Spring2018_HITCS_SC_Lab5/
 
 ```
-**Step2: 重新 stage 这个文件夹**
+**Step3: 重新 stage 这个文件夹**
 
 ```
 $ git add src/txt/Spring2018_HITCS_SC_Lab5/
@@ -132,7 +132,7 @@ $ git add src/txt/Spring2018_HITCS_SC_Lab5/
 `git add src/txt/Spring2018_HITCS_SC_Lab5/`: create mode `100644`
 `git add src/txt/Spring2018_HITCS_SC_Lab5`: create mode `160000`
 
-**Step3: 再次 commit，并 push**
+**Step4: 再次 commit，并 push**
 
 ```git
 $ git status 
