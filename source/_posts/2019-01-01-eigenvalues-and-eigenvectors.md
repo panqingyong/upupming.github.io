@@ -8,7 +8,6 @@ categories:
 date: 2019-01-01 02:38:59
 ---
 
-
 特征值、特征向量、特征根相关知识。
 
 <!-- more -->
@@ -191,4 +190,4 @@ e-vectors:
 
 ## 参考文献
 
-1. [Eigenvalues and eigenvectors | Wikipedia]
+1. [Eigenvalues and eigenvectors | Wikipedia](https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors)
