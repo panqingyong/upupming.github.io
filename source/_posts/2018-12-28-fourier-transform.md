@@ -595,9 +595,7 @@ $$
 R(\tau) = \frac{1}{2\pi}\int_{-\infty}^{+\infty}S(\omega)e^{j\omega t}d\omega
 $$
 
-另外，也有归一化表达形式：
-
-> 归一化与非归一化计算出的结果是否是一样的？如果不一样，那是怎么回事？
+另外，也有用圈频率的表达形式：
 
 $$
 \begin{aligned}
@@ -689,7 +687,7 @@ S_{XY}(\omega) = \int_{-\infty}^{+\infty}R_{XY}(\tau)e^{-j\omega \tau}d\tau \\
 R_{XY}(\tau) = \frac{1}{2\pi}\int_{-\infty}^{+\infty}S_{XY}(\omega)e^{j\omega \tau}d\omega
 $$
 
-归一化形式：
+圈频率形式：
 
 $$
 \begin{aligned}
@@ -790,6 +788,56 @@ $$
 
 <img src=https://i.loli.net/2018/12/25/5c21c4a65ba5c.png width=400>
 
+上面的式子中，用到了一个有意思的积分，那就是：
+
+$$
+\int_{-\infty}^{+\infty}e^{j\omega t}d\omega
+$$
+
+这其实与 [狄拉克 $\delta$ 函数, Dirac delta function](https://en.wikipedia.org/wiki/Dirac_delta_function)的定义有微妙的关系。
+
+### 狄拉克 $\delta$ 函数
+
+#### 定义
+
+笼统地来说，δ 函数是在实数线上的一个函数，在原点上无限，在所有其他点上为零，
+
+$$
+{\displaystyle \delta (x)={\begin{cases}+\infty ,&x=0\\0,&x\neq 0\end{cases}}}
+$$
+
+并同时满足以下条件
+
+$$
+{\displaystyle \int _{-\infty }^{\infty }\delta (x)\,dx=1.}
+$$
+
+这只是一个概略的表述：δ 函数并不是一个严格意义上的函数，没有任何定义在实数集上的函数能满足以上的条件。更严谨地来说，δ 函数可以定义为分布或测度。
+
+#### 傅里叶积分中的应用
+
+历史上 $\delta$ 函数的引入就是约瑟夫·傅里叶在傅里叶变换中发现的，后来被奥古斯丁·路易·柯西用指数函数表达了这一定理。
+
+$$
+\int_{-a}^{a} e^{j\omega t}d\omega=\frac{e^{j\omega t}}{jt}|_{-a}^{a}=\frac{e^{jta}-e^{-jta}}{jt}=\frac{2j\sin{ta}}{jt}=2a\frac{\sin{ta}}{ta}
+$$
+
+令 $a \to +\infty$，项 $\frac{\sin{ta}}{ta} = \pi\delta(ta) = \pi\frac{1}{a}\delta(t)$，其中 $\delta$ 就是狄拉克 $\delta$ 函数。参见 [Relationship to the Dirac delta distribution](https://en.wikipedia.org/wiki/Sinc_function#Relationship_to_the_Dirac_delta_distribution)。
+
+最终我们有：
+
+$$
+\int_{-\infty}^{+\infty}e^{j\omega t}d\omega = 2\pi\delta(t)
+$$
+
+也就是说：
+
+$$
+\frac{1}{2\pi}\int_{-\infty}^{+\infty}e^{j\omega t}d\omega = \delta(t)
+$$
+
+这个公式的物理意义是：常数 1 与 $\delta(t)$ 互为傅里叶变换对。
+
 <img src=https://i.loli.net/2018/12/25/5c21c5096dd5d.png width=400>
 
 <img src=https://i.loli.net/2018/12/25/5c21c51e430ff.png width=400>
@@ -805,7 +853,9 @@ $$
 众多维基百科条目。
 
 1. [傅里叶变换存在条件](https://www.dsprelated.com/freebooks/mdft/Existence_Fourier_Transform.html)
-2. [归一化形式的维纳-辛钦定理](https://www.probabilitycourse.com/chapter10/10_2_1_power_spectral_density.php)
+2. [圈频率形式的维纳-辛钦定理](https://www.probabilitycourse.com/chapter10/10_2_1_power_spectral_density.php)
 3. [Derivation of Fourier Series](http://lpsa.swarthmore.edu/Fourier/Series/DerFS.html)
 4. [Fourier Series](http://mathworld.wolfram.com/FourierSeries.html)
 5. [From fourier series to fourier transform](http://fourier.eng.hmc.edu/e101/lectures/Fourier_Transform_C/node1.html)
+6. [狄拉克 $\delta$ 函数](https://zh.wikipedia.org/wiki/%E7%8B%84%E6%8B%89%E5%85%8B%CE%B4%E5%87%BD%E6%95%B0)
+7. [int-infty-infty-eikxdx-equals-what](https://math.stackexchange.com/questions/177091/int-infty-infty-eikxdx-equals-what)
