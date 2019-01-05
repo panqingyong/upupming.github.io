@@ -1,5 +1,5 @@
 ---
-title: "傅里叶变换、{能量,功率,互}谱密度、白噪声随机过程"
+title: '傅里叶变换、{能量,功率,互}谱密度、白噪声随机过程'
 tags:
   - 傅里叶变换
   - Fourier transform
@@ -838,6 +838,16 @@ $$
 
 这个公式的物理意义是：常数 1 与 $\delta(t)$ 互为傅里叶变换对。
 
+值得注意的是，常数 1 的傅里叶变换也是 $\delta(t)$，可以通过将上式中的 $\omega$ 用 $-\omega'$ 代替，得到：
+
+$$
+\frac{1}{2\pi}\int_{-\infty}^{+\infty}e^{-j\omega' t}d(-\omega') = \delta(t)
+$$
+
+$$
+\frac{1}{2\pi}\int_{-\infty}^{+\infty}e^{-j\omega' t}d(\omega) = \delta(t)
+$$
+
 <img src=https://i.loli.net/2018/12/25/5c21c5096dd5d.png width=400>
 
 <img src=https://i.loli.net/2018/12/25/5c21c51e430ff.png width=400>
@@ -847,6 +857,28 @@ $$
 <img src=https://i.loli.net/2018/12/25/5c21c54260d9c.png width=400>
 
 <img src=https://i.loli.net/2018/12/25/5c21c57424802.png width=400>
+
+#### 例题
+
+已知平稳随机过程的自相关函数为 $R_{\tau} = \frac{A}{4} + Ae^{-\beta|\tau|}$, 其中 $A > 0, \beta > 0, -\infty < \tau < +\infty$，求其功率谱密度。
+
+根据维纳-辛钦定理，功率谱密度是自相关函数的傅里叶变换：
+
+$$
+\begin{aligned}
+    S(\omega)
+    &= \int_{-\infty}^{+\infty}R(t)e^{-j\omega t}dt \\
+    &= \int_{-\infty}^{+\infty}\frac{A}{4}e^{-j\omega t}dt + \int_{-\infty}^{+\infty}Ae^{-\beta|t|}e^{-j\omega t}dt \\
+    &= \frac{A}{4} \cdot 2\pi \delta(\omega) + \int_{-\infty}^{+\infty}Ae^{-\beta|t|-j\omega t}dt \\
+    &= \frac{A}{4} \cdot 2\pi \delta(\omega) + \int_{-\infty}^{0}Ae^{\beta t-j\omega t}dt + \int_{0}^{+\infty}Ae^{-\beta t-j\omega t}dt\\
+    &= \frac{A}{4} \cdot 2\pi \delta(\omega) + \int_{-\infty}^{0} \frac{1}{(\beta-j\omega)} Ae^{(\beta-j\omega) t}d[(\beta-j\omega) t] \\
+    & \quad -\frac{1}{(\beta +j\omega)}\int_{0}^{+\infty}Ae^{-(\beta +j\omega) t}d-[(\beta +j\omega)t]\\
+    &= \frac{A}{4} \cdot 2\pi \delta(\omega) + \frac{1}{(\beta-j\omega)} Ae^{(\beta-j\omega) t}\Big|_{t=-\infty}^{t=0} \\
+    & \quad -\frac{1}{(\beta +j\omega)}Ae^{-(\beta +j\omega) t}\Big|_{t=0}^{t=+\infty}\\
+    &= \frac{A}{4} \cdot 2\pi \delta(\omega) + \frac{1}{(\beta-j\omega)} A + \frac{1}{(\beta +j\omega)}A \\
+    &= \frac{\pi}{2}A\delta(\omega) + \frac{2A\beta}{\beta^2+\omega^2}
+\end{aligned}
+$$
 
 ## 参考文献
 
