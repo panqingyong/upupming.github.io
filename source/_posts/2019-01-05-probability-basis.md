@@ -414,7 +414,7 @@ $$
 1. 共轭对称性
 
    $$
-   \overline{R_X(s, t)} = R_X(s, t), s, t \in T
+   \overline{R_X(s, t)} = R_X(t, s), s, t \in T
    $$
 
    很显然，因为存在，所以相等
