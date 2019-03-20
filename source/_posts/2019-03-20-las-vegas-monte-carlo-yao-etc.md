@@ -1,5 +1,5 @@
 ---
-title: las-vegas-monte-carlo-yao-etc
+title: 随机算法习题 1
 date: 2019-03-20 23:30:51
 categories:
 - 算法

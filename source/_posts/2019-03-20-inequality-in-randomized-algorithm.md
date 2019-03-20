@@ -1,5 +1,5 @@
 ---
-title: inequality-in-randomized-algorithm
+title: 随机算法常用不等式
 date: 2019-03-20 23:31:22
 categories:
 - 算法
