@@ -314,16 +314,26 @@ $$
 
 ## 课堂练习
 
-证明随机排序算法不能突破下界 $O(n\log n)$。
+证明**基于比较的**随机排序算法不能突破下界 $O(n\log n)$。
 
 利用姚期智不等式：
 
 $$
-\min_{A \in \mathcal{D}} A 在 I_P 上的期望运行时间 \\
+\min_{A \in \mathcal{D}} A 在 I_p 上的期望运行时间 \\
 \le \max_{I\in\mathcal{I}} R 在 I 上的运行时间
 $$
 
+通过 [Google](https://www.google.com/search?q=prove+that+randomized+algorithm+sorting+lower+bound) 找到 [CMU 的资料](https://www.cs.cmu.edu/~avrim/451f11/lectures/lect0913.pdf)。
 
+定理 1：任何确定性算法的平均情况运行时间至少为 $\lfloor\log_2(n!)\rfloor$。
+
+根据定理 1，不管我们选择什么分布 p，最终的随机算法的时间下界都是 $\lfloor\log_2(n!)\rfloor = \Omega(n\log n)$。
+
+定理一的证明：
+
+<!-- <iframe src="http://docs.google.com/gview?url=https://www.cs.cmu.edu/~avrim/451f11/lectures/lect0913.pdf&embedded=true" style="height:700px;" frameborder="0"></iframe> -->
+
+<embed src="https://drive.google.upupming.site/viewerng/viewer?embedded=true&url=https://upupming.site/2019/03/20/las-vegas-monte-carlo-yao-etc/lect0913.pdf" width=500px height=700px>
 
 ## Useful links
 
