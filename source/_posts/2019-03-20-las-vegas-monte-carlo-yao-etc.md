@@ -355,7 +355,7 @@ $$
 
 <!-- <iframe src="http://docs.google.com/gview?url=https://www.cs.cmu.edu/~avrim/451f11/lectures/lect0913.pdf&embedded=true" style="height:700px;" frameborder="0"></iframe> -->
 
-<!-- <embed src="https://drive.google.upupming.site/viewerng/viewer?embedded=true&url=https://upupming.site/2019/03/20/las-vegas-monte-carlo-yao-etc/lect0913.pdf" width=800px height=1100px> -->
+<embed src="https://drive.google.upupming.site/viewerng/viewer?embedded=true&url=https://upupming.site/2019/03/20/las-vegas-monte-carlo-yao-etc/lect0913.pdf" width=800px height=1100px>
 
 定理 1 的证明关键用到了 1 条引理：
 
