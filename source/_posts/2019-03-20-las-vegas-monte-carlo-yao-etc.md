@@ -325,15 +325,36 @@ $$
 
 通过 [Google](https://www.google.com/search?q=prove+that+randomized+algorithm+sorting+lower+bound) 找到 [CMU 的资料](https://www.cs.cmu.edu/~avrim/451f11/lectures/lect0913.pdf)。
 
-定理 1：任何确定性算法的平均情况运行时间至少为 $\lfloor\log_2(n!)\rfloor$。
+（下文在输入数据量为 n 的前提下进行讨论。）
 
-根据定理 1，不管我们选择什么分布 p，最终的随机算法的时间下界都是 $\lfloor\log_2(n!)\rfloor = \Omega(n\log n)$。
+定理 1：任何基于比较的确定性排序算法，**平均**比较次数至少为 $\lfloor\log_2(n!)\rfloor$。
 
-定理一的证明：
+根据定理 1，不管我们选择什么分布 p，最终的随机算法的时间下界都是 $\lfloor\log_2(n!)\rfloor = O(n\log n)$。
+
+定理 1 的证明：
 
 <!-- <iframe src="http://docs.google.com/gview?url=https://www.cs.cmu.edu/~avrim/451f11/lectures/lect0913.pdf&embedded=true" style="height:700px;" frameborder="0"></iframe> -->
 
-<embed src="https://drive.google.upupming.site/viewerng/viewer?embedded=true&url=https://upupming.site/2019/03/20/las-vegas-monte-carlo-yao-etc/lect0913.pdf" width=500px height=700px>
+<!-- <embed src="https://drive.google.upupming.site/viewerng/viewer?embedded=true&url=https://upupming.site/2019/03/20/las-vegas-monte-carlo-yao-etc/lect0913.pdf" width=800px height=1100px> -->
+
+定理 1 的证明关键用到了 1 条引理：
+
+引理 1：任何基于比较的确定性排序算法，**最坏情况下**比较次数至少为 $\lfloor\log_2(n!)\rfloor$。
+
+引理 1 的证明：
+
+1. 排序的目的就是输出原序列一个排列，总排列数为 $n!$，其中只有一个排列是唯一正确的答案。
+2. 算法通过一系列比较的答案 YES 或 NO 来推断出 $n!$ 个排列中正确的那一个，而『对手』却想方设法构建不好的输入让算法进行最多的比较次数才能得出答案。
+3. 初始排列集合为 $S$，满足 $|S| = n!$，每次比较根据回答的结果是 YES 还是 NO，可以将 $S$ 划分成两个子集
+4. 『对手』总是给出划分之后较大的那个集合，这样算法最多只能将 $S$ 大小变为原来的 $\frac{1}{2}$。
+5. 算法结束的条件是 $|S| = 1$，算法必须至少进行 $\log_2(n!)$ 次比较。
+
+在引理 1 的基础上证明定理 1：
+
+我们可以把算法的执行看成一棵 $S$ 的决策树，这棵树是由算法的每一次比较结果构建而成的，具有 $n!$ 个叶子结点。其中叶子的深度就是对这种排列进行判定时经历的比较次数。我们只需证明所有叶子节点的平均深度至少为 $\lfloor\log_2(n)!\rfloor$。（在引理 1 中的第 3 步，其实考虑的就是最深的叶子节点的深度）
+
+1. 如果决策树是完全平衡的，也就是说任意两个叶子节点的深度最多相差 1，由于每个叶子结点深度都为 $\lfloor\log_2(n)!\rfloor$ 或者 $\lceil\log_2(n)!\rceil$，得证。
+2. 我们只需证明，所有叶子结点数量相同的树中，只有完全平衡树的平均深度才是最小的。对于某个不平衡的树，我们将两个最深的兄弟叶子结点移为最浅叶子结点的孩子。因为最深和最浅深度之差至少为 2，这个操作将平均深度减少了。定量来讲，最深、最浅叶子深度为 $D, d$，那么我们较少的深度是 $A = 2D + d$，增加的深度是 $B = 2(d+1) + D-1$，很显然 $A > B$。经过不断重复操作，我们可以得到一个完全平衡树，这个完全平衡树的平均深度小于原来的非平衡树的平均深度。得证。
 
 ## Useful links
 
