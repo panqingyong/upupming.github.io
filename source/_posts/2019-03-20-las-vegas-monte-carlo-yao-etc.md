@@ -230,6 +230,8 @@ $$
 
 (2)
 
+> 注意：下面的证明有问题，请忽略。此题有问题，无须再进一步讨论。
+
 设 $u$ 的所有邻接点分别为 $v_1, v_2, \cdots, v_{d_u}$，将 $<u, v_1, v_2, \cdots, v_{d_u}>$ 按照标签大小从小到大排序之后的序列为 $<v_{i_1}, v_{i_2}, \cdots, v_{i_m}, u, v_{i_{m+1}}\cdots, v_{i_{d_u}}>$，因为『上述顶点集中$u$ 的标签最小等价于 $u \in I$』：
 
 $$
@@ -357,7 +359,7 @@ $$
 
 <!-- <iframe src="http://docs.google.com/gview?url=https://www.cs.cmu.edu/~avrim/451f11/lectures/lect0913.pdf&embedded=true" style="height:700px;" frameborder="0"></iframe> -->
 
-<embed src="https://drive.google.upupming.site/viewerng/viewer?embedded=true&url=https://upupming.site/2019/03/20/las-vegas-monte-carlo-yao-etc/lect0913.pdf" width=800px height=1100px>
+<embed src="https://drive.google.upupming.com/viewerng/viewer?embedded=true&url=https://upupming.site/2019/03/20/las-vegas-monte-carlo-yao-etc/lect0913.pdf" width=800px height=1100px>
 
 定理 1 的证明关键用到了 1 条引理：
 
