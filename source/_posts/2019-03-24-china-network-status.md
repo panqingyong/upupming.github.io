@@ -76,6 +76,13 @@ Approximate round trip times in milli-seconds:
 
 弃用 vultr 唯一的遗憾就是之前辛苦建好的 [Mirror](https://github.com/upupming/Mirror) 不复存在了，不过这也是无可奈何之举呀，相信有一天我会找到更好的解决方案。
 
+<hr>
+2019.04.08 更新
+
+Mirror v0.0.2 已经发布，使用 `now.sh` 就可以搭建镜像啦！
+
+<hr>
+
 ### 寻找其他高质量的 VPS/SS 提供商。
 
 我们学校的校园网对国内的 IP 基本上都能 ping 得通，我还想过使用阿里云/腾讯云来当 vultr 的中继节点的方法，参考了 [ShadowSocks+Haproxy中继](http://sjq597.github.io/2018/05/22/ShadowSocks-Haproxy%E4%B8%AD%E7%BB%A7/)，使用 Haproxy，配置非常简单。可惜阿里云价格实在是太贵了，我不小心把带宽调到了 30Mbps，结果两天不到 100 元就没有了。要想在 vultr 网络带宽是超快的，而且并不需要付费，国内的网络还是与国外有很大的差距，价格贵、网速慢。再加上要维护两台服务器也比较费劲，所以放弃了这种方法。
