@@ -201,38 +201,57 @@ $$
 
 (1)
 
-先计算第 1 次 Insert(x) 需要探查的存储位置个数，随机变量 $X_1$，
+第 i 次 Insert(x) 需要探查的存储位置个数为随机变量 $X_i$，
 
 $$
 \begin{aligned}
-P(X_1=a)
+P(X_i=a)
 &= P\{A[h(x,0)]\neq NULL \land \cdots \\ &\quad \land A[h(x,a-1)]\neq NULL \land A[h(x,a)]= NULL\}
 \end{aligned}
 
 \tag{1}
 $$
 
-因为共有 $n$ 个数据项，$h$ 均匀独立，且总共有 $2n$ 种取值，那么：
+因为共有 $i-1$ 个数据项，$h$ 均匀独立，且总共有 $2n$ 种取值，那么：
 
 $$
-P\{A[h(x,i)]\neq NULL\} = \frac{n}{2n} = \frac{1}{2}
+P\{A[h(x,i)]\neq NULL\} = \frac{i-1}{2n}
 $$
 
 再由独立性，得到：
 
 $$
-P(X_1=a) = \left(\frac{1}{2}\right)^a
+\begin{aligned}
+P(X_i=a) 
+&= \left(\frac{i-1}{2n}\right)^{a-1}\left(1-\frac{i-1}{2n}\right) \\
+&= (i-1)^{a-1}(2n-i+1)\left(\frac{1}{n}\right)^a\left(\frac{1}{2}\right)^a
+\end{aligned}
 $$
 
-同理可得 $P(X_2=a) = \left(\frac{n+1}{2n}\right)^{a}\cdot \frac{n-1}{2n} \approx \left(\frac{1}{2}\right)^{a+1} \le \left(\frac{1}{2}\right)^a$, $P(X_i=a) \approx \left(\frac{1}{2}\right)^{a++i-1} \le \left(\frac{1}{2}\right)^a$
+只需证明：
+
+$$
+(i-1)^{a-1}(2n-i+1)\left(\frac{1}{n}\right)^a \le 1
+$$
+
+左边对 $i$ 求导得到：
+$$
+\left(\frac{1}{n}\right)^a\left(\left(a-1\right)\left(2n-i+1\right)\left(i-1\right)^{a-2}-\left(i-1\right)^{a-1}\right)\quad > 0
+$$
+
+也就是说 $P(X_1=a)\le P(X_2=a)\le \cdots \le P(X_n=a) = \left(\frac{n-1}{2n}\right)^{a-1}-\left(\frac{n-1}{2n}\right)^a \le \left(\frac{1}{2}\right)^{a-1}-\left(\frac{1}{2}\right)^{a}=\left(\frac{1}{2}\right)^{a}$
+
+注意有一个特例是 $P(X_1=1)=1$，不满足上式。
 
 (2)
 
 利用上一问的结论，同时还需认识到 $P(X_i >2\log n) \le P(X_i =\lfloor 2\log n\rfloor)$，这是因为有下式成立：
 
 $$
-\left(\frac{1}{2}\right)^{a+1} + \left(\frac{1}{2}\right)^{a+2} + \cdots \left(\frac{1}{2}\right)^{a+n} + \cdots = \left(\frac{1}{2}\right)^{a}
+\left(\frac{n-1}{2n}\right)^{a}-\left(\frac{n-1}{2n}\right)^{a+1} + \left(\frac{n-1}{2n}\right)^{a+1}-\left(\frac{n-1}{2n}\right)^{a+2} + \cdots \le \left(\frac{n-1}{2n}\right)^{a-1}-\left(\frac{n-1}{2n}\right)^a
 $$
+
+也就是说说 $X_i=a+1, a+2, \cdots,  a+3, \cdots$ 的概率之和小于等于 $X_i=a$ 的概率。
 
 $$
 \begin{aligned}
