@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+        <title>Windows U 盘病毒查杀过程</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+        <link href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css" rel="stylesheet" type="text/css">
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        
+        <script src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script>
+    </head>
+    <body>
+        <!-- ---
+title: kill-u-disk-virus
+tags:
+--- -->
+<h1 id="windows-u-%E7%9B%98%E7%97%85%E6%AF%92%E6%9F%A5%E6%9D%80%E8%BF%87%E7%A8%8B">Windows U 盘病毒查杀过程</h1>
+<h2 id="%E9%9C%80%E6%B1%82">需求</h2>
+<p>杨辰的 U 盘中了病毒，听她说具体的表现是文件经过室友的电脑之后原来的 <code>音乐.docx</code> 被篡改为了 <code>音乐.exe</code>，结果文档就再也看不到了。</p>
+<p>我猜想杨辰的室友的 Windows 可能是 Win7 （不带杀毒功能）或者是 Windows 10 但是没有开启 Windows defender，现在 Windows defender 基本上是可以查到任何病毒，当场隔离的。</p>
+<h2 id="%E5%BC%80%E5%A7%8B%E5%88%86%E6%9E%90">开始分析</h2>
+<p>我因为自己之前<a href="https://www.wisecleaner.com/how-to/119-how-to-turn-off-windows-defender-in-windows-10.html">在组策略里面禁用了 Windows defender</a>，现在为了防止中毒先重新打开一下。（因为自己平时很谨慎对待软件的安装，所以个人不会使用任何杀毒软件）</p>
+<p>然后插上 U 盘（HP 16GB 这个），果然一插入 Windows defender 就提示有病毒：</p>
+<img src="https://i.loli.net/2019/04/22/5cbda61f35afc.jpg" alt="20190422193137-2019-4-22-19-31-40">
+<img src="https://i.loli.net/2019/04/22/5cbda6457b091.jpg" alt="20190422193216-2019-4-22-19-32-17">
+<img src="https://i.loli.net/2019/04/22/5cbda6560d3e7.jpg" alt="20190422193232-2019-4-22-19-32-34">
+<img src="https://i.loli.net/2019/04/22/5cbda67be4dbb.jpg" alt="20190422193312-2019-4-22-19-33-13">
+<img src="https://i.loli.net/2019/04/22/5cbda6d434dcc.jpg" alt="20190422193440-2019-4-22-19-34-41">
+<img src="https://i.loli.net/2019/04/22/5cbda74354c56.jpg" alt="20190422193629-2019-4-22-19-36-30">
+<p>Windows defender 大约每隔 30 秒弹一条 <code>Threats found</code> 通知，可以看到最主要是隐藏目录的一些文件，比较好奇，于是上网查了一下这些病毒：</p>
+<ol>
+<li>
+<p><a href="https://www.microsoft.com/en-us/wdsi/threats/malware-encyclopedia-description?Name=Virus%3AWin32%2FRamnit.A">Virus:Win32/Ramnit.A</a></p>
+<p>此病毒感染 Windows 可执行文件（.EXE）和 HTML 文件（.HTML）。它还可以让恶意黑客访问您的 PC。</p>
+</li>
+<li>
+<p><a href="https://www.microsoft.com/en-us/wdsi/threats/malware-encyclopedia-description?Name=Trojan:Win32/Occamy.C">Occamy.C</a></p>
+<p>此威胁可以在您的 PC 上执行恶意黑客选择的许多操作。</p>
+</li>
+<li>
+<p>...</p>
+</li>
+</ol>
+<p>太多啦，最后我通过<a href="https://serverfault.com/questions/816870/where-are-windows-10-defender-offline-scan-logs-results">这里</a>的方法拿到了病毒的<a href="chen-usb-virus.txt">日志文件</a>，经过正则表达式筛选（<code>(	(Name: .*))|(Path: .*)</code>），我整理成了下面比较好看的日志：</p>
+<pre><code class="language-txt"><div>Name: Trojan:Win32/Aenjaris.CP!bit
+Path: file:_E:\.Trashes.exe
+Name: Trojan:Win32/Aenjaris.CP!bit
+Path: file:_E:\.Trashes.exe
+Name: Trojan:Win32/Aenjaris.CP!bit
+Path: file:_E:\.Trashes.exe
+Name: Trojan:Win32/Aenjaris.CP!bit
+Path: file:_E:\.Trashes.exe
+Name: Trojan:Win32/Aenjaris.CP!bit
+Path: file:_E:\.Trashes.exe
+Name: Trojan:Win32/Aenjaris.CP!bit
+Path: file:_E:\.Trashes.exe
+Name: Virus:Win32/Ramnit.A!remnants
+Path: file:_E:\.Trashes.exe
+Name: Virus:Win32/Ramnit.A!remnants
+Path: file:_E:\.Trashes.exe
+Name: Trojan:Win32/Aenjaris.CP!bit
+Path: file:_E:\.TemporaryItems.exe
+Name: Trojan:Win32/Aenjaris.CP!bit
+Path: file:_E:\.TemporaryItems.exe
+Name: Virus:Win32/Ramnit.A!remnants
+Path: file:_E:\.TemporaryItems.exe
+Name: Trojan:Win32/Aenjaris.CP!bit
+Path: file:_E:\.TemporaryItems.exe
+Name: Trojan:Win32/Aenjaris.CP!bit
+Path: file:_E:\.TemporaryItems.exe
+Name: Trojan:Win32/Aenjaris.CP!bit
+Path: file:_E:\.TemporaryItems.exe
+Name: Virus:Win32/Ramnit.A!remnants
+Path: file:_E:\.TemporaryItems.exe
+Name: Virus:Win32/Ramnit.A!remnants
+Path: file:_E:\.TemporaryItems.exe
+Name: Virus:Win32/Ramnit.A!remnants
+Path: file:_E:\.TemporaryItems.exe
+Name: Trojan:Win32/Aenjaris.CP!bit
+Path: file:_E:\.Spotlight-V100.exe
+Name: Virus:Win32/Ramnit.A!remnants
+Path: file:_E:\.TemporaryItems.exe
+Name: Trojan:Win32/Aenjaris.CP!bit
+Path: file:_E:\.Spotlight-V100.exe
+Name: Trojan:Win32/Aenjaris.CP!bit
+Path: file:_E:\.Spotlight-V100.exe
+Name: Trojan:Win32/Aenjaris.CP!bit
+Path: file:_E:\.Spotlight-V100.exe
+Name: Trojan:Win32/Aenjaris.CP!bit
+Path: file:_E:\.Spotlight-V100.exe
+Name: Trojan:Win32/Aenjaris.CP!bit
+Path: file:_E:\.Spotlight-V100.exe
+Name: Virus:Win32/Ramnit.A!remnants
+Path: file:_E:\.Spotlight-V100.exe
+Name: Trojan:Win32/Aenjaris.CP!bit
+Path: file:_E:\.fseventsd.exe
+Name: Virus:Win32/Ramnit.A!remnants
+Path: file:_E:\.Spotlight-V100.exe
+Name: Trojan:Win32/Aenjaris.CP!bit
+Path: file:_E:\.fseventsd.exe
+Name: Trojan:Win32/Aenjaris.CP!bit
+Path: file:_E:\.fseventsd.exe
+Name: Trojan:Win32/Aenjaris.CP!bit
+Path: file:_E:\.fseventsd.exe
+Name: Trojan:Win32/Aenjaris.CP!bit
+Path: file:_E:\.fseventsd.exe
+Name: Trojan:Win32/Aenjaris.CP!bit
+Path: file:_E:\.fseventsd.exe
+Name: Virus:Win32/Ramnit.A!remnants
+Path: file:_E:\.fseventsd.exe
+Name: Virus:Win32/Ramnit.A!remnants
+Path: file:_E:\.fseventsd.exe
+</div></code></pre>
+<p>这些病毒全部是隐藏文件，对于没有开启默认显示隐藏文件的电脑来说无疑是很吃亏的，真的建议大家平时把这个功能一直打开：</p>
+<img src="https://i.loli.net/2019/04/22/5cbdabe5ceb79.jpg" alt="20190422195613-2019-4-22-19-56-14">
+<h2 id="%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3">问题解决</h2>
+<p>找到问题所在，自然很好解决，删掉所有 <code>.</code> 开头的（隐藏的） <code>exe</code> 文件，因为杨辰自己用的 macOS，所以我删除任何 <code>exe</code> 都是没问题的，肯定不是她日常需要使用的东西，所以直接来了一个文件名匹配：</p>
+<pre><code class="language-bash"><div>$ grep -ir .*.exe . &gt; log.txt
+grep: input file ‘./log.txt’ is also the output
+grep: ./.Trashes/501/System Volume Information.exe: Permission denied
+grep: ./.Trashes/501/音乐.exe: Permission denied
+grep: ./.Trashes/501/琴谱.exe: Permission denied
+grep: ./.Trashes/501/网络虚拟财产的继承问题研究 结题.exe: Permission denied
+grep: ./.Trashes/501/音乐 16.47.40.exe: Permission denied
+grep: ./.Trashes/501/琴谱 16.47.42.exe: Permission denied
+grep: ./.Trashes/501/网络虚拟财产的继承问题研究 结题 16.47.47.exe: Permission denied
+grep: ./.Trashes/501/琴谱 19.04.31.exe: Permission denied
+grep: ./.Trashes/501/打印.exe: Permission denied
+grep: ./.Trashes/501/打印 07.27.16.exe: Permission denied
+grep: ./.Trashes/501/打印 22.09.01.exe: Permission denied
+grep: ./.Trashes/501/4.21 打印.exe: Permission denied
+grep: ./.Trashes/501/打印 12.23.41.exe: Permission denied
+grep: ./.Trashes/501/琴谱 12.23.45.exe: Permission denied
+grep: ./.Trashes/501/推荐信.exe: Permission denied
+grep: ./网络虚拟财产的继承问题研究 结题.exe: Permission denied
+grep: ./System Volume Information.exe: Permission denied
+grep: ./音乐.exe: Permission denied
+</div></code></pre>
+<p>可以看到有很多 <code>exe</code> 文件，在我搜索的过程中，Windows defender 不知为什么，同时发现了它们，自动把它们给隔离掉了。</p>
+<p>最后只留下了两个隐藏文件夹：</p>
+<img src="https://i.loli.net/2019/04/22/5cbdafc691723.jpg" alt="20190422201251-2019-4-22-20-12-52">
+<p>这两个文件夹 macOS 会用到，具体参见这里，我也复制一下原文：</p>
+<ul>
+<li><code>.DS_Store</code>: This is a common hidden file that is created in each directory you view using Finder. It stores stuff like folder view settings and icon positions</li>
+<li><code>.Trash(es)</code>: Stays until you empty your recycle bin.</li>
+<li><code>.TemporaryItems</code>, <code>._Temporary Items</code> or <code>Temporary Items</code> folders: These are used as temporary storage. Ideally, the application using it would clean up after itself, but this does not always happen.</li>
+<li><code>.Spotlight-V100</code>: used by the spotlight indexer</li>
+</ul>
+<p>Windows 病毒藏在 macOS 的隐藏文件夹里面，确实很神奇。我推测应该是自动复制病毒，会将软件名自动修改为当前文件的名字，对于不显示后缀名的 Windows 用户来说，他们会误以为是原来的文件而点开。</p>
+<h2 id="%E6%94%B6%E5%B0%BE%E9%AA%8C%E8%AF%81">收尾验证</h2>
+<ol>
+<li>拔出 U 盘</li>
+<li>再次插入</li>
+<li>Windows defender 显示没有病毒，清理完成</li>
+</ol>
+<p>对第二个 U 盘（印有杨辰的那个）也来分析一下。</p>
+<p>第二个很有意思，有一个快捷方式：</p>
+<img src="https://i.loli.net/2019/04/22/5cbdb1e4148c5.jpg" alt="20190422202151-2019-4-22-20-21-52">
+<p>指向的是 <code>%COMSPEC% /C .\WindowsServices\movemenoreg.vbs</code>，查阅<a href="https://holeycc.blogspot.com/2016/07/virus-movemenoregvbs.html">资料</a>发现：</p>
+<img src="https://i.loli.net/2019/04/22/5cbdb24eeb1bc.jpg" alt="20190422202339-2019-4-22-20-23-40">
+<p>这是一个老牌病毒，病毒本身有三个运行着的 Service，还尝试将其复制到电脑硬盘中，这将造成电脑的永久感染。</p>
+<p>删除这个快捷方式即可，没有发现其他的病毒，Windows defender 也没有报毒，其他一切正常。</p>
+<p>同样再次拔插，没有任何问题。</p>
+<h2 id="%E6%80%BB%E7%BB%93">总结</h2>
+<p>macOS 不易中毒，但是 Window 很容易中毒，应该谨慎对待 <code>exe</code> 文件，从官网下载应用（比较重视安全的人都会验证哈希值），对待 U 盘需要谨慎一点。现在杨辰的同学的电脑可能还携带有病毒，不知道 U 盘插上去之后会不会再次感染，可以用 Windows defender 查杀一下。Windows 7 及以下的话，可以使用迈克菲、360、电脑管家等。</p>
+<p>还得问一下杨辰，原来的 <code>音乐.exe</code> 是不是一个 <code>docx</code> 文档，我推测不是，只是病毒根据<code>音乐</code>文件夹生成的<code>音乐.exe</code>如果是的话，那<code>音乐.docx</code>确实已经丢失，找不到了！！！</p>
+
+    </body>
+    </html>
