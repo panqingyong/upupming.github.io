@@ -1,11 +1,13 @@
 ---
 title: 科学上网原理与方案
-categories:
-- GFW
 tags:
-- GFW
-- 科学上网
+  - GFW
+  - 科学上网
+categories:
+  - GFW
+date: 2019-04-30 19:08:20
 ---
+
 
 这次给大家分享一下自己平时『科学上网』的一些经验，主要为了：
 
@@ -66,13 +68,15 @@ HTTP (Hypertext Transfer Protocol) 中文叫做超文本传输协议，从下图
 
 由于 HTTP 的传输报文是明文，所以非常不安全，人门于是将 SSL(TLS) 和 HTTP 结合，在 HTTP 进入 TCP 报文段之前，先经过 SSL 对 HTTP 报文进行加密这就产生了 HTTPS。关于 HTTPS 的具体认证过程推荐大家看一下[阮一峰老师的博文](http://www.ruanyifeng.com/blog/2014/09/illustration-ssl.html)。
 
-温馨提示：大家在访问网站的时候一定要用尽量 https，推荐使用 Firefox、Chrome 这种现代化的浏览器，使用 IE 浏览器上网简直就是在裸奔，IE 在安全性和 JS 新特性支持上都表现的很差劲，如今很多前端项目也逐渐放弃了对旧版本 IE 的支持，如 GitHub 上最火的前端项目 Bootstrap 等等。国内的浏览器也不可信，一方面可能不得不配合参与 GFW 的自我审查，我之前遇到过即使翻墙在 360 浏览器中还是无法访问 Google 的情况，另一方面有诸如 [红芯浏览器](https://www.leiphone.com/news/201808/tSIjaHWIXcBnjuD5.html)这种无良商家，不建议使用。相反 Firefox 和 Chrome 的插件系统会让用它的人爱不释手，开发者也不得不依赖于 Chrome 的 dev-tools。
+温馨提示：大家在访问网站的时候一定要尽量用 https，推荐使用 Firefox、Chrome 这种现代化的浏览器，使用 IE 浏览器上网简直就是在裸奔，IE 在安全性和 JS 新特性支持上都表现的很差劲，如今很多前端项目也逐渐放弃了对旧版本 IE 的支持，如 GitHub 上最火的前端项目 Bootstrap 等等。国内的浏览器也不可信，一方面可能不得不配合参与 GFW 的自我审查，我之前遇到过即使翻墙在 360 浏览器中还是无法访问 Google 的情况，另一方面有诸如[红芯浏览器](https://www.leiphone.com/news/201808/tSIjaHWIXcBnjuD5.html)这种无良商家，不建议使用。相反 Firefox 和 Chrome 的插件系统会让用它的人爱不释手，开发者也不得不依赖于 Chrome 的 dev-tools。
 
 ### DNS 污染（DNS 欺骗）
 
 DNS 污染（DNS Spoofing）又称为域名服务器缓存污染，英文为 DNS Cache Poisoning。
 
 由于全球只有 13 个顶级域名服务器，所以为了避免单点故障、减少查询压力等等会有各级缓存。如果你使用的是国外的 DNS 服务器，比如 Google 的 `8.8.8.8`，DNS 查询需要经过国际出口。GFW 会通过技术手段伪造 DNS 的查询结果，这样你查询到的 IP 地址并非域名的真实地址，也就会访问失败。
+
+测试 DNS 是否被污染最佳工具是 [China Firewall Test](http://www.chinafirewalltest.com/)。
 
 ### DNS 劫持
 
@@ -81,6 +85,8 @@ DNS 劫持和 DNS 污染是不同的，国内很多的 ISP（Internet Service Pr
 ### IP 黑名单
 
 顾名思义，在你请求某个 IP 地址时，如果其恰好在 GFW 的 IP 黑名单上，GFW 会屏蔽这些报文，导致无法正常访问。大家可能经常会听翻墙的朋友这样说：『我那个服务器的 IP 被 GFW 被屏蔽了，我不得不换一台服务器来重新搭建 VPN 服务端。』亲身体验过 IP 被屏蔽会发现那是一件很难受的事情，自己亲手构筑的一切在瞬间就化为了乌有。
+
+测试 IP 是否被墙的最佳工具是[站长工具 Ping 检测](http://ping.chinaz.com/)。
 
 ### 敏感词过滤
 
@@ -112,7 +118,7 @@ GFW 会维护一个敏感词列表，经常更新。如果你访问的网页中�
 
 hosts 文件中的条目大概长这样：
 
-![20190428221339.png](https://i.loli.net/2019/04/28/5cc5b51fb7152.png)
+![Format of hosts](https://i.loli.net/2019/04/28/5cc5b51fb7152.png)
 
 在这里在向大家推荐一款安卓端的软件 [一键 Go Host](https://github.com/Lerist/Go-Hosts)，对于安卓特别友好，可以一键翻墙，不过前提是需要获取 root 权限，这个对大家难度应该不大，推荐在 [xda](https://forum.xda-developers.com/) 中搜索相关教程。
 
@@ -160,7 +166,7 @@ Tor 全称为 The Onion Router（洋葱路由器），主要的目的是为了�
 
 反向代理的基本原理是利用中继服务器（没有被墙）访问得到原始网站的信息之后，返回结果给客户端。优点是客户端拿到镜像网址即可，访问的行为与原网址一模一样，缺点是无法实现登录等复杂操作。
 
-我自己在 GitHub 上创建了一个小的项目，主页在 github.com/upupming/Mirror，分为 0.0.1 和 0.0.2 两个版本（两个分支），前者是分享的 Nginx 反向代理搭建教程和 `nginx.conf` 配置，后者直接使用 now.sh 提供的服务（无需自建服务器，是【免费】的）来托管一个 [Koa](https://github.com/koajs/koa) 服务端，这个服务端可以实现对单个域名的反向代理，通过脚本批量代理可以代理很多子域名。
+我自己在 GitHub 上创建了一个小的项目，主页在 github.com/upupming/Mirror， 分为 0.0.1 和 0.0.2 两个版本（两个分支），前者是分享的 Nginx 反向代理搭建教程和 `nginx.conf` 配置，后者直接使用 now.sh 提供的服务（无需自建服务器，是【免费】的）来托管一个 [Koa](https://github.com/koajs/koa) 服务端，这个服务端可以实现对单个域名的反向代理，通过脚本批量代理可以代理很多子域名。
 
 由于 now.sh 也是托管在 AWS 的 [lambda](https://aws.amazon.com/lambda/) 上的，受 GFW 影响速度比较慢，所以只适合于平时没有翻墙但是想快速访问 Google 的情况。
 
@@ -178,15 +184,17 @@ Tor 全称为 The Onion Router（洋葱路由器），主要的目的是为了�
 
 #### Shadowsocks & V2Ray
 
-Shadowsocks 项目由 clowwindy 发起，最初只是他自己个人用来翻墙的，后来才越做越大。这所有的历史都记录在了[这里](https://github.com/JadaGates/ShadowsocksBio)。SS 是至今为止最稳定、用户数最多的翻墙软件了，不管最初选择如何，似乎大家最终的选择都会倾向于它。
+Shadowsocks 项目由 clowwindy 发起，最初只是他自己个人用来翻墙的，后来才越做越大。这所有的历史都记录在了[JadaGates/ShadowsocksBio](https://github.com/JadaGates/ShadowsocksBio)。SS 是至今为止最稳定、用户数最多的翻墙软件了，不管最初选择如何，似乎大家最终的选择都会倾向于它。
 
 大家进入 [Shadowsocks](https://github.com/shadowsocks/shadowsocks) （简称为 SS） 会发现项目被删除了，其实只是展示的 `rm` 分支罢了（应该当时为了应对特殊情况才这样做的），把分支切换成 `master` 就好了，Shadowsocks 至今仍在维护，并且 Linux 各大软件包管理器也可以直接安装，Windows、Linux、macOS、Android 和 iOS 等等全都支持。
 
-Shadowsocks 的搭建推荐使用脚本即可，请阅读 https://shadowsocks.be/ （需翻墙），由于网上的教程很多，这里不再重复介绍，请大家善用搜索。遇到问题及时翻阅 GitHub 上的 [Wiki 页面](https://github.com/shadowsocks/shadowsocks/wiki)
+Shadowsocks 的搭建推荐使用脚本即可，请阅读 https://shadowsocks.be/ （需翻墙），由于网上的教程很多，这里不再重复介绍，请大家善用搜索。遇到问题及时翻阅 GitHub 上的 [Wiki 页面](https://github.com/shadowsocks/shadowsocks/wiki)。
 
 [v2ray](https://github.com/v2ray/v2ray-core) 是新兴的代理软件，发展迅猛，可以看[这篇文章](https://oing9179.github.io/blog/2016/11/v2ray-More-Complex-and-Better-than-Shadowsocks/)。搭建过程比 SS 复杂，但不算太难，但是需要有一些基础知识，与搭建 Nginx 反向代理的难度相差不大，推荐大家直接查阅官方文档。
 
 对于刚入门计算机的同学，推荐先看[这篇文章](http://www.evernote.com/l/AmEIfRIK0H9LE5XUla9dVz21Q8NQ5sVaxMM/)，可以先使用一些小型服务提供商的代理服务。
+
+更高级的一些操作还有[中继](https://sjq597.github.io/2018/05/22/ShadowSocks-Haproxy%E4%B8%AD%E7%BB%A7/)，可以使用国内服务器作为中继节点，连接国外的服务器达到更快的速度。
 
 ##### 代理模式设置
 
@@ -198,7 +206,7 @@ Shadowsocks 的搭建推荐使用脚本即可，请阅读 https://shadowsocks.be
 
 这三种模式其实影响的是系统中的『Internet 选项』或者『代理设置』（Windows 10）：
 
-![20190428212136.png](https://picgo-1256492673.cos.ap-chengdu.myqcloud.com/img/20190428212136.png)
+![Windows Internet Options](https://picgo-1256492673.cos.ap-chengdu.myqcloud.com/img/20190428212136.png)
 
 其他软件看到系统中的配置后，会遵循其中定义的代理地址，比如这里是 127.0.0.1（本地回环地址）的 1080 端口（SOCKS 代理默认端口），就会把请求发送到这个端口。
 
@@ -209,22 +217,26 @@ Shadowsocks 的搭建推荐使用脚本即可，请阅读 https://shadowsocks.be
 
 对于一些命令自身实现不了的（比如 `npm install`），我们可以用 `tsocks` 和 `proxychains` 来实现，限于篇幅，这里就不再介绍啦。
 
-另外推荐 Chrome 的插件 [SwitchyOmega](https://github.com/FelisCatus/SwitchyOmega)，配置过程参见[这里](https://github.com/FelisCatus/SwitchyOmega/wiki/GFWList)，它能让 Chrome 忽略系统的代理设置，直接走软件本身的配置，在软件内部加一个 gfwlist，每次遇到新的被墙的网站还可以自行添加域名，比较方便，推荐使用。
+另外推荐 Chrome 的插件 [SwitchyOmega](https://github.com/FelisCatus/SwitchyOmega)，配置过程参见[官方 Wiki](https://github.com/FelisCatus/SwitchyOmega/wiki/GFWList)，它能让 Chrome 忽略系统的代理设置，直接走软件本身的配置，在软件内部加一个 gfwlist，每次遇到新的被墙的网站还可以自行添加域名，比较方便，推荐使用。
 
 温馨推荐：如果使用 Linux 的话，推荐看一下我的[配置教程](https://gist.github.com/upupming/b3f837c912d2c6291baef0db0e72f7a6)（gist 需翻墙）。
 
 #### 路由器代理
+
+路由器代理可以解决一些终端命令无法配置代理的情况（比如 [Firebase CLI](https://github.com/firebase/firebase-tools/issues/155)），这样即使本地电脑电脑上不配置任何代理，只要通过路由器联网了，就能翻墙。
 
 路由器代理可以参见：
 
 1. 极路由：https://github.com/qiwihui/hiwifi-ss
 2. 刷【梅林固件】，再安装 Shadowsocks 插件，自行搜索相关教程即可
 
+说到路由器代理，不得不向大家推荐 [SSTap](https://www.ccava.cc/2731.html)，可以在本地创建虚拟网卡，达到路由器级别的代理，而且可以开机自启。
+
 ## 翻墙之后值得推荐的网站
 
 1. Google 域名内搜索 - 精准获取想要的信息
 
-    ![20190428224938.png](https://picgo-1256492673.cos.ap-chengdu.myqcloud.com/img/20190428224938.png)
+    ![Google search in site](https://picgo-1256492673.cos.ap-chengdu.myqcloud.com/img/20190428224938.png)
 
 2. [StartPage](https://startpage.com/)，更尊重隐私的 "Google"
 3. [中文维基百科](https://zh.wikipedia.org/wiki/Wikipedia:%E9%A6%96%E9%A1%B5)，更尊重事实的百科全书
