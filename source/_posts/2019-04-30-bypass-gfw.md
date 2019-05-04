@@ -166,7 +166,7 @@ Tor 全称为 The Onion Router（洋葱路由器），主要的目的是为了�
 
 反向代理的基本原理是利用中继服务器（没有被墙）访问得到原始网站的信息之后，返回结果给客户端。优点是客户端拿到镜像网址即可，访问的行为与原网址一模一样，缺点是无法实现登录等复杂操作。
 
-我自己在 GitHub 上创建了一个小的项目，主页在 github.com/upupming/Mirror， 分为 0.0.1 和 0.0.2 两个版本（两个分支），前者是分享的 Nginx 反向代理搭建教程和 `nginx.conf` 配置，后者直接使用 now.sh 提供的服务（无需自建服务器，是【免费】的）来托管一个 [Koa](https://github.com/koajs/koa) 服务端，这个服务端可以实现对单个域名的反向代理，通过脚本批量代理可以代理很多子域名。
+我自己在 GitHub 上创建了一个小的项目，主页在 github.com/upupming/Mirror ， 分为 0.0.1 和 0.0.2 两个版本（两个分支），前者是分享的 Nginx 反向代理搭建教程和 `nginx.conf` 配置，后者直接使用 now.sh 提供的服务（无需自建服务器，是【免费】的）来托管一个 [Koa](https://github.com/koajs/koa) 服务端，这个服务端可以实现对单个域名的反向代理，通过脚本批量代理可以代理很多子域名。
 
 由于 now.sh 也是托管在 AWS 的 [lambda](https://aws.amazon.com/lambda/) 上的，受 GFW 影响速度比较慢，所以只适合于平时没有翻墙但是想快速访问 Google 的情况。
 
