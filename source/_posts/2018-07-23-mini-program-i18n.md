@@ -203,9 +203,10 @@ this.setData({
 
 # 其他页面的处理
 
-相信细心的读者应该已经看到了 `/pages/index/index.js` 中有一句 `event.emit('languageChanged');`，这是为了释放 `languageChanged` 事件，让其他页面感知道，并在下次加载的时候修改语言。
+相信细心的读者应该已经看到了 `/pages/index/index.js` 中有一句 `event.emit('languageChanged');`，这是为了释放 `languageChanged` 事件，让其他页面『感知』到，并在下次加载的时候修改语言。
 
 在 `/utils/event.js` 中写入如下的代码：
+
 ```js
 // /utils/event.js
 let events = {};
