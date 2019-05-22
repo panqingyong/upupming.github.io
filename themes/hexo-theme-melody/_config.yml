@@ -12,6 +12,8 @@
 #   hr_color: "#A4D8FA"
 #   tag_start_color: "#A4D8FA"
 #   tag_end_color: "#1B9EF3"
+#   header_text_color: "#EEEEEE"
+#   footer_text_color: "#EEEEEE"
 
 # Main menu navigation
 menu:
@@ -79,6 +81,7 @@ katex:
   enable: false
   cdn:
     css: https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css
+  hide_scrollbar: true
 
 # Toggle fireworks (IE >= 10)
 # ---------------
@@ -249,8 +252,17 @@ busuanzi:
   site_pv_footer:
   # custom pv span for one page only
   page_pv: true
-  page_pv_header: <i class="fa fa-file-o"></i>
+  page_pv_header: <i class="fa fa-file"></i>
   page_pv_footer:
+
+# canvas_ribbon
+# See: https://github.com/hustcc/ribbon.js
+canvas_ribbon:
+  enable: false
+  size: 150
+  alpha: 0.6
+  zIndex: -1
+  click_to_change: false
 
 # Sidebar Settings
 # ---------------
@@ -272,3 +284,27 @@ google_adsense:
   js: //pagead2.googlesyndication.com/pagead/js/adsbygoogle.js
   client: ca-pub-...........
   enable_page_level_ads: true
+  
+
+# Google Webmaster tools verification setting
+# See: https://www.google.com/webmasters/
+google_site_verification:
+
+# Bing Webmaster tools verification setting
+# See: https://www.bing.com/webmaster/
+bing_site_verification:
+
+# Yandex Webmaster tools verification setting
+# See: https://webmaster.yandex.ru/
+#yandex_site_verification:
+
+# Baidu Webmaster tools verification setting
+# See: https://ziyuan.baidu.com/site/
+baidu_site_verification:
+
+# 360 Webmaster tools verification setting
+# see http://zhanzhang.so.com/
+qihu_site_verification:
+
+# avoid baidu transformation
+disable_baidu_transformation: true
