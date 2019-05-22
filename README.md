@@ -11,7 +11,7 @@ Using [hexo-theme-melody](https://github.com/Molunerfinn/hexo-theme-melody) and 
 
 Do all things on `source` branch.
 
-# Configuration
+## Configuration
 
 1. Fork this repo, rename it to `your-username.github.io` and `git clone` to your computer.
 2. Delete `source/CNAME` or change its content to your own custom domain.
@@ -42,7 +42,7 @@ Configure them in Travis settings like below:
 
 <img src=https://user-images.githubusercontent.com/24741764/42017071-613dc3a8-7ae0-11e8-93d7-21a881b2ebcc.png>
 
-# Start blogging
+## Start blogging
 
 1. Write a post
 
@@ -54,16 +54,17 @@ Configure them in Travis settings like below:
 2. deploy to the origin
 
     ```bash
-    $ ./deploy.sh "Added: my first post"
+    ./deploy.sh "Added: my first post"
     ```
 
     or just
+
     ```bash
-    $ ./deploy.sh
-    ```
-    which is equivalent to 
-    ```bash
-    $ ./deploy.sh "Updated: blog source"
+    ./deploy.sh
     ```
 
+    which is equivalent to
 
+    ```bash
+    ./deploy.sh "Updated: blog source"
+    ```
