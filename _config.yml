@@ -129,9 +129,9 @@ search:
 
 
 markdown_it_plus:
-    plugins:
-        - plugin:
-            name: '@neilsustc/markdown-it-katex'
-            enable: true
-            options:
-              strict: false
+  plugins:
+    - plugin:
+      name: '@neilsustc/markdown-it-katex'
+      enable: true
+      options:
+        strict: false
