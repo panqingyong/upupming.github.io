@@ -24,7 +24,7 @@ $$
 
 对任意的 $t>0$ 成立。
 
-> 从直观上可以理解为，某高中生平时成绩已知的情况下，高考及时发挥超常或者失误平均分都变化不会太大。我们可以根据平时的平均分判断该考生分数超过给定分数 $t$ 的概率
+> 从直观上可以理解为，某高中生平时成绩已知的情况下，高考即使发挥超常或者失误平均分都变化不会太大。我们可以根据平时的平均分判断该考生分数超过给定分数 $t$ 的概率。
 
 ### 证明
 
@@ -33,13 +33,19 @@ $$
 $$
 \begin{aligned}
     P(X \ge t) 
-    &= \int_{x=t}^{\infty}p(X=x)dx \\
+    &= \int_{x=t}^{\infty}P(X=x)dx \\
     &利用 x \ge t \\
-    &\le \int_{x=t}^{\infty}\frac{x}{t}p(X=x)dx \\
-    &= \frac{1}{t}\int_{x=t}^{\infty}xp(X=x)dx \\
-    &\le \frac{1}{t}\int_{x=0}^{\infty}xp(X=x)dx \\
+    &\le \int_{x=t}^{\infty}\frac{x}{t}P(X=x)dx \\
+    &= \frac{1}{t}\int_{x=t}^{\infty}xP(X=x)dx \\
+    &\le \frac{1}{t}\int_{x=0}^{\infty}xP(X=x)dx \\
     &= \frac{E(X)}{t}
 \end{aligned}
+$$
+
+推广：
+
+$$
+P(X \le t) \ge 1-\frac{E(X)}{t}
 $$
 
 ## Chebyshev 不等式
