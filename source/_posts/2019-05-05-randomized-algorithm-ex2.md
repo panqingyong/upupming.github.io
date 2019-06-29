@@ -106,7 +106,7 @@ $$
 P(X_{12}=1,X_{23}=1,X_{13}=1)
 &= P(X_{12}=1,X_{23}=1)  \\
 &= P(X_{12}=1)\cdot P(X_{23}=1) \\
-&\neq P(X_{12}=1)\cap P(X_{23}=1) \cap P(X_{13}=1)
+&\neq P(X_{12}=1)\cdot P(X_{23}=1) \cdot P(X_{13}=1)
 \end{aligned}
 $$
 
@@ -250,10 +250,10 @@ $$
 利用上一问的结论，同时还需认识到 $P(X_i >2\log n) \le P(X_i =\lfloor 2\log n\rfloor)$，这是因为有下式成立：
 
 $$
-\left(\frac{n-1}{2n}\right)^{a}-\left(\frac{n-1}{2n}\right)^{a+1} + \left(\frac{n-1}{2n}\right)^{a+1}-\left(\frac{n-1}{2n}\right)^{a+2} + \cdots \le \left(\frac{n-1}{2n}\right)^{a-1}-\left(\frac{n-1}{2n}\right)^a
+\left(\frac{i-1}{2n}\right)^{a}-\left(\frac{i-1}{2n}\right)^{a+1} + \left(\frac{i-1}{2n}\right)^{a+1}-\left(\frac{i-1}{2n}\right)^{a+2} + \cdots \le \left(\frac{i-1}{2n}\right)^{a-1}-\left(\frac{i-1}{2n}\right)^a
 $$
 
-也就是说说 $X_i=a+1, a+2, \cdots,  a+3, \cdots$ 的概率之和小于等于 $X_i=a$ 的概率。
+也就是说 $X_i=a+1, a+2, \cdots,  a+3, \cdots$ 的概率之和小于等于 $X_i=a$ 的概率。
 
 $$
 \begin{aligned}
@@ -294,6 +294,8 @@ $$
 ## 2.5
 
 <img src="https://i.loli.net/2019/04/07/5caa167038f1a.jpg" alt="习题 2.5">
+
+> 更新：用 LSH 评判集合相似性，可以达到 $n \ln n$ 的复杂度。
 
 听众相当于箱子，歌曲相当于球，每个球可以被扔进多个箱子，如果箱子之间相似球的个数越多，那么证明箱子越『口味趋于相同』。
 

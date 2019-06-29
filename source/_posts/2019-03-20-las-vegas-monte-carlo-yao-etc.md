@@ -22,7 +22,7 @@ tags:
 
 (1)
 
-该该算法属于 Sherwood 算法，因为该算法一定会得到正确解，但运行时间不确定。
+该算法属于 Sherwood 算法，因为该算法一定会得到正确解，但运行时间不确定。
 
 (2)
 
@@ -34,7 +34,7 @@ tags:
 
 > 注意，题目中第 4 行、第 5 行处的 $k$ 应该改为 $k-1$ 才对。
 >
-> 算法不能处理有相等值的情况，考虑极端情况所有数全相等的话，求出来的 S_1, S_2 都是空集
+> 算法不能处理有相等值的情况，考虑极端情况所有数全相等的话，求出来的 $S_1, S_2$ 都是空集
 
 这三种情况出现的概率分别为：$\frac{k-2}{n}$, $\frac{1}{n}$, $\frac{n-k+1}{n}$。
 
@@ -60,7 +60,7 @@ $$
 E(Z_2) = (\frac{1}{2}+t-t^2)n + (2t-2) - \frac{1}{2n} < (\frac{1}{2}+t-t^2)n
 $$
 
-令 $b = \frac{1}{2}+t-t^2, b \in [\frac{1}{2}, \frac{3}{4}]$ 即可，则有 $E(Z_2) < bn$。
+令 $b = \frac{1}{2}+t-t^2$  即可, 此时 $b \in [\frac{1}{2}, \frac{3}{4}]$，则有 $E(Z_2) < bn$。
 
 以此递推，不难得到：
 
@@ -87,7 +87,7 @@ $$
 
 代码实现如下：
 
-<script src="http://gist-it.appspot.com/https://github.com/upupming/algorithm/blob/master/src/RandomSelect.java"></script>
+<script src="https://gist-it.appspot.com/https://github.com/upupming/algorithm/blob/master/src/RandomSelect.java"></script>
 
 ## 1.2
 
@@ -151,7 +151,7 @@ $$
 2. $A(B\overrightarrow{s}): O(p\times q)$
 3. $C\overrightarrow{s}: O(p\times r)$
 
-总的时间复杂度为：$O(\max_1(p, q, r)\max_2(p, q, r))$，其中 $\max_i(p, q, r)$ 表示 p, q 中第 i 大的元素。
+总的时间复杂度为：$O(\max_1(p, q, r)+\max_2(p, q, r))$，其中 $\max_i(p, q, r)$ 表示 p, q 中第 i 大的元素。
 
 算法的类型：由于运行时间确定，但是可能给出不正确的结果，此算法属于 Monte Carlo 算法。
 
@@ -170,7 +170,7 @@ $$
 
 也在 CMU 找到了：https://www.cs.cmu.edu/~avrim/Randalgs97/lect0122
 
-根据 MIT 的算法导论 http://www.cs.tau.ac.il/~zwick/grad-algo-13/mst.pdf，最小生成树也可以使用收缩法进行构建，我们可以把最小生成树的构建过程看作是 2.6 节中的边的收缩过程，因为最小生成树的构建过程中使用 union-find data structure 将点合在同一个子图中时就等价与 2.6 中的收缩（采用 Prim 算法）。
+根据 MIT 的算法导论 http://www.cs.tau.ac.il/~zwick/grad-algo-13/mst.pdf ，最小生成树也可以使用收缩法进行构建，我们可以把最小生成树的构建过程看作是 2.6 节中的边的收缩过程，因为最小生成树的构建过程中使用 union-find data structure 将点合在同一个子图中时就等价与 2.6 中的收缩（采用 Prim 算法）。
 
 不失一般性，不妨假设最终删除的边就是我们在构建最小生成树时加入的最后一条边（对 Prim 算法一定成立）。我们需要求的就是每次新加进来的边（除了最后一次，一共 n-2 条边）都不在最小割集顶点集 U 中的概率。
 
@@ -312,7 +312,7 @@ $$
 
 题目要求任意 $z$，我们应该做最坏的打算，假设 $z$ 处的函数值恰好被篡改了：
 
-均匀随机地选择 $t \in [1, n-1]$，计算 $F(z\ominus t)$ 和 $F(t)$，注意到 $z\ominus t$ 和 $t$ 不是相互独立的，错误率为 $P(error) = P(F(z\ominus t) 损坏 \cup F(t) 损坏 \le (\frac{1}{5} + \frac{1}{5}) = \frac{2}{5}$
+均匀随机地选择 $t \in [1, n-1]$，计算 $F(z\ominus t)$ 和 $F(t)$，注意到 $z\ominus t$ 和 $t$ 不是相互独立的，错误率为 $P(error) = P[F(z\ominus t) 损坏 \cup F(t) 损坏] \le (\frac{1}{5} + \frac{1}{5}) = \frac{2}{5}$
 
 算法运行 3 次，如果 3 次结果都不一样，返回第一次的结果。否则，返回出现次数最多的结果，
 
