@@ -7,6 +7,35 @@ categories:
 date: 2019-11-12 11:03:57
 ---
 
+## 内推软广
+
+我已经入职字节跳动实习啦~~，有对前端感兴趣的同学可以随时找我内推哟，邮箱：
+
+- liyiming.cs@bytedance.com
+- upupming@gmail.com
+
+<details>
+<summary>招聘 Job Specification（仅供参考）</summary>
+
+<details>
+实习生、校招、社招均可
+
+职位描述
+1. 负责今日头条付费中台产品 Web/Hybrid/Wap/小程序/Flutter 的前端开发工作；
+2. 负责高质量的设计和编码；承担重点、难点的技术攻坚；
+3. 负责WEB/WAP页面性能优化，打造良好的用户体验；
+4. 负责推动、优化前端基础架构、组件抽象，提升开发效率。
+
+职位要求：
+1. 本科及以上学历，计算机等相关专业；
+2. 对主流前端开发框架（如Vue/Angular/React等）有全面的了解，熟练使用至少一种；
+3. 熟悉WEB前端技术，对符合WEB标准的网站重构、网站性能提升等有丰富经验，有成功作品；
+4. 良好的设计和编码品味，热爱写代码，能产出高质量的设计和代码；较好的产品意识，愿意将产品效果做为工作最重要的驱动因素；
+5. 热爱前端技术，有较强的学习能力，有强烈的求知欲、好奇心和进取心 ，能及时关注和学习业界最新的前端技术；
+6. 有服务端开发(Go/Node.js)/Flutter相关开发经验者优先，熟悉TypeScript开发者优先。
+</details>
+
+## 正文开始
 
 即将面试今日头条的前端实习，此次一定要做好充足准备，特打算花个几天的时间对前端来一个系统性的梳理（前端太庞大，其实也只能包含一小部分哈哈）。虽然检查了很多遍，可能仍有错误，如果发现，请指正，谢谢！
 
@@ -116,7 +145,7 @@ print('Hello') // Hello
 
 ### 变量提升
 
-1. 所有声明都会被提升到作用域的最顶上
+1. 所有 `var` 声明都会被提升到作用域的最顶上
 2. 同一个变量声明只进行一次
 
     ```js
@@ -475,6 +504,75 @@ Array.prototype.isPrototypeOf([]) // true
 
 - `===`：只要数据类型不一样，就返回false。
 
+### 防抖（debounce） vs. 节流（throttle）
+
+防抖是说**连续两次**的调用必须间隔指定的时间，节流是说当调用一次之后，必须在**指定时间之后的调用**才会有效。
+
+具体使用场景：
+
+- 比如用户 `resize` 调整窗口大小，因为一次窗口调整中间会出发出相当多的时间间隔很短的 `resize` 事件，那么防抖主要是看用户进行调整的总次数，而节流看的是每一次调整时，用户的 `resize` 的手速有多快。
+- 在搜索引擎中，时常出现比如要搜索 `front end`，当你输入前面的 `f` 或者 `front` 时就会出现候选结果。但是因为 API 调用消耗很大，所以会使用防抖来较少调用次数，这符合用户停顿时就是想看到搜索结果的现实逻辑。
+
+实现如下：
+
+```js
+function debounce(func, limit) {
+  let timer
+  return function (...args) {
+    // 前一次还没来得及执行的话，取消掉前一次的
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+      func.apply(this, args)
+    }, limit)
+  }
+}
+
+function throttle(func, limit) {
+  let flag = true
+  return function(...args) {
+    if (flag) {
+      func.apply(this, args)
+      flag = false
+      // 只有经过指定时间后，才可以执行新的
+      setTimeout(() => {
+        flag = true
+      }, limit)
+    }
+  }
+}
+```
+
+### 清除浮动
+
+> 在非IE浏览器（如Firefox）下，当容器的高度为auto，且容器的内容中有浮动（float为left或right）的元素，在这种情况下，容器的高度不能自动伸长以适应内容的高度，使得内容溢出到容器外面而影响（甚至破坏）布局的现象。这个现象叫浮动溢出，为了防止这个现象的出现而进行的CSS处理，就叫CSS清除浮动。
+
+- clear 清除浮动，添加空div法，在浮动元素下方添加空div,并给该元素写css样式 {clear:both;height:0;overflow:hidden;}
+- 给浮动元素父级设置高度
+- 父级同时浮动（需要给父级同级元素添加浮动）
+- 父级设置成 `inline-block`，其 `margin: 0 auto` 居中方式失效
+- 给父级添加 `overflow:hidden`
+- 万能清除法 after 伪类清浮动（现在主流方法，推荐使用）
+
+### 圣杯布局和双飞翼布局
+
+#### 圣杯布局
+
+<p class="codepen" data-height="265" data-theme-id="light" data-default-tab="css,result" data-user="upupming" data-slug-hash="qBBQemg" style="height: 265px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="圣杯布局">
+  <span>See the Pen <a href="https://codepen.io/upupming/pen/qBBQemg">
+  圣杯布局</a> by Li Yiming (<a href="https://codepen.io/upupming">@upupming</a>)
+  on <a href="https://codepen.io">CodePen</a>.</span>
+</p>
+<script async src="https://static.codepen.io/assets/embed/ei.js"></script>
+
+#### 双飞翼布局
+
+<p class="codepen" data-height="265" data-theme-id="light" data-default-tab="css,result" data-user="upupming" data-slug-hash="pooQMad" style="height: 265px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="双飞翼布局">
+  <span>See the Pen <a href="https://codepen.io/upupming/pen/pooQMad">
+  双飞翼布局</a> by Li Yiming (<a href="https://codepen.io/upupming">@upupming</a>)
+  on <a href="https://codepen.io">CodePen</a>.</span>
+</p>
+<script async src="https://static.codepen.io/assets/embed/ei.js"></script>
+
 ### Ajax
 
 ajax的原理：相当于在用户和服务器之间加一个中间层（ajax引擎),使用户操作与服务器响应异步化。
@@ -564,6 +662,21 @@ while(true) {
 ### `class` & `interface`
 
 在es6中，我们有一种新的关键字`class`来定义一个类；我们可以继承方法和属性，使用`extends`关键字继承；其实本质上，还是使用原型链的方式继承，只是给了更好理解的语法糖；Typescript在 `class` 的基础上添加了访问修饰符和接口 `interface` 。
+
+<!-- 
+### 图片下载
+
+已有 API:
+
+```js
+// 给定图片地址，下载图片并返回 Data
+fetch(imgUrl: string) : Promise<Data>
+```
+
+现在假设浏览器的图片下载队列最多可以容纳 6 张同时下载，要求写一个函数，下载一组图片，之后返回这一组图片的数据。
+
+```js
+``` -->
 
 ## HTML
 
