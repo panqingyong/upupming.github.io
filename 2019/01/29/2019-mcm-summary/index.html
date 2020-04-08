@@ -1,0 +1,110 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="2019 美赛 MCM A 题总结"><meta name="keywords" content="MCM,mathematics modelling"><meta name="author" content="upupming"><meta name="copyright" content="upupming"><title>2019 美赛 MCM A 题总结 | upupming 的博客</title><link rel="shortcut icon" href="/my-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.min.css?version=1.6.1"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css?version=1.6.1"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.css"><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.js" defer></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css"><script src="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js"></script><script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script><link rel="manifest" href="/manifest.json"><link rel="manifest" href="/manifest.json"><meta name="theme-color" content="#1B9EF3"><meta name="msapplication-TileColor" content="#1B9EF3"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#1B9EF3"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle = window.adsbygoogle || []).push({
+  google_ad_client: 'ca-pub-2188191456032650',
+  enable_page_level_ads: 'true'
+});
+</script><link rel="dns-prefetch" href="https://hm.baidu.com"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?295ad5c5a196e4964e20f74260711177";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();</script><link rel="dns-prefetch" href="https://www.google-analytics.com"><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-114899088-1', 'auto');
+ga('send', 'pageview');</script><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: {"appId":"5WEDOKLFCL","apiKey":"26a57bfa5275b7c98a3b3ab7dae61915","indexName":"upupming-blog","hits":{"per_page":10},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容:${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  }
+} </script></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前期准备"><span class="toc-number">1.</span> <span class="toc-text"> 前期准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#写作"><span class="toc-number">2.</span> <span class="toc-text"> 写作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#合作"><span class="toc-number">3.</span> <span class="toc-text"> 合作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#建模以及数学知识"><span class="toc-number">4.</span> <span class="toc-text"> 建模以及数学知识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#写代码"><span class="toc-number">5.</span> <span class="toc-text"> 写代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#论文分享"><span class="toc-number">6.</span> <span class="toc-text"> 论文分享</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#小事故"><span class="toc-number">7.</span> <span class="toc-text"> 小事故</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一些链接"><span class="toc-number">8.</span> <span class="toc-text"> 一些链接</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/img/doraemon.jpeg"></div><div class="author-info__name text-center">upupming</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">41</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">49</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">分类</span><span class="pull-right">26</span></a></div><hr><div class="author-info-links"><div class="author-info-links__title text-center">友情链接</div><a class="author-info-links__name text-center" href="https://molunerfinn.com/">MARKSZのBlog</a><a class="author-info-links__name text-center" href="https://github.com/ryanhanwu/How-To-Ask-Questions-The-Smart-Way/blob/master/README-zh_CN.md">提问的智慧</a><a class="author-info-links__name text-center" href="https://zh.wikipedia.org/">中文维基百科</a><a class="author-info-links__name text-center" href="https://zbqtesla.github.io">ZBQTesla的博客</a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(/img/background.png)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">upupming 的博客</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">主页</a><a class="site-page" href="/archives">归档</a><a class="site-page" href="/tags">标签</a><a class="site-page" href="/categories">分类</a><a class="site-page" href="https://mirror.upupming.site">Mirror</a><a class="site-page" href="https://music.wxhbts.com">音乐</a><a class="site-page" href="https://writing.upupming.site">Writing</a><a class="site-page" href="/about">关于</a><a class="site-page" href="/rss">RSS</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> 搜索</span></a></span></div><div id="post-info"><div id="post-title">2019 美赛 MCM A 题总结</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2019-01-29</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/数学/">数学</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/数学/数学建模/">数学建模</a><div class="post-meta-wordcount"><span>字数总计: </span><span class="word-count">2.5k</span><span class="post-meta__separator">|</span><span>阅读时长: 7 分钟</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><p>2019 年数学建模，从 1.25 到 1.29 这 4 天零 3 个小时的时间里，我们组三人一行合作，顺利完成了 A 题『真实世界的虚构龙』的建模。整个过程收获很大，主要是这几个方面：</p>
+<ol>
+<li>合作。这次的合作非常成功，写作、建模、写代码三人齐头并进，少了任何一个人都是不行的。</li>
+<li>建模。如何建模，如何查找文献，吸收前人的思想，以前我很少考虑，这次从学长身上学到了一些经验。</li>
+<li>写代码。从这个学期学习机器学习、随机过程时只是会用一下 <code>numpy</code> 的矩阵计算，用 <code>matplotlib</code> 画简单的图，到现在 5 天基本掌握 <code>numpy</code>、<code>matplotlib</code>、<code>sympy</code>、<code>scipy</code> 的核心思想，运用自如。</li>
+<li>数学。这学期学的数学（机器学习、随机过程）让我对数学有了更深刻的认识，现在通过数学建模，这些认识更加深刻。</li>
+</ol>
+<a id="more"></a>
+<h2 id="前期准备"><a class="markdownIt-Anchor" href="#前期准备"></a> 前期准备</h2>
+<p>不得不说，前期准备真的非常重要。</p>
+<p>我们组一共三个人，另外两位是大四的学长，他们参加过 2018 年美赛，因为去年做的不好，所以想弥补这个遗憾，找到了我一起参加比赛。虽然两位学长已经保研，参加美赛并不会对保研加分有什么帮助，但是出于对数学建模的热爱，还是选择参加比赛。和这么负责、爱建模的学长做队友，真的是我最大的荣幸。</p>
+<p>因为两位学长参加过美赛、国赛，对数学建模有了一定的经验。总结去年的问题之后，我们将前期准备定位了如下的任务：</p>
+<ol>
+<li>Z 学长阅读 <a href="./%E6%AD%A3%E7%A1%AE%E5%86%99%E4%BD%9C%E7%BE%8E%E5%9B%BD%E5%A4%A7%E5%AD%A6%E7%94%9F%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1%E7%AB%9E%E8%B5%9B%E8%AE%BA%E6%96%87.pdf">《正确写作美国大学生数学建模竞赛论文》</a>，学习写作的相关知识，写作是美赛最重要的环节，因为我们最终要交的是一份 pdf 的论文，而不是代码，不管模型建得多么好，需要用简洁明了的语言表达出来。</li>
+<li>C 学长比较忙，一直忙于毕业设计，没有分配什么任务，不过学长建模的功底已经很强了，也看了不少文章。</li>
+<li>我是新手，所以要学习的东西比较多。主要是看算法、LaTeX、LyX、画图、<code>matplotlib</code> 使用、读 UMAP 上的获奖论文等等。后期因为各种事情没能坚持下来，有点遗憾，不过准备还算充分。</li>
+</ol>
+<blockquote>
+<p>我们前期所做的工作，都存放在 <a href="https://github.com/upupming/2019-MCM" target="_blank" rel="noopener">upupming/2019-MCM</a> 和 <a href="https://github.com/ZPinjun/paper" target="_blank" rel="noopener">ZPinjun/paper</a>。</p>
+</blockquote>
+<p>就拿我准备的 LaTeX 和 LyX 来说，之前没想到会在附录里面贴上自己的代码，不过因为之前学习过 LaTeX 如何贴代码以及 LyX 如何引用 <code>.tex</code> 文件，所以最终节省了很多时间。</p>
+<p>还有 <code>matplotlib</code>，我比赛之前特意准备了一个仓库 <a href="https://github.com/upupming/matplotlib-demos" target="_blank" rel="noopener">matplotlib-demos</a>，看了一篇很长的 tutorial，所以之后比赛的时候画图效率较高。</p>
+<p>当然，我也有现学的，比如一些 LyX 如何插入链接型的 BibTeX 引用、<code>SymPy</code>、<code>Maxent</code> 如何使用等等，这些是我们没有考虑到的，这些本身也很难预见。我在 <code>Maxent</code> 上花费了很长的时间，不过最终还是理解了，而且对我们的论文做了很大的贡献。我们应该做到准备充分，但平时自己的时间确实有限，只需要做到关键点就行了，比如 LyX 的 tutorial 肯定是要看一遍的，对 python 未接触过的包要知道它的存在，有快速上手的能力等等。</p>
+<p>我们比赛之前进行了一次 <a href="https://github.com/upupming/2019-MCM/issues/2" target="_blank" rel="noopener">模拟</a>，做出的结果在<a href="https://github.com/upupming/paper/tree/e8ef140b0e71f6b1079013176d7cf636ef314f8d" target="_blank" rel="noopener">这里</a>。结果不重要，但是我们为之做出的准备很重要，我们在模拟中学到了：</p>
+<ol>
+<li>模拟之前总结了去年的失误，结合 O 奖论文提出了新战略：从第一天就开始写作，直接写英文而非中文，检查非常重要，不能提交结构组织错乱的 pdf 文件。</li>
+<li>使用 GitHub + LyX + <s>壁虎通</s>（后来换为 teamviewer） + 黑板进行高效协作</li>
+<li>磨合大家的之间合作（写作+建模+写代码），对比赛进度把控好</li>
+<li>调整好生物钟，中午睡午觉。学会定外卖，我们三人每天 8:00 在我的宿舍见面，一直待到 23:00 之后，中间不去食堂，就是为了节约其中的时间。</li>
+</ol>
+<h2 id="写作"><a class="markdownIt-Anchor" href="#写作"></a> 写作</h2>
+<ol>
+<li>写作要尽量简洁。</li>
+<li>Results 里面非常显然的结论也要指出来，把读者当『傻瓜』。除了分析结果，还得与自己的模型相呼应。</li>
+<li>我们的语法水平比较弱，只要意思说明白就行，不追求句式错综复杂，但是一定不能有任何错误。</li>
+<li>Grammarly 在语法错误的检查上帮了不少忙。</li>
+</ol>
+<h2 id="合作"><a class="markdownIt-Anchor" href="#合作"></a> 合作</h2>
+<p>在整个比赛过程中，我几乎花费了 85% 的时间在写代码。而模型的构建基本上是由 C 学长来完成的，要不是学长耐心地解释公式中每个变量的含义，我会寸步难行。对建模的细节，我至今有一些还没有去深究，但是思想已经知道了，细节又何必深究呢？对于写代码来说，还是最终的公式最重要。在写代码的过程中，我也提出了很多细节上的问题，这些问题在建模人的眼中几乎是很难看到的，所以写代码对建模起了一个『校正』的作用。两者相辅相成，缺一不可。</p>
+<p>还有我们特意将 LyX 项目分成了很多子文档，减少大家的编辑冲突，效率大大提升。</p>
+<p>我们每天都会开会，尽量让每个人的想法都能够被其他人知道，这是我们做出的最重要的决策。看似浪费时间的讨论，实则加快了大家的效率。</p>
+<h2 id="建模以及数学知识"><a class="markdownIt-Anchor" href="#建模以及数学知识"></a> 建模以及数学知识</h2>
+<p>拿到题目之后，我们用 2 个小时阅读完，之后讨论了很长时间来讨论如何建模，应该做什么、可以忽略什么。然后我们才开始查找参考文献。讨论的过程非常重要，虽然看似需要很多时间，其实是可以避免一个人单干进入思维误区，相比之下会节约更多的时间。</p>
+<p>之后就进入了我们查文献的环节，这个过程很重要，直接决定了我们后续具体实施时的方案路线 。两位学长看文献的经验比我强很多，能够抓住重点。他们刚开始主要是看一些硕士论文，这些硕士论文往往细节详细，通俗易懂，我们一看就能看到自己是否能够用到其中的哪些点，当觉得比较靠谱的时候，我们再去查阅相关的英文文献做详细的考证。2 小时之后，我们交流并确定了模型的几个大方向，龙的生长、需要的能量、对环境的影响等等，后续就是加东西了。</p>
+<p>后续建模的过程中，还是有很多文献要阅读。两位学长的数学功底真是令人佩服，模拟的时候对矩阵操作的熟练程度就让我大开眼界，正式比赛的时候，符号如此之多的式子、积分等等，在他们看来，都是信手拈来，我也是学到了不少。感觉这个学期学的那些机器学习、随机过程里面的数学都是最基础的数学了。随着以后的学习，在数学方面应该也会更加深入吧。</p>
+<h2 id="写代码"><a class="markdownIt-Anchor" href="#写代码"></a> 写代码</h2>
+<p>写代码的能力的提升空间确实是永无止境的，我在 5 天的时间里写了近一个月的代码量，参见 <a href="https://github.com/upupming/dragon" target="_blank" rel="noopener">upupming/dragon</a>，感觉对 Python 的掌握又更加深入了一步。</p>
+<p>在最开始， S 型曲线的求解顺畅无比。后来要模拟环境条件，就一直在鼓捣 <code>Maxent</code>，那个东西是学者用的，所以看起来比较费劲，又缺乏生物学方面的相关知识，开始花费了一个晚上加一个早上的时间硬是没搞明白。后来转到 Dragon Hunting Algorithm 之后，做完了再回过来看时却发现，一切自然就通了，还是得感谢<a href="http://www.lep-net.org/wp-content/uploads/2016/08/WorldClim_to_MaxEnt_Tutorial.pdf" target="_blank" rel="noopener">这篇文档</a>。可能是因为 Dragon Hunting Algorithm 写的比较顺利，对自己的效率大大提升，所以后来就一口气解决了 <code>Maxent</code>，也可能是先前看得多，写 Algorithm 的时候消化得比较充分吧。刚开始看 <code>Maxent</code> 的时候就一直非常纠结，生怕这个模型自己用不到，看懂了也是浪费时间。这里有两个非常重要的启示：</p>
+<ol>
+<li>不要一直关注一个东西，不会的时候放一放，说不定某个时候灵感就来了。</li>
+<li>使用现成的大型软件有一定的风险，要懂得权衡，因为可能并不符合自己的模型。</li>
+</ol>
+<h2 id="论文分享"><a class="markdownIt-Anchor" href="#论文分享"></a> 论文分享</h2>
+<p>我们的论文已经整理好并且开源，在 <a href="https://github.com/upupming/paper" target="_blank" rel="noopener">https://github.com/upupming/paper</a> ，大家可以下载来编译一下， LyX 用起来真的很不错的。</p>
+<p>pdf 下载链接：<a href="https://github.com/upupming/paper/raw/simulation/build/1911426.pdf" target="_blank" rel="noopener">https://github.com/upupming/paper/raw/simulation/build/1911426.pdf</a></p>
+<h2 id="小事故"><a class="markdownIt-Anchor" href="#小事故"></a> 小事故</h2>
+<p>我们论文交出之后到了 31 号 11:00 还是显示未提交 (not yet received)，当时还在坐火车的我们很着急。不过最后通过邮件与 <a href="mailto:mcm@comap.com" target="_blank" rel="noopener">mcm@comap.com</a> 联系，对方工作人员秒回，最终帮我们解决了这个问题，这一切就真的算是结束啦，等待 4 月份出结果吧！</p>
+<p><img src="https://i.loli.net/2019/02/01/5c53bec0af962.png" alt="20190201113631.png"><br>
+<img src="https://i.loli.net/2019/02/01/5c53bdf09defb.png" alt="20190201113302.png"><br>
+<img src="https://i.loli.net/2019/02/01/5c53be09deffa.png" alt="20190201113328.png"><br>
+<img src="https://i.loli.net/2019/02/01/5c53be309a2e2.png" alt="20190201113407.png"><br>
+<img src="https://i.loli.net/2019/02/01/5c53be4756902.png" alt="20190201113429.png"><br>
+<img src="https://i.loli.net/2019/02/01/5c53be5fcbf2f.png" alt="20190201113454.png"><br>
+<img src="https://i.loli.net/2019/02/01/5c53be6f160b4.png" alt="20190201113510.png"></p>
+<p>如果大家邮件接收出现问题的话，也一定不要着急，要及时跟组委会联系解决问题。</p>
+<h2 id="一些链接"><a class="markdownIt-Anchor" href="#一些链接"></a> 一些链接</h2>
+<ol>
+<li><a href="https://github.com/upupming/2019-MCM" target="_blank" rel="noopener">https://github.com/upupming/2019-MCM</a></li>
+<li><a href="https://github.com/ZPinjun/paper" target="_blank" rel="noopener">https://github.com/ZPinjun/paper</a></li>
+<li><a href="https://github.com/upupming/paper" target="_blank" rel="noopener">https://github.com/upupming/paper</a></li>
+</ol>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">upupming</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://upupming.site/2019/01/29/2019-mcm-summary/">https://upupming.site/2019/01/29/2019-mcm-summary/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://upupming.site">upupming 的博客</a>！</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/MCM/">MCM</a><a class="post-meta__tags" href="/tags/mathematics-modelling/">mathematics modelling</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2019/03/20/las-vegas-monte-carlo-yao-etc/"><i class="fa fa-chevron-left">  </i><span>随机算法习题 1</span></a></div><div class="next-post pull-right"><a href="/2019/01/05/probability-basis/"><span>概率论基础</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="gitalk-container"></div><script>var gitalk = new Gitalk({
+  clientID: '77bd7cc3fdbcd3e5945a',
+  clientSecret: '883971da140a8232d72918030f8c1a211a5befc1',
+  repo: 'upupming.github.io',
+  owner: 'upupming',
+  admin: 'upupming',
+  id: md5(decodeURI(location.pathname)),
+  language: 'zh-CN'
+})
+gitalk.render('gitalk-container')</script></div></div><footer class="footer-bg" style="background-image: url(/img/background.png)"><div class="layout" id="footer"><div class="copyright">&copy;2018 - 2020 By upupming</div><div class="framework-info"><span>驱动 - </span><a href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script src="/js/search/algolia.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css"><script src="/js/katex.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="algolia-search"><div class="search-dialog__title" id="algolia-search-title">Algolia</div><div id="algolia-input-panel"><div id="algolia-search-input"></div></div><hr><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-stats"></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>

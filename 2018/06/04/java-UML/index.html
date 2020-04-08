@@ -1,0 +1,170 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="Java UML 类图、Delegation"><meta name="keywords" content="java,UML,delegation"><meta name="author" content="upupming"><meta name="copyright" content="upupming"><title>Java UML 类图、Delegation | upupming 的博客</title><link rel="shortcut icon" href="/my-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.min.css?version=1.6.1"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css?version=1.6.1"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.css"><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.js" defer></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css"><script src="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js"></script><script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script><link rel="manifest" href="/manifest.json"><link rel="manifest" href="/manifest.json"><meta name="theme-color" content="#1B9EF3"><meta name="msapplication-TileColor" content="#1B9EF3"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#1B9EF3"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle = window.adsbygoogle || []).push({
+  google_ad_client: 'ca-pub-2188191456032650',
+  enable_page_level_ads: 'true'
+});
+</script><link rel="dns-prefetch" href="https://hm.baidu.com"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?295ad5c5a196e4964e20f74260711177";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();</script><link rel="dns-prefetch" href="https://www.google-analytics.com"><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-114899088-1', 'auto');
+ga('send', 'pageview');</script><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: {"appId":"5WEDOKLFCL","apiKey":"26a57bfa5275b7c98a3b3ab7dae61915","indexName":"upupming-blog","hits":{"per_page":10},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容:${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  }
+} </script></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#class-和-interface"><span class="toc-number">1.</span> <span class="toc-text"> class 和 interface</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#各个类之间的关系表示"><span class="toc-number">2.</span> <span class="toc-text"> 各个类之间的关系表示</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#四种-delegation-辨析"><span class="toc-number">3.</span> <span class="toc-text"> 四种 Delegation 辨析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#dependency"><span class="toc-number">3.1.</span> <span class="toc-text"> Dependency</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#association"><span class="toc-number">3.2.</span> <span class="toc-text"> Association</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#aggregationhas_a暂时拥有"><span class="toc-number">3.2.1.</span> <span class="toc-text"> Aggregation：has_a，暂时拥有</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#compositionis_part_of同生共死"><span class="toc-number">3.2.2.</span> <span class="toc-text"> Composition：is_part_of，同生共死</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#注释"><span class="toc-number">4.</span> <span class="toc-text"> 注释</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考资料"><span class="toc-number">5.</span> <span class="toc-text"> 参考资料</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/img/doraemon.jpeg"></div><div class="author-info__name text-center">upupming</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">41</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">49</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">分类</span><span class="pull-right">26</span></a></div><hr><div class="author-info-links"><div class="author-info-links__title text-center">友情链接</div><a class="author-info-links__name text-center" href="https://molunerfinn.com/">MARKSZのBlog</a><a class="author-info-links__name text-center" href="https://github.com/ryanhanwu/How-To-Ask-Questions-The-Smart-Way/blob/master/README-zh_CN.md">提问的智慧</a><a class="author-info-links__name text-center" href="https://zh.wikipedia.org/">中文维基百科</a><a class="author-info-links__name text-center" href="https://zbqtesla.github.io">ZBQTesla的博客</a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(/img/background.png)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">upupming 的博客</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">主页</a><a class="site-page" href="/archives">归档</a><a class="site-page" href="/tags">标签</a><a class="site-page" href="/categories">分类</a><a class="site-page" href="https://mirror.upupming.site">Mirror</a><a class="site-page" href="https://music.wxhbts.com">音乐</a><a class="site-page" href="https://writing.upupming.site">Writing</a><a class="site-page" href="/about">关于</a><a class="site-page" href="/rss">RSS</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> 搜索</span></a></span></div><div id="post-info"><div id="post-title">Java UML 类图、Delegation</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2018-06-05</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/编程语言/">编程语言</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/编程语言/Java/">Java</a><div class="post-meta-wordcount"><span>字数总计: </span><span class="word-count">822</span><span class="post-meta__separator">|</span><span>阅读时长: 3 分钟</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><p>本文定义了一个 Java UML 标准，同时详细分析了各种 Delegation 及其 UML 表示。</p>
+<a id="more"></a>
+<h1 id="class-和-interface"><a class="markdownIt-Anchor" href="#class-和-interface"></a> class 和 interface</h1>
+<p>class 的类图由三部分组成：类名、域、方法。</p>
+<p><strong>举例</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Example</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> x;</span><br><span class="line">  <span class="keyword">protected</span> <span class="keyword">int</span> y;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> z;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">Example</span><span class="params">()</span> </span>&#123; ... &#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123; ... &#125;</span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">foo</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123; ... &#125;</span><br><span class="line">  <span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">int</span> <span class="title">bar</span><span class="params">(<span class="keyword">int</span> y, <span class="keyword">int</span> z)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<iframe frameborder="0" style="width:100%;height:353px;" src="https://www.draw.io/?lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1#R7Vvfb%2BI4EP5rLPUeqJI4gfCYUNh76ErV9qS7ezSJAWtDzDmmhf71N04cwIlhWUqqPa4rtGuPf8XzzRfPjLMIj5abL4KsFl95SjPkOekG4QfkedgL4G8l2FYC39WCuWBpJXL3gmf2RrXQ0dI1S2lhdJScZ5KtTGHC85wm0pARIfir2W3GM3PVFZnTluA5IVlb%2BidL5aKShoGzl%2F9O2XxRr%2Bw6umVKku9zwde5Xg95eFb%2BqZqXpJ5L9y8WJOWvByI8RngkOJdVabkZ0UyptlZbNW5ypHX33ILm8pwBXjXghWRrvfXxhixXoIfq8eS2VknxypYZyaEWz3gun3ULPHFMMjbPoZzAolSA4IUKyUCbkW6QfAXSZMGy9JFs%2BVo9WiFBVXUtXnDB3mBakkGTCwJoFlIbhtc3ejyrkSB2QCpoAX2e6v26DdFXsjE6PpJCakHCs4ysCjYtt6EGLomYszzmUvKl7lRvesKybMQzLkpd1JDiuK1ujYDSAN0ciLT6v1C%2BpFJsoYtu9Wqj0lRxQ11%2F3Rue29eyxaHRDbSQaGOf7%2BbeLfcNyEHyuYLzZ9YLLcsBCMZqJAOscyJprKy9OLQyKBzsdC8qbc9uh7hlhz143oiBWtXC2HVKbeOtRdgwVNC7LA1I8O%2B0Bi3nleUe4KhFtfFmdCaPmm6xIgnL549lnwd%2FL%2FmmFaREHMbOspLNC5amNFdmxyWRpLIx9bQrDk9fajCI4Qd6Hjn3AQrgwUdQd%2Fd1%2BKnuQo54DnshrLQwCgb8SpURGyx02obonW2IWxPgH9kd9o%2BbnWEBJ%2BDut%2BBGXvz2ia0NW%2F8K2PbPfKd4J14p52LrW7BtwJixEp4KxvqAdS%2FCcAloZHQP2h8K04ee2wIWt4HFFhAzMqXZEy%2BYZFzNL6q%2BDXB%2FhN8VIDv3GAjfj1hgYyMaeSiCU1JtcJ1IgAQEcazdg7vfDJrGkj9LAaoFOY6q4iePr2MH4Xl24HvvN4SBxRD6gDfsJJ8W6p%2FejPM7fTL%2FdgzWhVzWblzpdh3VrVIfWUteVH6e%2B5NQa67711G0iz%2FwJTm0aTpTO2ZQmFe2Y6oeyDQl4m7nAcEazluNRH1yZtXIycEsN4VR8IEY1cHoqZOM5mmk4k2oJRkpCpaYui2Pk3gXFB7EEJPyz6kYgqZGkNpWyoESAosOapmgGZHsxQxtTwQNT7y0pWMBQ0u3BV%2BLhOpRh7FmY6JdpFGD2QxgIOSbU9ma6IJwwnUt0FXkmNbM6EE7GococlEUovEART6KIwWFYC8Q1xywafqfYNNPh56u2wDExy12DbsiVzvz0AW56IbJvxQS9z4Odf3vsu4EQ11%2FooLB86vMxYNzSrOVoRuvrl%2BEo00k%2FUs5igcNk8DdcbQd87c4isZ9NITfCI2BnA9oiK2MJVPlfSXy9inbwscZtg9EtyvOnhHaXZWzjjs0OBv28Xs4i2%2BTs27zgHa746wtVGxyVunZfrKaPuqNUjQMTIYO23m1QVcEteXVOiSoQc7gXBr2fykaDq%2FFQr%2FBwqA7Flrj9CYL4%2BP%2BLZc0kTTdDRL78xb6hCiEQoDCEA09NRBGxRPrVIUE1SeWeY5Kbpf3uIE%2FDs47mf1rED%2F8EOKfRe%2Fgl6I3vhK9%2FYbj5XUYvB5PDk0Nog5R1FdEhVdY%2BFAydoLigYWoqgl%2BuHSnAxQ7qgBDovHt09JvZB2sdyFdecz1HKd4WSzIShXZsvwo4VDNdjXV0sfGVcVU31yfYPLu4rpcLCpW1ccTCkJSV2ZsA0eD7gL1hZTqq4tIbdqbJGnu37OE5zOWp1TcJ7CiN0mJJCrrqK4LVJW%2B0IyvqOgVVPbAHZy46p5iUiReD0r3K3U78H5km%2BmLQTsWwhZgmyHtRcAeTzCpuzukPk2ptd7%2FZ821YzygpE%2BdQ1HjvNzzG45dF8Xxnt9Wpu5k1ao3SeCGY%2BWGbgtmvyv%2BnpGl%2BuTvpcA2PaaBJVLy28AOrvABguWDE4sL%2FQ5CV4krOKKhEGN16h7j6q0fwIHjGzBjp51l7oy%2FtnzFJ3%2BvxF%2BvwV%2Bnzd8gbAMbXOGTBc8W8FyVv6U3PQQneojCgSr%2FX%2Fnr903%2B7t6dH8FfWyjUXUKrp1LOgZHVGgzqa6OLUs63GQw3b3JxdxlnbIugKsqBtedHHeicLOkdgEOWhfo6Qm5XRy50dzJzulticGBmpG0HsGsLlC5gMFT3H69XcO%2F%2FgwAe%2Fws%3D"></iframe>
+<p><strong>访问权限</strong></p>
+<p><code>+</code>表示 public，<code>#</code>表示 protected，<code>-</code>表示 private。</p>
+<p><strong>命名习惯</strong></p>
+<p>采用 <a href="https://en.wikipedia.org/wiki/ALGOL" target="_blank" rel="noopener">Algol</a> 命名风格，字符之间不需要任何空格。</p>
+<ul>
+<li>
+<p>变量</p>
+<p><code>name:type</code><br>
+例如：<code>y:int</code></p>
+</li>
+<li>
+<p>方法</p>
+<p><code>name(params):type</code>，每个 parameter 又是一个变量，返回值为 <code>void</code> 时省去 <code>type</code><br>
+例如：<code>bar(y:int,z:int):int</code></p>
+</li>
+<li>
+<p>元数据</p>
+<p>使用 <a href="https://en.wikipedia.org/wiki/Guillemet" target="_blank" rel="noopener">guillemet</a>（书名号）<code>«...»</code><br>
+例如：<code>+«constructor» Example()</code>、<code>«interface»</code></p>
+</li>
+<li>
+<p>static 变量或方法</p>
+<p>使用下划线<br>
+例如：<u><code>+z:int</code></u></p>
+</li>
+<li>
+<p>抽象类或方法</p>
+<p>使用斜体<br>
+例如：<em><code>Example</code></em>、<em><code>#bar(y:int, z:int):int</code></em></p>
+</li>
+</ul>
+<p>interfaces 需要在类名部分增加 <code>«interface»</code>，并且省去变量部分，如下所示。</p>
+<p><strong>举例</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">FooListener</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">foo</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<iframe frameborder="0" style="width:100%;height:200px;" src="https://www.draw.io/?lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1#RlVRNb5tAEP01SO2l4sO20mMgcXJwpKo%2B9LyGAVZZdtAyru38%2Bs7CYEwcS66FLObNzM7He0uQZM3xxam2fsMCTBCHxTFInoI4XkQP%2FO%2BBkwCr1QBUThcDFE3AVn%2BAgKGge11ANwskREO6nYM5Wgs5zTDlHB7mYSWaedVWVXAFbHNlrtE%2FuqB6QB%2BW4YS%2Fgq7qsXIUimen8vfK4d5KvSBOyv43uBs1niXxXa0KPFxAyXOQZA6RhrfmmIHxqx3XNuStb3jPfTuwdFeC9PFXmb3MHmRx8JhqS%2BBKlYM30zSImcCEo5N0jbjRHYEFJzPQadxbd9CNUZattERLW%2FH4tLzWptioE%2B59Yx3xokYrrdHpD45Xhl0RA%2Bx2JLLgynyaNiZDg44Bi32BKWnrD5MyDjpO%2BzUuIPoEvanjLHCjOhobRGNU2%2Bld37JPbJSrtE2RCBsJGgdcX%2FQzcZyksk1wBMeblERnovn%2BADZA7sQhkhD%2FFE7k7kSjfZiUGC0Eqy9UuIzlAoj4q%2FPRkwD4RTRwQw%2FRtR5i5hK%2Ffb8im0ekniuH7%2FCJnC%2F4UkZXlk0DpU%2FzO9J84x4FJmz9Ya3Kta02fczTYkJ%2By5weQs4tTX9tal0UYD2dSIrU7iy3FlnB%2FSKWKT%2B8riz8sQyW3HjGdjTZ%2FPhwRxlankXpniZgYRzAi%2BNOTsOvSRUS49V9HI5x%2F8Ehm9P3ovddfJOT538%3D"></iframe>
+<h1 id="各个类之间的关系表示"><a class="markdownIt-Anchor" href="#各个类之间的关系表示"></a> 各个类之间的关系表示</h1>
+<table>
+<thead>
+<tr>
+<th>关系</th>
+<th>UML</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dependency</td>
+<td><img src="dependency.png"></td>
+<td>A 依赖 B，联系较小，不常见</td>
+</tr>
+<tr>
+<td>Association</td>
+<td><img src="association.png"></td>
+<td>A 的实例调用 B 的实例</td>
+</tr>
+<tr>
+<td>Aggregation</td>
+<td><img src="aggregation.png"></td>
+<td>A 由 B 组成，表现为 A 中有 B 类型的域</td>
+</tr>
+<tr>
+<td>Composition</td>
+<td><img src="composition.png"></td>
+<td>A 由 B 组成，当 A 的实例被销毁时，B 的实例也会被销毁</td>
+</tr>
+<tr>
+<td>Multiplicity</td>
+<td><img src="player_achievement.png"></td>
+<td>关系中有多少个对象，* 表示 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>≥</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\ge 0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7719400000000001em;vertical-align:-0.13597em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span></span></span></span>，还可以用常数（例如 1）或者范围（例如 2…*，表示 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>≥</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">\ge 2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7719400000000001em;vertical-align:-0.13597em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span></span></span></span>）</td>
+</tr>
+<tr>
+<td>Directionality</td>
+<td><img src="customer_account.png"></td>
+<td>省去箭头，表示关系具有双向性</td>
+</tr>
+<tr>
+<td>Generalization</td>
+<td><img src="generalization.png"></td>
+<td>A 较 B 更泛化，比如 B 是 A 的子类（extends）</td>
+</tr>
+<tr>
+<td>Realization</td>
+<td><img src="realization.png"></td>
+<td>B 实现 A，比如 B 是 A 的实现（implements）</td>
+</tr>
+</tbody>
+</table>
+<h1 id="四种-delegation-辨析"><a class="markdownIt-Anchor" href="#四种-delegation-辨析"></a> 四种 Delegation 辨析</h1>
+<p>在哈工大软件构造课程 <em>5.2 Construction for Reuse</em> 中，详细介绍了四种 Delegation 的区别。</p>
+<h2 id="dependency"><a class="markdownIt-Anchor" href="#dependency"></a> Dependency</h2>
+<p>这是一种很松散的关系，很少见。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Course</span> </span>&#123; ... &#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CourseSchedule</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 只记录了 Course 的引用</span></span><br><span class="line">  <span class="keyword">private</span> List&lt;Course&gt; courses;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(Course c)</span> </span>&#123; ... &#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">(Course c)</span> </span>&#123; ... &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<iframe frameborder="0" style="width:100%;height:239px;" src="https://www.draw.io/?lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1#R7ZjRbtowFIafJtJ20SmJCXSXENrugkrV2LRrk5jEqpMTOaZAn37HsU0IgRZVqLsYFarw7%2BMT%2B3y%2FbcAjcbF5kLTKHyFlwgv9dOORqReGJBrhfy1sjTDwiREyyVMjBa0w56%2FMir5VVzxldSdQAQjFq66YQFmyRHU0KiWsu2FLEN2nVjRjPWGeUNFX%2F%2FBU5Ua9jfxW%2F8F4lrsnB77tWdDkOZOwKu3zvJAsmz%2FTXVCXy8bXOU1hvSeRO4%2FEEkCZd8UmZkKX1pXNjLs%2F0bubt2SlOmtAaEa8ULGya%2F9dMzs3tXX1YGU61mXFFlSs9MgEFYsNU5BJSuuc6ZwBNnJVCPu2Px87RZZ2CNjZPTAomJJbDFi3dQ%2BGtlqSCar4SxcStayz3dhduifg%2BNjQd7Yc2TzWlcFo2E1Rw0omzI7ar9pBooi8k0hRmTHVS4Rv9tbYSg2UE4BID1CMs6zRrVjwleizqte8ELTE1mQJpZrbHh%2FbVPAM4U0TpMEkCi9MKo62H9sOBRWqSc5FOqNbWGlmtUJPu9YkB8lfMS11hLFbKmuFcNiJmOuR9tGS1Rjz5IwQHEiPdNMJnNFaWSEBIWhV80WzDD2wwOrycgJKQWGD3KLvuRAxCJBNLdzee8OHugJs86YTbe%2FucHLQw4FpH3Nq3j0dTju1Y423fDDo%2BeAmaYyAScczjuUKh0ITMvbAVqZ2C9%2BzB65WNdgkPDNXqhKMX%2FaqZyVnGcGW6qRh6oomvMxmTcx00Co%2FbRW0BDh2KZozJOdp2pwiEhRVdLEzaKV3TFOlaIIvrFvsf4u8CCceYzto2%2FjS4VLFUOJaKG%2B4MrTNmtXqOHFyNnKLOByeRzgcXgBw1APcYyd4w8SwcxdT8CFwBSIQrCX1S4Oc3gQ9mqRPkxwhJ%2BiCiSeoueKg80sTe0D0M6BF4XnQbi%2FAbHiE2YSm6ZcEN6XZiF897Q4S%2BM3y8HgrcCOc7L9u1g9zd4zf4x5d4jQenbiVr7fxJ93GvY9ghJy57S9xVt%2F2930cemO%2Fh%2F8%2F3sCjs5H%2Bi9v2%2B%2FW2vQi0T7xt3Xfm6667JMBzr80P7Dpstr9kmO%2B%2B7a9F5O4v"></iframe>
+<h2 id="association"><a class="markdownIt-Anchor" href="#association"></a> Association</h2>
+<p>Association 其实包含了两种种情况：Aggregation 和 Composition。<sup><a href="https://www.visual-paradigm.com/guide/uml-unified-modeling-language/uml-aggregation-vs-composition/" target="_blank" rel="noopener">3</a></sup></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Course</span> </span>&#123; ... &#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span> </span>&#123;</span><br><span class="line">  <span class="comment">// &gt;= 5 个 Course 组成</span></span><br><span class="line">  Course[] selectedCourses;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<iframe frameborder="0" style="width:100%;height:213px;" src="https://www.draw.io/?lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1#RxVXJbtswEP0aXQrEkETLdY5ekvRSoIALND3S4lgiSokqRXnJ13coktZmAz4UiA8G55Gz8M0bMSCb4vymaJV%2FlwxEEIfsHJBtEMfPywj%2FDXCxwHz%2B1QKZ4sxCUQfs%2BAc4MHRowxnUg4NaSqF5NQRTWZaQ6gFGlZKn4bGDFMOsFc1gAuxSKqboL850btFlEnb4N%2BBZ7jNHodvZ0%2FRPpmRTunxBTA7tz24X1Mdy5%2BucMnnqQeQlIBslpbar4rwBYaj1tFm%2F1zu717oVlPoRB%2BLqOFLRuLvvdMOMt61PXzwn7a3A%2BIUBWZ9yrmFX0dTsnlAEiOW6EGhFuHRRQWk43y0tul4YdQSyAK0ueMQ5zF1pTkKRJ%2F%2FUNSTyNOa9ZiwcRp0GsmvkjgdcOCru0BJNaNnIRtXw6ayQ5DNpiSe0TAiBkq3MBKKVClrXPB1ygPdUl3fHV2v8NsYsMeaZ63d%2FDtfdjk0DbDK2I96wFOxTCkN1a6oy0P3WTvnt8ZfcoM9jCgTV%2FDgs4xanLsMPyc0s3RF1vBx1xVbvnPpzO4rzPIpDRnHsjSdx2gZfL%2F1Yz8mk5zUI%2FOgCsyNRB%2FFCIEvrvcJVpttuWYTx40Aci7%2BN%2BbCtUf76iQqelQFZGVJbnq%2Fb4zB1RUuPJbPZF49j6f2tHtwm9uhIoCb5UJIKav5B9%2B0Bo8rK0NYSmayDZIsIbbSs7StlHFzpWwEHE8oMNMfHY%2BVgLStbdcrL7Kcxtk%2Fz%2FzP%2B8Xj8lzfGP7yh37FAHhh%2FNLuHyCqne%2BzJyz8%3D"></iframe>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Teacher</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 由 1 或多个 Student 组成      </span></span><br><span class="line">  <span class="keyword">private</span> Student[] students;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 由 1 个 teacher 组成            </span></span><br><span class="line">  <span class="keyword">private</span> Teacher teacher;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<iframe frameborder="0" style="width:100%;height:219px;" src="https://www.draw.io/?lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1#R7Vhbj9o4FP41eak0FYmBCY9c2t2HqTQqlXb30SQmserErGMG6K%2FfY%2FuYJBha2k7Z1Qo0YuLPx5dzvnMjEZlX%2B98U3ZQfZM5ElAzyfUQWUZJM0hi%2BDXBwwHD46IBC8dxBcQss%2BReG4ADRLc9Z0xPUUgrNN30wk3XNMt3DqFJy1xdbS9E%2FdUMLFgDLjIoQ%2FYPnunRoOhq0%2BO%2BMF6U%2FOR7gzIpmnwsltzWeFyVkbT9uuqJ%2BL5RvSprLXQci7yIyV1Jq91Tt50wY03qzuXXvL8we761Yra9aQNyKFyq2qPsnRrOSKbyfPnibNDteCVrDaLaWtV7izADGVPCihucMToWVZPbClOZgzilOaLkBNCu5yJ%2FoQW7N3RoNtvKjWSkV%2FwLbUgFTMQAwrTR6RjLuSSzNSjxasQZknr3C8Qn0ge57gk%2B00QhkUgi6afjKqmEWVlQVvJ5JrWWFQl7p91yIuRRSWVt4TskMrQfqsv1FCuIjsRAvTFZMqwOI4IKj02OsxMnQjXet58VjlCk7XjdBjKKzF8etW8LhATm%2FwP8w4P%2Bh0dsc7g67TpfuMRrNotEi8AjQWVumlPzMvHVq6VykYzCEvJcIttYXfaTZ0IzXxZOVWQxb5CMqbiAJa9fCxk3Jc7ih4Vdqqunq6JMbya0OC3v5GdhqPng7smrMYRy3Y%2Fgz4krPZQ26UG55Y%2BApO2a85UqSyXmWkVVw4atI9XI%2FReooIDXgTnDLiePO57j4h4irgALBWqY%2BGSIXD3HAJgnZJGeYE3TFxLNsuObS7K%2Bc7AmjtyBtlFxHWvoKnI1DzuZJNB0EzN2j7noCPVnfIpC8Qir1QdZh0KfPeym9TSkdpZO3KSEkhg40TdI4%2BfcKaxI2Vg8aOysyvdRj3WO7w7ULqP9ERU3CNuleUX%2BEtBtW1ORMF3SvqD9L4E0r6uO3o47V%2BdT84G%2FpKXXlCx8opQ5%2FoiHt4C8zAHN5Y7A8eBFwUmzgNLlVmZfCRAAVtWDeYhd6kI6JRmcs5DHFBNX8pX%2BNc2bDE56NQ7Q1jzwO%2B1Xu8cTy7vq4qvsq4GSj4WTw9Y2czsFGlsWj2tcRm54hdiyMj%2Bb8pUfw%2BO%2BteRcyMzH6gJE3NVazhjxOw1OB%2F%2B02EGy1x46%2FZ3EObted7sD28D76C%2B7z5jsvcj5bddzc9mMXU4bJCnSrZeMawPg7MxjWnuErdWjkxMnGkyCf%2FLJ0Mgm8zndkaPmV8laPQ%2Bj%2FRQRJb0YEDNsXmi5btC%2BNybt%2FAA%3D%3D"></iframe>
+<h3 id="aggregationhas_a暂时拥有"><a class="markdownIt-Anchor" href="#aggregationhas_a暂时拥有"></a> Aggregation：has_a，暂时拥有</h3>
+<ul>
+<li>计算机系暂时拥有一些教师，如果院系解散，教师人可以继续存在</li>
+<li>车子有轮胎，车坏了，轮胎可能还能用在其他地方</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span> </span>&#123; ... &#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Course</span> </span>&#123;</span><br><span class="line">  <span class="comment">// &gt;= 15 个学生      </span></span><br><span class="line">  <span class="keyword">private</span> Student[] students;</span><br><span class="line">  <span class="comment">// new 发生在 Student 类外部，通过 add 方法加入</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">addStudent</span><span class="params">(Student s)</span> </span>&#123;</span><br><span class="line">    students.append(s);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<iframe frameborder="0" style="width:100%;height:213px;" src="https://www.draw.io/?lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1#RxVbLjpswFP0aNpUSAQaSWeY17aZSpYzUtYNvwKrB1Jg85utrYzvg0My0VaXJIrLPvT7XPveRBGhTXT4L3JRfOQEWxCG5BGgbxPEiidS3Bq4GSDJkgEJQYqBoAPb0FSwYWrSjBFrPUXLOJG18MOd1Dbn0MCwEP%2FtuR878qA0uYALsc8ym6HdKZGnQZRoO%2BBegRekiR6G1HHD%2BoxC8q228IEbH%2FmPMFXZc1r8tMeHnEYR2AdoIzqVZVZcNMC2tk82ce35gvd1bQC3%2F5ABKzIkTZh24K%2FcXk1cnBtRkpTVVO95AHaB1KSumdpFaKqNNX6Quv24lFtJ5E4orXpOXktbO5HwTBzxTpqlCTUVUDmxYLmTJC15jthvQNWa0UFRbBkf1uvUJhKQqaSsLH7iUvFIG8wTN91CW6Ca2qmHgFUhxVS62gGfhPItTc8qW8MJmTADDkp58Zmzrrbgx3ci%2Fcapi3pijp9CjjZahT9HyTuRgT40zd0eE0neIlLoFyDeInCM%2FHlvwfNRipMoA9cXzoJCySSFt1EtamJRT3x1AbNLPJZWwb3CurWc1TPzysqQq0XD5x1wu7nRyup2Hxo5cO5ajps7u9Bzn1hPqLVUWE1X2siNgU%2FKRsqA0miP1SVQhpcv0Kfk4lZJwolJrVGqDOGO61Q9CrQrZP90ghJ48AbOfnR6aa6WInNlBsdL92t%2F1Zr6naRtcOyxK5%2FNPzqAuPbaN4D6yQ%2B%2ByqKP7qRLQ0ld86B10Zhvdfb1Y6TpIt3qqdZK3di6%2BP%2BQkb8y1c1oXL3qznSX%2FpyTi5YORMiqC7Dc1gP6%2BBtR2%2BJEz42b4I4F2vwA%3D"></iframe>    
+<h3 id="compositionis_part_of同生共死"><a class="markdownIt-Anchor" href="#compositionis_part_of同生共死"></a> Composition：is_part_of，同生共死</h3>
+<ul>
+<li>学校一旦倒闭，计算机系也不再存在了</li>
+<li>人一旦死，手、脚、❤都没有了灵魂，不再有意义了</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Heart</span> </span>&#123;&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">  <span class="comment">// new 发生在 Person 类内部</span></span><br><span class="line">  <span class="keyword">private</span> Heart heart  = <span class="keyword">new</span> Heart();    </span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<iframe frameborder="0" style="width:100%;height:213px;" src="https://www.draw.io/?lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1#RxVXBjpswEP0ajl1hDMnmuGST7qXSSqnUs4MHsGoYZJwl6dd3CDaEZdNWvawPkf1m5o39ZoYEfFudvxrRlN9Qgg6iUJ4D%2FhxE0Tpm9NsDlwGIV3wACqPkALEJOKhf4MDQoScloZ05WkRtVTMHM6xryOwME8ZgN3fLUc%2BzNqKABXDIhF6iP5S05YA%2BJuGEv4AqSp%2BZhc5yFNnPwuCpdvmCiOfXNZgr4bmcf1sKid0NxHcB3xpEO%2Byq8xZ0L62XbYjb37GO9zZQ238J4Ksh4k3ok3v7K5gWa3c9e%2FGSXB8FfVgY8LQrlYVDI7Le2lEPEFbaStOJ0daRgrFwvnszNr6X2giwAmsu5OJ7yCnkOoh57bupHsyrWN7UYuUw4VqgGJknGWjjlLijynqhygsIYz9dFJ6wB04r5kmYPCab%2BPM0iqOFRgt5oJZP%2FTTSCRuo53KQ0Q0%2BoxenrSWBvbdUosJafi9V7U3eN%2FbAXumRStL0urRobIkF1kLvJjQVWhVE9awhJw3SvgiKxv3JwUe0FisyaHEEnY5DvEWN5voWvr%2BusYx9yv8s4pfwYZ3MCsddPQxoYdXbnPijIjnuV1SUciRmm3czs97MKVo8mQxc1O1X4R0RT%2F5CRPoXYP9A5B0xz1uwi74aRfmo1eg4fQAH9%2BlPhu9%2BAw%3D%3D"></iframe>    
+<p><strong>注意：<strong>平时当我们不太清楚是 aggregate 还是 composite 时，一般都是用 associate。因为 aggregate 和 composite 这两种关系非常容易界定，但是有其他一些情况各个类之间的联系一般是</strong>动态</strong>确定的，这种情况使用 associate 更加合理。</p>
+<h1 id="注释"><a class="markdownIt-Anchor" href="#注释"></a> 注释</h1>
+<p>与任意一个 UML 组件用虚线连接。</p>
+<img src="note.png">
+<h1 id="参考资料"><a class="markdownIt-Anchor" href="#参考资料"></a> 参考资料</h1>
+<ol>
+<li><a href="http://www.cs.bsu.edu/~pvg/misc/uml/" target="_blank" rel="noopener">All the UML you need to know</a></li>
+<li>Software Construction at HIT | 5.2 Construction for Reuse</li>
+<li><a href="https://www.visual-paradigm.com/guide/uml-unified-modeling-language/uml-aggregation-vs-composition/" target="_blank" rel="noopener">UML Association vs Aggregation vs Composition</a></li>
+<li><a href="https://stackoverflow.com/questions/885937/what-is-the-difference-between-association-aggregation-and-composition" target="_blank" rel="noopener">What is the difference between association, aggregation and composition?</a></li>
+</ol>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">upupming</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://upupming.site/2018/06/04/java-UML/">https://upupming.site/2018/06/04/java-UML/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://upupming.site">upupming 的博客</a>！</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/java/">java</a><a class="post-meta__tags" href="/tags/UML/">UML</a><a class="post-meta__tags" href="/tags/delegation/">delegation</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2018/06/14/6.031-concurrency/"><i class="fa fa-chevron-left">  </i><span>Notes for MIT 6.031 Concurrency</span></a></div><div class="next-post pull-right"><a href="/2018/05/31/git-submodules/"><span>管理 Git 仓库内的子仓库</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="gitalk-container"></div><script>var gitalk = new Gitalk({
+  clientID: '77bd7cc3fdbcd3e5945a',
+  clientSecret: '883971da140a8232d72918030f8c1a211a5befc1',
+  repo: 'upupming.github.io',
+  owner: 'upupming',
+  admin: 'upupming',
+  id: md5(decodeURI(location.pathname)),
+  language: 'zh-CN'
+})
+gitalk.render('gitalk-container')</script></div></div><footer class="footer-bg" style="background-image: url(/img/background.png)"><div class="layout" id="footer"><div class="copyright">&copy;2018 - 2020 By upupming</div><div class="framework-info"><span>驱动 - </span><a href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script src="/js/search/algolia.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css"><script src="/js/katex.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="algolia-search"><div class="search-dialog__title" id="algolia-search-title">Algolia</div><div id="algolia-input-panel"><div id="algolia-search-input"></div></div><hr><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-stats"></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>

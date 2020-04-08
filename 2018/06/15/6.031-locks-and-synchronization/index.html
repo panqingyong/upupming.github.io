@@ -1,0 +1,398 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="Notes for MIT 6.031 Locks and Synchronization"><meta name="keywords" content="java,MIT 6.031"><meta name="author" content="upupming"><meta name="copyright" content="upupming"><title>Notes for MIT 6.031 Locks and Synchronization | upupming 的博客</title><link rel="shortcut icon" href="/my-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.min.css?version=1.6.1"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css?version=1.6.1"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.css"><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.js" defer></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css"><script src="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js"></script><script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script><link rel="manifest" href="/manifest.json"><link rel="manifest" href="/manifest.json"><meta name="theme-color" content="#1B9EF3"><meta name="msapplication-TileColor" content="#1B9EF3"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#1B9EF3"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle = window.adsbygoogle || []).push({
+  google_ad_client: 'ca-pub-2188191456032650',
+  enable_page_level_ads: 'true'
+});
+</script><link rel="dns-prefetch" href="https://hm.baidu.com"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?295ad5c5a196e4964e20f74260711177";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();</script><link rel="dns-prefetch" href="https://www.google-analytics.com"><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-114899088-1', 'auto');
+ga('send', 'pageview');</script><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: {"appId":"5WEDOKLFCL","apiKey":"26a57bfa5275b7c98a3b3ab7dae61915","indexName":"upupming-blog","hits":{"per_page":10},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容:${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  }
+} </script></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#synchronization"><span class="toc-number">1.</span> <span class="toc-text"> Synchronization</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#bank-account-example"><span class="toc-number">1.1.</span> <span class="toc-text"> Bank account example</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#deadlock"><span class="toc-number">2.</span> <span class="toc-text"> Deadlock</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#developing-a-threadsafe-abstract-data-type"><span class="toc-number">3.</span> <span class="toc-text"> Developing a threadsafe abstract data type</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#step-to-develop-the-datatype"><span class="toc-number">3.1.</span> <span class="toc-text"> Step to develop the datatype</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#locking"><span class="toc-number">4.</span> <span class="toc-text"> Locking</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#locks-guard-access-to-data"><span class="toc-number">4.1.</span> <span class="toc-text"> Locks guard access to data</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#monitor-pattern"><span class="toc-number">5.</span> <span class="toc-text"> Monitor pattern</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#exercises"><span class="toc-number">5.1.</span> <span class="toc-text"> Exercises</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#synchronizing-with-locks"><span class="toc-number">5.1.1.</span> <span class="toc-text"> Synchronizing with locks</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#this-list-is-mine-all-mine"><span class="toc-number">5.1.2.</span> <span class="toc-text"> This list is mine, all mine</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ok-fine-but-this-synchronized-list-is-totally-mine"><span class="toc-number">5.1.3.</span> <span class="toc-text"> OK fine but this synchronized List is totally mine</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#i-heard-you-like-locks-so-i-acquired-your-lock-so-you-can-lock-while-you-acquire"><span class="toc-number">5.1.4.</span> <span class="toc-text"> I heard you like locks so I acquired your lock so you can lock while you acquire</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#thread-safety-argument-with-synchronization"><span class="toc-number">6.</span> <span class="toc-text"> Thread safety argument with synchronization</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#locking-discipline"><span class="toc-number">6.1.</span> <span class="toc-text"> Locking discipline</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#atomic-operations"><span class="toc-number">7.</span> <span class="toc-text"> Atomic operations</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#giving-clients-access-to-a-lock"><span class="toc-number">7.1.</span> <span class="toc-text"> Giving clients access to a lock</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sprinkling-synchronized-everywhere"><span class="toc-number">7.2.</span> <span class="toc-text"> Sprinkling synchronized everywhere?</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#designing-a-datatype-for-concurrency"><span class="toc-number">8.</span> <span class="toc-text"> Designing a datatype for concurrency</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#deadlock-rears-its-ugly-headmeans-to-present-itself-and-force-people-to-deal-with-it"><span class="toc-number">9.</span> <span class="toc-text"> Deadlock rears its ugly head(means to present itself and force people to deal with it)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#deadlock-solution-1-lock-ordering"><span class="toc-number">9.1.</span> <span class="toc-text"> Deadlock solution 1: lock ordering</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#deadlock-solution-2-coarse-grained-locking"><span class="toc-number">9.2.</span> <span class="toc-text"> Deadlock solution 2: coarse-grained locking</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#exercises-2"><span class="toc-number">9.3.</span> <span class="toc-text"> Exercises</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#deadlock-2"><span class="toc-number">9.3.1.</span> <span class="toc-text"> Deadlock</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#locked-out"><span class="toc-number">9.3.2.</span> <span class="toc-text"> Locked out</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#concurrency-in-practice"><span class="toc-number">10.</span> <span class="toc-text"> Concurrency in practice</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#goals"><span class="toc-number">10.1.</span> <span class="toc-text"> Goals</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#strategies"><span class="toc-number">10.2.</span> <span class="toc-text"> Strategies</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#summary"><span class="toc-number">11.</span> <span class="toc-text"> Summary</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#references"><span class="toc-number">12.</span> <span class="toc-text"> References</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/img/doraemon.jpeg"></div><div class="author-info__name text-center">upupming</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">41</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">49</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">分类</span><span class="pull-right">26</span></a></div><hr><div class="author-info-links"><div class="author-info-links__title text-center">友情链接</div><a class="author-info-links__name text-center" href="https://molunerfinn.com/">MARKSZのBlog</a><a class="author-info-links__name text-center" href="https://github.com/ryanhanwu/How-To-Ask-Questions-The-Smart-Way/blob/master/README-zh_CN.md">提问的智慧</a><a class="author-info-links__name text-center" href="https://zh.wikipedia.org/">中文维基百科</a><a class="author-info-links__name text-center" href="https://zbqtesla.github.io">ZBQTesla的博客</a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(/img/background.png)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">upupming 的博客</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">主页</a><a class="site-page" href="/archives">归档</a><a class="site-page" href="/tags">标签</a><a class="site-page" href="/categories">分类</a><a class="site-page" href="https://mirror.upupming.site">Mirror</a><a class="site-page" href="https://music.wxhbts.com">音乐</a><a class="site-page" href="https://writing.upupming.site">Writing</a><a class="site-page" href="/about">关于</a><a class="site-page" href="/rss">RSS</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> 搜索</span></a></span></div><div id="post-info"><div id="post-title">Notes for MIT 6.031 Locks and Synchronization</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2018-06-16</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/编程语言/">编程语言</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/编程语言/Java/">Java</a><div class="post-meta-wordcount"><span>字数总计: </span><span class="word-count">4.9k</span><span class="post-meta__separator">|</span><span>阅读时长: 30 分钟</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><p>This is an easy-to-understand note for <a href="http://web.mit.edu/6.031/www/sp17/classes/21-locks/" target="_blank" rel="noopener">Reading 21: Locks and Synchronization</a>.</p>
+<p>Exercises are very important, <strong>do not</strong> skip them. On the contrary, you can read this article in an exercises-driven way if you just want to review the key ideas.</p>
+<a id="more"></a>
+<p>Recall <strong>three key properties</strong> of a good software:</p>
+<table>
+<thead>
+<tr>
+<th>Safety from bugs</th>
+<th>Easy to understand</th>
+<th>Ready for change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Correct today and correct in the unknown future.</td>
+<td>Communicating clearly with future programmers, including future you.</td>
+<td>Designed to accommodate change without rewriting.</td>
+</tr>
+</tbody>
+</table>
+<p>We will learn:</p>
+<ol>
+<li>how a lock is used</li>
+<li>recognize and prevent deadlock</li>
+<li>the monitor pattern</li>
+</ol>
+<p>Recall the four strategies for making code safe for concurrency:</p>
+<ul>
+<li><strong>Confinement.</strong> Don’t share the variable between threads.</li>
+<li><strong>Immutability.</strong> Make the shared data immutable.</li>
+<li><strong>Threadsafe data type</strong>: Encapsulate the shared data in an existing threadsafe data type that does the coordination for you.</li>
+<li><strong>Synchronization</strong>: <strong>Use synchronization to keep the threads from accessing the variable at the same time.</strong></li>
+</ul>
+<h1 id="synchronization"><a class="markdownIt-Anchor" href="#synchronization"></a> Synchronization</h1>
+<p><strong>Correctness should not depend on timing.</strong></p>
+<p>A way for concurrency modules that share memory to <strong>synchronize</strong> with each other.</p>
+<p><strong>Locks</strong> are one synchronization technique.<br>
+Lock: an abstraction that allows at most one thread to <em>own</em> it at a time.<br>
+Thread A <em>Holding a lock</em>: A tells other threads: “I’m working with it, don’t touch it right now.”</p>
+<p>Locks have two <em>operations</em>:</p>
+<ul>
+<li>
+<p><strong>acquire</strong></p>
+<details>allows a thread to take ownership of a lock. If a thread tries to acquire a lock currently owned by another thread, it blocks until the other thread releases the lock. At that point, it will contend with any other threads that are trying to acquire the lock. At most one thread can own the lock at a time.</details>
+</li>
+<li>
+<p><strong>release</strong></p>
+<details>relinquishes ownership of the lock, allowing another thread to take ownership of it.</details>
+</li>
+</ul>
+<p>Using a lock also tells the compiler and processor that you’re using shared memory concurrently, so that registers and caches will be flushed out to shared storage. This avoids the problem of <strong>reordering</strong>, ensuring that the owner of a lock is always looking at <strong>up-to-date data</strong>.</p>
+<p><strong>Blocking means</strong>, in general, that a thread waits (without doing further work) until an event occurs.</p>
+<h2 id="bank-account-example"><a class="markdownIt-Anchor" href="#bank-account-example"></a> Bank account example</h2>
+<img src="shared-memory-bank-account.png" height="250">
+<p>For concurrent reads and writes to the account balances, we can add a lock that protects each bank account. Now, before they can access or update an account balance, cash machines must first <strong>acquire</strong> the lock on that account.</p>
+<img src="locks-bank-account.png" height="250">
+<p>Both A and B are trying to access account 1. Suppose B <strong>acquires</strong> the lock first. Then A must wait to read or write the balance until B finishes and <strong>releases</strong> the lock. This ensures that A and B are <strong>synchronized</strong>, but another cash machine C is able to run independently on a different account (because that account is protected by a different lock).</p>
+<h1 id="deadlock"><a class="markdownIt-Anchor" href="#deadlock"></a> Deadlock</h1>
+<p><strong>Deadlock</strong> is a situation where two threads are <strong>waiting for each other</strong> — and hence neither can make progress.</p>
+<img src="deadlock.png" height="300">
+<p>A and B each <strong>acquire</strong> the lock on their respective “from” account: A acquires the lock on account 1, and B acquires the lock on account 2. Now, each must acquire the lock on their “to” account: so A is waiting for B to release the account 2 lock, and B is waiting for A to release the account 1 lock. Stalemate! A and B are frozen in a “deadly embrace,” and accounts are locked up.</p>
+<p>A deadlock may involve more than two modules: the signal feature of deadlock is a <strong>cycle of dependencies</strong>, e.g. A is waiting for B which is waiting for C which is waiting for A. None of them can make progress.</p>
+<p>You can also have <strong>deadlock without using any locks</strong>. For example, a message-passing system can experience deadlock when <strong>message buffers fill up</strong>. If a client fills up the server’s buffer with requests, and then <strong>blocks waiting to add another request</strong>, the server may then fill up the client’s buffer with results and then <strong>block itself</strong>. So the client is waiting for the server, and the server waiting for the client, and neither can make progress until the other one does. Again, deadlock ensues.</p>
+<h1 id="developing-a-threadsafe-abstract-data-type"><a class="markdownIt-Anchor" href="#developing-a-threadsafe-abstract-data-type"></a> Developing a threadsafe abstract data type</h1>
+<p>All code for this example on Github: <a href="https://github.com/6031-sp17/ex21-editor" target="_blank" rel="noopener">edit buffer example</a></p>
+<p><strong>Multi-user editor</strong> like Google Docs that allows multiple people to connect to it and edit it at the same time.</p>
+<p>We’ll need a <strong>mutable</strong> datatype to represent the text in the document. Here’s the interface; basically it represents a string insert and delete operations.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/** An EditBuffer represents a threadsafe mutable</span></span><br><span class="line"><span class="comment"> *  string of characters in a text editor. */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">EditBuffer</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Modifies this by inserting a string.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> pos position to insert at</span></span><br><span class="line"><span class="comment">                      (requires 0 &lt;= pos &lt;= current buffer length)</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> ins string to insert</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insert</span><span class="params">(<span class="keyword">int</span> pos, String ins)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Modifies this by deleting a substring</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> pos starting position of substring to delete </span></span><br><span class="line"><span class="comment">     *                (requires 0 &lt;= pos &lt;= current buffer length)</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> len length of substring to delete </span></span><br><span class="line"><span class="comment">     *                (requires 0 &lt;= len &lt;= current buffer length - pos)</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delete</span><span class="params">(<span class="keyword">int</span> pos, <span class="keyword">int</span> len)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> length of text sequence in this edit buffer</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">length</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> content of this edit buffer</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>A very simple rep for this datatype would just be a string:</li>
+</ol>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleBuffer</span> <span class="keyword">implements</span> <span class="title">EditBuffer</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String text;</span><br><span class="line">    <span class="comment">// Rep invariant: </span></span><br><span class="line">    <span class="comment">//   text != null</span></span><br><span class="line">    <span class="comment">// Abstraction function: </span></span><br><span class="line">    <span class="comment">//   represents the sequence text[0], ..., text[text.length()-1]</span></span><br></pre></td></tr></table></figure>
+<p><strong>Downside:</strong> We have to copy the entire string into a new string every time we do an <code>insert</code> or <code>delete</code>.</p>
+<ol start="2">
+<li>Another rep: a character array, with space at the end.</li>
+</ol>
+<p><strong>Downside:</strong> If the user is <strong>typing at the beginning</strong> of the document, then we’re copying the entire document with every keystroke.</p>
+<ol start="3">
+<li>A more interesting rep called <em>gap buffer</em>: a character array with extra space in it, but the extra space is a <em>gap</em> that can appear anywhere in the buffer. Whenever an <code>insert</code> or <code>delete</code> operation needs to be done, the datatype first <strong>moves the gap</strong> to the location of the operation, and then <strong>does the <code>insert</code> or <code>delete</code></strong>.</li>
+</ol>
+<ul>
+<li>
+<p>If the gap is already there, then nothing needs to be copied — an insert just consumes part of the gap, and a delete just enlarges the gap!</p>
+</li>
+<li>
+<p>Gap buffers are particularly well-suited to representing a string that is being edited by a user with a cursor, since inserts and deletes tend to be focused around the cursor, so the gap rarely moves.</p>
+</li>
+</ul>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/** GapBuffer is a non-threadsafe EditBuffer that is optimized</span></span><br><span class="line"><span class="comment"> *  for editing with a cursor, which tends to make a sequence of</span></span><br><span class="line"><span class="comment"> *  inserts and deletes at the same place in the buffer. */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GapBuffer</span> <span class="keyword">implements</span> <span class="title">EditBuffer</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">char</span>[] a;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> gapStart;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> gapLength;</span><br><span class="line">    <span class="comment">// Rep invariant: </span></span><br><span class="line">    <span class="comment">//   a != null</span></span><br><span class="line">    <span class="comment">//   0 &lt;= gapStart &lt;= a.length</span></span><br><span class="line">    <span class="comment">//   0 &lt;= gapLength &lt;= a.length - gapStart</span></span><br><span class="line">    <span class="comment">// Abstraction function: </span></span><br><span class="line">    <span class="comment">//   represents the sequence a[0],...,a[gapStart-1],</span></span><br><span class="line">    <span class="comment">//                           a[gapStart+gapLength],...,a[length-1]</span></span><br></pre></td></tr></table></figure>
+<p>In a multi-user scenario, we’d want <strong>multiple gaps</strong>, one for each user’s cursor, but we’ll use a single gap for now.</p>
+<h2 id="step-to-develop-the-datatype"><a class="markdownIt-Anchor" href="#step-to-develop-the-datatype"></a> Step to develop the datatype</h2>
+<p>Recall our <strong>recipe for designing and implementing an ADT</strong>:</p>
+<ol>
+<li><strong>Specify.</strong></li>
+</ol>
+<p>Define the operations (method signatures and specs). We did that in the <code>EditBuffer</code> interface.</p>
+<ol start="2">
+<li><strong>Test.</strong></li>
+</ol>
+<p>Develop test cases for the operations. <code>EditBuffer</code> includes a testing strategy based on partitioning the parameter space of the operations.</p>
+<ol start="3">
+<li><strong>Rep.</strong></li>
+</ol>
+<p>a. <strong>Implement a simple, brute-force rep first.</strong></p>
+<pre><code>`SimpleBuffer` -&gt; `GapBuffer`
+
+&lt;details&gt;It’s easier to write, you’re more likely to get it right, and it will validate your test cases and your specification so you can fix problems in them before you move on to the harder implementation. This is why we implemented &lt;code&gt;SimpleBuffer&lt;/code&gt; before moving on to &lt;code&gt;GapBuffer&lt;/code&gt;. Don’t throw away your simple version, either — keep it around so that you have something to test and compare against in case things go wrong with the more complex one.&lt;/details&gt;
+</code></pre>
+<p>b. <strong>Write down the rep invariant and abstraction function, and implement <code>checkRrep()</code>.</strong></p>
+<pre><code>&lt;details&gt;&lt;code&gt;checkRep()&lt;/code&gt; asserts the rep invariant at the end of every constructor, producer, and mutator method. (It’s typically not necessary to call it at the end of an observer, since the rep hasn’t changed.) In fact, assertions can be very useful for testing complex implementations, so it’s not a bad idea to also assert the postcondition at the end of a complex method. You’ll see an example of this in &lt;code&gt;GapBuffer&lt;/coode&gt;.&lt;code&gt;moveGap()&lt;/code&gt; in the code with this reading.&lt;/details&gt;
+</code></pre>
+<p>Consider single-threaded at first, then Multithreaded clients should be in the back of our minds at all times while we’re writing specs and choosing reps (we’ll see later that careful choice of operations may be necessary to avoid race conditions in the clients of your datatype). But get it working, and thoroughly tested, in a sequential, single-threaded environment first.</p>
+<ol start="4">
+<li><strong>synchronize.</strong></li>
+</ol>
+  <details>Make an <strong>argument</strong> that your rep is threadsafe. Write it down explicitly <strong>as a comment</strong> in your class, right by the rep invariant, so that a maintainer knows how you designed thread safety into the class.
+<ol start="5">
+<li><strong>Iterate.</strong></li>
+</ol>
+  <details>You may find that your choice of operations makes it hard to write a threadsafe type with the guarantees clients require. You might discover this in step 1, or in step 2 when you write tests, or in steps 3 or 4 when you implement. If that’s the case, go back and refine the set of operations your ADT provides.</details>
+<h1 id="locking"><a class="markdownIt-Anchor" href="#locking"></a> Locking</h1>
+<p>In Java, every object has a lock implicitly associated with it.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Even a humble Object has a lock</span></span><br><span class="line">Object lock = <span class="keyword">new</span> Object();</span><br></pre></td></tr></table></figure>
+<p>Java’s intrinsic locks cannot be obtained by calling <code>acquire</code> and <code>release</code>. Instead, use the ** <code>synchronized</code>** statement to acquire the lock for the duration of a statement block:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (lock) &#123; <span class="comment">// thread blocks here until lock is free</span></span><br><span class="line">    <span class="comment">// now this thread has the lock</span></span><br><span class="line">    balance = balance + <span class="number">1</span>;</span><br><span class="line">    <span class="comment">// exiting the block releases the lock</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Synchronized regions like this provide <strong>mutual exclusion</strong>.</p>
+<h2 id="locks-guard-access-to-data"><a class="markdownIt-Anchor" href="#locks-guard-access-to-data"></a> Locks guard access to data</h2>
+<p>You might think that simply owning an object’s lock would prevent other threads from accessing that object. <strong>That is not the case.</strong> Acquiring the lock associated with object <code>obj</code> using</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (obj) &#123; ... &#125;</span><br></pre></td></tr></table></figure>
+<p>in thread <em>t</em> does one thing and one thing only: <strong>prevents other threads from entering a synchronized(obj) block, until thread <em>t</em> finishes its synchronized block.</strong> That’s it.</p>
+<h1 id="monitor-pattern"><a class="markdownIt-Anchor" href="#monitor-pattern"></a> Monitor pattern</h1>
+<p>The most convenient lock is the object instance itself, i.e. <code>this</code>.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/** SimpleBuffer is a threadsafe EditBuffer with a simple rep. */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleBuffer</span> <span class="keyword">implements</span> <span class="title">EditBuffer</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String text;</span><br><span class="line">    ...</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SimpleBuffer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">            text = <span class="string">""</span>;</span><br><span class="line">            checkRep();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insert</span><span class="params">(<span class="keyword">int</span> pos, String ins)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">            text = text.substring(<span class="number">0</span>, pos) + ins + text.substring(pos);</span><br><span class="line">            checkRep();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delete</span><span class="params">(<span class="keyword">int</span> pos, <span class="keyword">int</span> len)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">            text = text.substring(<span class="number">0</span>, pos) + text.substring(pos+len);</span><br><span class="line">            checkRep();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">length</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> text.length();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> text;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Every method that touches the rep must be guarded with the lock — even apparently small and trivial ones like <code>length()</code> and <code>toString()</code>. This is because reads must be guarded as well as writes — if reads are left unguarded, then they may be able to <strong>see the rep in a partially-modified state</strong>.</p>
+<p>This approach is called the <strong>monitor pattern</strong>. A monitor is a class whose methods are <strong>mutually exclusive</strong>, so that only one thread can be inside an instance of the class at a time.</p>
+<p>If you add the keyword <code>synchronized</code> to a method signature, then Java will act as if you wrote <code>synchronized (this)</code> around the method body. So the code below is an equivalent way to implement the synchronized <code>SimpleBuffer</code>:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/** SimpleBuffer is a threadsafe EditBuffer with a simple rep. */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleBuffer</span> <span class="keyword">implements</span> <span class="title">EditBuffer</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String text;</span><br><span class="line">    ...</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SimpleBuffer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        text = <span class="string">""</span>;</span><br><span class="line">        checkRep();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">insert</span><span class="params">(<span class="keyword">int</span> pos, String ins)</span> </span>&#123;</span><br><span class="line">        text = text.substring(<span class="number">0</span>, pos) + ins + text.substring(pos);</span><br><span class="line">        checkRep();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">delete</span><span class="params">(<span class="keyword">int</span> pos, <span class="keyword">int</span> len)</span> </span>&#123;</span><br><span class="line">        text = text.substring(<span class="number">0</span>, pos) + text.substring(pos+len);</span><br><span class="line">        checkRep();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">length</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> text.length();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> text;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Notice that the <code>SimpleBuffer</code> constructor doesn’t have a <code>synchronized</code> keyword. Java actually forbids it, syntactically, because an object under construction is expected to <strong>be confined to a single thread</strong> until it has returned from its constructor. So synchronizing constructors should be <strong>unnecessary</strong>.</p>
+<h2 id="exercises"><a class="markdownIt-Anchor" href="#exercises"></a> Exercises</h2>
+<h3 id="synchronizing-with-locks"><a class="markdownIt-Anchor" href="#synchronizing-with-locks"></a> Synchronizing with locks</h3>
+<p>If thread B tries to acquire a lock currently held by thread A:</p>
+<p>What happens to thread A?</p>
+<details>
+nothing
+</details>
+<p>What happens to thread B?</p>
+<details>
+blocks until A releases the lock
+</details>
+<h3 id="this-list-is-mine-all-mine"><a class="markdownIt-Anchor" href="#this-list-is-mine-all-mine"></a> This list is mine, all mine</h3>
+<p>Suppose <code>list</code> is an instance of <code>ArrayList&lt;String&gt;</code>.</p>
+<p>What is true while A is in a <code>synchronized (list) { ... }</code> block?</p>
+<details>
+it owns the lock on `list` <br>
+no other thread can acquire the lock on `list`.
+</details>
+<h3 id="ok-fine-but-this-synchronized-list-is-totally-mine"><a class="markdownIt-Anchor" href="#ok-fine-but-this-synchronized-list-is-totally-mine"></a> OK fine but this synchronized List is totally mine</h3>
+<p>Suppose <code>sharedList</code> is a <code>List</code> returned by <code>Collections.synchronizedList</code>.</p>
+<p>It is now safe to use <code>sharedList</code> from multiple threads without acquiring any locks… except! Which of the following would require a <code>synchronized(sharedList) { ... }</code> block?</p>
+<p>call <code>isEmpty</code><br>
+call <code>add</code><br>
+iterate over the list<br>
+call <code>isEmpty</code>, if it returns false, call <code>remove(0)</code></p>
+<details>
+no<br>
+no<br>
+yes, specification of list<br>
+yes, in between our call to isEmpty and remove, someone else could have emptied the list!<br>
+</details>
+<h3 id="i-heard-you-like-locks-so-i-acquired-your-lock-so-you-can-lock-while-you-acquire"><a class="markdownIt-Anchor" href="#i-heard-you-like-locks-so-i-acquired-your-lock-so-you-can-lock-while-you-acquire"></a> I heard you like locks so I acquired your lock so you can lock while you acquire</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (obj) &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="keyword">synchronized</span> (obj) &#123; <span class="comment">// &lt;-- uh oh, deadlock?</span></span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// &lt;-- do we own the lock on obj?</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>On the line “uh oh, deadlock?”, do we experience deadlock?</p>
+<details>No.</details>
+<p>If we don’t deadlock, on the line “do we own the lock on obj”, does the thread own the lock on obj?</p>
+<details>Yes.</details>
+<h1 id="thread-safety-argument-with-synchronization"><a class="markdownIt-Anchor" href="#thread-safety-argument-with-synchronization"></a> Thread safety argument with synchronization</h1>
+<p><strong>Thread safety argument</strong> of <code>SimpleBuffer</code>:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/** SimpleBuffer is a threadsafe EditBuffer with a simple rep. */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleBuffer</span> <span class="keyword">implements</span> <span class="title">EditBuffer</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String text;</span><br><span class="line">    <span class="comment">// Rep invariant: </span></span><br><span class="line">    <span class="comment">//   text != null</span></span><br><span class="line">    <span class="comment">// Abstraction function: </span></span><br><span class="line">    <span class="comment">//   represents the sequence text[0],...,text[text.length()-1]</span></span><br><span class="line">    <span class="comment">// Safety from rep exposure:</span></span><br><span class="line">    <span class="comment">//   text is private and immutable</span></span><br><span class="line">    <span class="comment">// Thread safety argument:</span></span><br><span class="line">    <span class="comment">//   all accesses to text happen within SimpleBuffer methods,</span></span><br><span class="line">    <span class="comment">//   which are all guarded by SimpleBuffer's lock</span></span><br></pre></td></tr></table></figure>
+<p>Note that the encapsulation of the class, the absence of rep exposure, is very important for making this argument. If text were public:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> String text;</span><br></pre></td></tr></table></figure>
+<p>then clients outside <code>SimpleBuffer</code> would be able to read and write it <strong>without knowing that they should first acquire the lock</strong>, and <code>SimpleBuffer</code> would no longer be threadsafe.</p>
+<h2 id="locking-discipline"><a class="markdownIt-Anchor" href="#locking-discipline"></a> Locking discipline</h2>
+<p>A locking discipline is a strategy for ensuring that synchronized code is threadsafe. We must satisfy two conditions:</p>
+<ol>
+<li>
+<p>Every shared mutable variable must be guarded by some lock. The data may not be read or written except inside a synchronized block that acquires that lock.</p>
+</li>
+<li>
+<p>If an invariant involves multiple shared mutable variables (which might even be in different objects), then all the variables involved must be guarded by the same lock. Once a thread acquires the lock, the invariant must be reestablished before releasing the lock.</p>
+</li>
+</ol>
+<p>The monitor pattern as used here satisfies both rules. All the shared mutable data in the rep — which the rep invariant depends on — are guarded by the same lock.</p>
+<h1 id="atomic-operations"><a class="markdownIt-Anchor" href="#atomic-operations"></a> Atomic operations</h1>
+<p>Consider a find-and-replace operation on the <code>EditBuffer</code> datatype:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/** Modifies buf by replacing the first occurrence of s with t.</span></span><br><span class="line"><span class="comment"> *  If s not found in buf, then has no effect.</span></span><br><span class="line"><span class="comment"> *  <span class="doctag">@returns</span> true if and only if a replacement was made</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">findReplace</span><span class="params">(EditBuffer buf, String s, String t)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 1. convert buf to a string in order to search for s</span></span><br><span class="line">    <span class="keyword">int</span> i = buf.toString().indexOf(s);</span><br><span class="line">    <span class="keyword">if</span> (i == -<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 2. delete the old text</span></span><br><span class="line">    buf.delete(i, s.length());</span><br><span class="line">    <span class="comment">// 3. insert t in its place</span></span><br><span class="line">    buf.insert(i, t);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Even though each call of <code>buf</code> individually is atomic, the <code>findReplace</code> method as a whole is not threadsafe, because other threads might mutate the buffer while <code>findReplace</code> is working, causing it to delete the wrong region or put the replacement back in the wrong place.</p>
+<p>To prevent this, <code>findReplace</code> needs to synchronize with all other clients of <code>buf</code>.</p>
+<h2 id="giving-clients-access-to-a-lock"><a class="markdownIt-Anchor" href="#giving-clients-access-to-a-lock"></a> Giving clients access to a lock</h2>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/** An EditBuffer represents a threadsafe mutable string of characters</span></span><br><span class="line"><span class="comment"> *  in a text editor. Clients may synchronize with each other using the</span></span><br><span class="line"><span class="comment"> *  EditBuffer object itself. */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">EditBuffer</span> </span>&#123;</span><br><span class="line">   ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">findReplace</span><span class="params">(EditBuffer buf, String s, String t)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (buf) &#123;</span><br><span class="line">        <span class="keyword">int</span> i = buf.toString().indexOf(s);</span><br><span class="line">        <span class="keyword">if</span> (i == -<span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        buf.delete(i, s.length());</span><br><span class="line">        buf.insert(i, t);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>The effect of this is to enlarge the synchronization region that the monitor pattern already put around the individual <code>toString</code>, <code>delete</code>, and <code>insert</code> methods, into a single atomic region that ensures that all three methods are executed without interference from other threads.</p>
+<h2 id="sprinkling-synchronized-everywhere"><a class="markdownIt-Anchor" href="#sprinkling-synchronized-everywhere"></a> Sprinkling synchronized everywhere?</h2>
+<p>No.</p>
+<ol>
+<li>Synchronization imposes a large cost on your program.</li>
+<li>It minimizes the scope of access to your lock. Adding <code>synchronized</code> to every method means that your lock is the object itself, and every client with a reference to your object automatically has a reference to your lock, that it can acquire and release at will.</li>
+<li>It’s not sufficient to sprinkle <code>synchronized</code> everywhere.</li>
+</ol>
+<p>Suppose we had tried to solve findReplace’s synchronization problem simply by dropping synchronized onto its declaration:</p>
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> <span class="keyword">boolean</span> <span class="title">findReplace</span><span class="params">(EditBuffer buf, ...)</span> </span>&#123;</span><br></pre></td></tr></table></figure>
+<p>As a result, only one thread could call <code>findReplace</code> at a time — even if other threads want to <strong>operate on different buffers</strong>, which should be safe, they’d still be blocked until the single lock was free. So we’d suffer a significant loss in performance.</p>
+<p>Worse, however, it wouldn’t provide useful protection, because other code that touches the document probably wouldn’t be acquiring the same lock. It wouldn’t actually eliminate our race conditions.</p>
+<p>The <code>synchronized</code> keyword is not a panacea(works for everything). Thread safety requires a <strong>discipline</strong> — using <em>confinement</em>, <em>immutability</em>, or <em>locks</em> to protect shared data. And that discipline needs to be written down, or maintainers won’t know what it is.</p>
+<h1 id="designing-a-datatype-for-concurrency"><a class="markdownIt-Anchor" href="#designing-a-datatype-for-concurrency"></a> Designing a datatype for concurrency</h1>
+<p>For example, it might be better to pair <code>EditBuffer</code> with a <code>Position</code> datatype representing a cursor position in the buffer, or even a <code>Selection</code> datatype representing a selected range. Once obtained, a <code>Position</code> could hold its location in the text against the wash of insertions and deletions around it, until the client was ready to use that <code>Position</code>. If some other thread deleted all the text around the <code>Position</code>, then the <code>Position</code> would be able to inform a subsequent client about what had happened (perhaps with an exception), and allow the client to decide what to do. These kinds of considerations come into play when designing a datatype for concurrency.</p>
+<p><strong>The <code>ConcurrentMap</code> interface(extends <code>Map</code>) in Java</strong></p>
+<p><code>map.putIfAbsent(key,value)</code> is an atomic version of<br>
+  <code>if ( ! map.containsKey(key)) map.put(key, value);</code><br>
+<code>map.replace(key, value)</code> is an atomic version of<br>
+  <code>if (map.containsKey(key)) map.put(key, value);</code></p>
+<h1 id="deadlock-rears-its-ugly-headmeans-to-present-itself-and-force-people-to-deal-with-it"><a class="markdownIt-Anchor" href="#deadlock-rears-its-ugly-headmeans-to-present-itself-and-force-people-to-deal-with-it"></a> Deadlock <em>rears its ugly head</em>(means to present itself and force people to deal with it)</h1>
+<p>Threads need to wait. Blocking raises the possibility of deadlock.</p>
+<p>Suppose we’re modeling the social network of a series of books:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Wizard</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Set&lt;Wizard&gt; friends;</span><br><span class="line">    <span class="comment">// Rep invariant:</span></span><br><span class="line">    <span class="comment">//    name, friends != null</span></span><br><span class="line">    <span class="comment">//    friend links are bidirectional: </span></span><br><span class="line">    <span class="comment">//        for all f in friends, f.friends contains this</span></span><br><span class="line">    <span class="comment">// Concurrency argument:</span></span><br><span class="line">    <span class="comment">//    threadsafe by monitor pattern: all accesses to rep </span></span><br><span class="line">    <span class="comment">//    are guarded by this object's lock</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Wizard</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.friends = <span class="keyword">new</span> HashSet&lt;Wizard&gt;();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">boolean</span> <span class="title">isFriendsWith</span><span class="params">(Wizard that)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.friends.contains(that);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">friend</span><span class="params">(Wizard that)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (friends.add(that)) &#123;</span><br><span class="line">            that.friend(<span class="keyword">this</span>);</span><br><span class="line">        &#125; </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">defriend</span><span class="params">(Wizard that)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (friends.remove(that)) &#123;</span><br><span class="line">            that.defriend(<span class="keyword">this</span>);</span><br><span class="line">        &#125; </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Like Facebook, this social network is bidirectional: if <em>x</em> is friends with <em>y</em>, then <em>y</em> is friends with <em>x</em>. The <code>friend()</code> and <code>defriend()</code> methods enforce that invariant by modifying the reps of both objects, which because they use the monitor pattern means acquiring the locks to both objects as well.</p>
+<p>A couple of wizards:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Wizard harry = <span class="keyword">new</span> Wizard(<span class="string">"Harry Potter"</span>);</span><br><span class="line">Wizard snape = <span class="keyword">new</span> Wizard(<span class="string">"Severus Snape"</span>);</span><br></pre></td></tr></table></figure>
+<p>When two independent threads are repeatedly running:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// thread A                   // thread B</span></span><br><span class="line">harry.friend(snape);          snape.friend(harry);</span><br><span class="line">harry.defriend(snape);        snape.defriend(harry);</span><br></pre></td></tr></table></figure>
+<p>We will deadlock very rapidly. Here’s why. Suppose thread A is about to execute <code>harry.friend(snape)</code>, and thread B is about to execute <code>snape.friend(harry)</code></p>
+<ol>
+<li>Thread A acquires the lock on <code>harry</code> (because the <code>friend</code> method is synchronized).</li>
+<li>Then thread B acquires the lock on <code>snape</code> (for the same reason).</li>
+<li>They both update their individual reps independently, and then try to call <code>friend()</code> on the other object — which requires them to acquire the lock on the other object.</li>
+</ol>
+<p>So A is holding Harry and waiting for Snape, and B is holding Snape and waiting for Harry. Both threads are stuck in <code>friend()</code>, so neither one will ever manage to exit the synchronized region and release the lock to the other. This is a classic deadly embrace. The program simply stops.</p>
+<p>Notice that it is possible for thread A and thread B to interleave <strong>such that deadlock does not occur</strong>: perhaps thread A acquires and releases both locks before thread B has enough time to acquire the first one. If the locks involved in a deadlock are also involved in a race condition — and very often they are — then the deadlock will be just as difficult to reproduce or debug.</p>
+<h2 id="deadlock-solution-1-lock-ordering"><a class="markdownIt-Anchor" href="#deadlock-solution-1-lock-ordering"></a> Deadlock solution 1: lock ordering</h2>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">friend</span><span class="params">(Wizard that)</span> </span>&#123;</span><br><span class="line">    Wizard first, second;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.name.compareTo(that.name) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        first = <span class="keyword">this</span>; second = that;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        first = that; second = <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">synchronized</span> (first) &#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (second) &#123;</span><br><span class="line">            <span class="keyword">if</span> (friends.add(that)) &#123;</span><br><span class="line">                that.friend(<span class="keyword">this</span>);</span><br><span class="line">            &#125; </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>In our social network example, we might always acquire the locks on the Wizard objects in alphabetical order by the wizard’s name. Since thread A and thread B are both going to need the locks for Harry and Snape, they would both acquire them in that order: Harry’s lock first, then Snape’s. <strong>If thread A gets Harry’s lock before B does, it will also get Snape’s lock before B does</strong>, because B can’t proceed until A releases Harry’s lock again. The ordering on the locks forces an ordering on the threads acquiring them, so there’s no way to produce a cycle in the waiting-for graph.</p>
+<p>Note: Order the locks alphabetically by the person’s name would work fine for this example, but it wouldn’t work in a real-life social network, because they might have the same name. In real life, we can use their unique national identification number.</p>
+<p><strong>Drawbacks:</strong></p>
+<ol>
+<li>It’s not modular(module’s adj) — the code has to know about <strong>all the locks</strong>(<code>this</code>, <code>that</code>) in the system, or at least in its subsystem.</li>
+<li>It may be difficult or impossible for the code to know exactly <strong>which of those locks it will need</strong> before it even acquires the first one. It may need to <strong>do some computation to figure it out</strong>. Think about doing a depth-first search on the social network graph, for example — how would you know which nodes need to be locked, before you’ve even started looking for them?</li>
+</ol>
+<h2 id="deadlock-solution-2-coarse-grained-locking"><a class="markdownIt-Anchor" href="#deadlock-solution-2-coarse-grained-locking"></a> Deadlock solution 2: coarse-grained locking</h2>
+<p>Use a single lock to guard many object instances, or even a whole subsystem of a program.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Wizard</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Castle castle;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Set&lt;Wizard&gt; friends;</span><br><span class="line">    ...</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">friend</span><span class="params">(Wizard that)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (castle) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.friends.add(that)) &#123;</span><br><span class="line">                that.friend(<span class="keyword">this</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>All Wizards belong to a <code>Castle</code>, and we just use that <code>Castle</code>object’s lock to synchronize.</p>
+<p>Coarse-grained locks can have a significant <strong>performance penalty</strong>. If you guard a large pile of mutable data with a single lock, then you’re giving up the ability to access any of that data concurrently. In the worst case, having a single lock protecting everything, your program might be essentially <strong>sequential</strong> — only one thread is allowed to make progress at a time.</p>
+<h2 id="exercises-2"><a class="markdownIt-Anchor" href="#exercises-2"></a> Exercises</h2>
+<h3 id="deadlock-2"><a class="markdownIt-Anchor" href="#deadlock-2"></a> Deadlock</h3>
+<p>In the code below three threads 1, 2, and 3 are trying to acquire locks on objects <code>alpha</code>, <code>beta</code>, and <code>gamma</code>.</p>
+<table>
+  <tr>
+    <th><p>Thread 1</p>
+    </th>
+    <th><p>Thread 2</p>
+    </th>
+    <th><p>Thread 3</p>
+    </th>
+  </tr>
+  <tr>
+    <td>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">    <span class="keyword">synchronized</span> (alpha) &#123;</span><br><span class="line">    <span class="comment">// using alpha</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">synchronized</span> (gamma) &#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (beta) &#123;</span><br><span class="line">        <span class="comment">// using beta &amp; gamma</span></span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// finished</span></span><br></pre></td></tr></table></figure>
+<pre><code>&lt;/td&gt;
+&lt;td&gt;
+</code></pre>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (gamma) &#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (alpha) &#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (beta) &#123;</span><br><span class="line">            <span class="comment">// using alpha, beta, &amp; gamma</span></span><br><span class="line">            <span class="comment">// ...</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// finished</span></span><br></pre></td></tr></table></figure>
+<pre><code>&lt;/td&gt;
+&lt;td&gt;
+</code></pre>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (gamma) &#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (alpha) &#123;</span><br><span class="line">        <span class="comment">// using alpha &amp; gamma</span></span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">synchronized</span> (beta) &#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (gamma) &#123;</span><br><span class="line">        <span class="comment">// using beta &amp; gamma</span></span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// finished</span></span><br></pre></td></tr></table></figure>
+<pre><code>&lt;/td&gt;
+</code></pre>
+  </td></tr>
+</table>
+<p>This system is susceptible to deadlock.</p>
+<p>For each of the scenarios below, determine whether the system is in deadlock if the threads are currently on the indicated lines of code.</p>
+<p><strong>Scenario A</strong></p>
+<p>Thread 1 inside using <code>alpha</code><br>
+Thread 2 blocked on <code>synchronized (alpha)</code><br>
+Thread 3 finished</p>
+<details>
+not deadlock
+</details>
+<p><strong>Scenario B</strong></p>
+<p>Thread 1 finished<br>
+Thread 2 blocked on <code>synchronized (beta)</code><br>
+Thread 3 blocked on 2nd <code>synchronized (gamma)</code></p>
+<details>
+deadlock
+</details>
+<p><strong>Scenario C</strong></p>
+<p>Thread 1 running <code>synchronized (beta)</code><br>
+Thread 2 blocked on <code>synchronized (gamma)</code><br>
+Thread 3 blocked on 1st <code>synchronized (gamma)</code></p>
+<details>
+not deadlock
+</details>
+<p><strong>Scenario D</strong></p>
+<p>Thread 1 blocked on <code>synchronized (beta)</code><br>
+Thread 2 finished<br>
+Thread 3 blocked on 2nd <code>synchronized (gamma)</code></p>
+<details>
+deadlock
+</details>
+<h3 id="locked-out"><a class="markdownIt-Anchor" href="#locked-out"></a> Locked out</h3>
+<p>Examine the code again.</p>
+<p>In the previous problem, we saw deadlocks involving <code>beta</code> and <code>gamma</code>.</p>
+<p>What about <code>alpha</code>?</p>
+<details>
+there are no deadlocks involving <code>alpha</code><br>
+<p>In order to encounter deadlock, threads must try to acquire locks in different orders, creating a cycle in the graph of who-is-waiting-for-who.</p>
+</details>
+<h1 id="concurrency-in-practice"><a class="markdownIt-Anchor" href="#concurrency-in-practice"></a> Concurrency in practice</h1>
+<h2 id="goals"><a class="markdownIt-Anchor" href="#goals"></a> Goals</h2>
+<p><strong>Safety</strong></p>
+<p>Does the concurrent program satisfy its invariants and its specifications? Races in accessing mutable data threaten safety. Safety asks the question: can you prove that <strong>some bad thing never happens</strong>?</p>
+<p><strong>Liveness</strong></p>
+<p>Does the program keep running and eventually do what you want, or does it get stuck somewhere waiting forever for events that will never happen? Can you prove that <strong>some good thing eventually happens</strong>?</p>
+<p><em>Fairness</em></p>
+<h2 id="strategies"><a class="markdownIt-Anchor" href="#strategies"></a> Strategies</h2>
+<p><strong>Library data structures</strong></p>
+<p>Either use <strong>no synchronization</strong> (to offer high performance to single-threaded clients, while leaving it to multithreaded clients to add locking on top) or the <strong>monitor pattern</strong>.</p>
+<p><strong>Mutable data structures with many parts</strong></p>
+<p>Typically use either <strong>coarse-grained locking</strong> or <strong>thread confinement</strong>. Most graphical user interface toolkits follow one of these approaches, because a graphical user interface is basically a big mutable tree of mutable objects. Java Swing, the graphical user interface toolkit, uses thread confinement. Only a single dedicated thread is allowed to access Swing’s tree. Other threads have to pass messages to that dedicated thread in order to access the tree.</p>
+<p><strong>Search</strong></p>
+<p>Often uses <strong>immutable datatypes</strong>.</p>
+<p><strong>Operating systems</strong></p>
+<p>Often use <strong>fine-grained locks</strong> in order to get high performance, and use <strong>lock ordering</strong> to deal with deadlock problems.</p>
+<p><strong>Database</strong> systems are widely used for distributed client/server systems like web applications. Databases avoid race conditions using transactions, which are similar to synchronized regions in that their effects are atomic, but they don’t have to acquire locks, though <strong>a transaction may fail and be rolled back if it turns out that a race occurred</strong>. Databases can also manage locks, and handle locking order automatically. For more about how to use databases in system design, <strong>6.170 Software Studio</strong> is strongly recommended; for more about how databases work on the inside, take <strong>6.814 Database Systems</strong>.</p>
+<p>And if you’re interested in the <strong>performance</strong> of concurrent programs — since performance is often one of the reasons we add concurrency to a system in the first place — then <strong>6.172 Performance Engineering</strong> is the course for you.</p>
+<h1 id="summary"><a class="markdownIt-Anchor" href="#summary"></a> Summary</h1>
+<ol>
+<li>Safety from bugs</li>
+<li>Easy to understand</li>
+<li>Ready to change</li>
+</ol>
+<p><strong>Heisenbugs</strong> will skitter away as soon as you try to pin them down, so debugging simply isn’t an effective way to achieve correct threadsafe code. And threads can interleave their operations in so many different ways that you will never be able to test even a small fraction of all possible executions.</p>
+<ul>
+<li>
+<p>Make <strong>thread safety arguments</strong> about your datatypes, and <strong>document them</strong> in the code.</p>
+</li>
+<li>
+<p><strong>Acquiring a lock</strong> allows a thread to have exclusive access to the data guarded by that lock, forcing other threads to block — as long as those threads are also trying to acquire that same lock.</p>
+</li>
+<li>
+<p>The <strong>monitor pattern</strong> guards the rep of a datatype with <strong>a single lock</strong> that is acquired by every method.</p>
+</li>
+<li>
+<p><strong>Blocking</strong> caused by acquiring multiple locks creates the possibility of <strong>deadlock</strong>.</p>
+</li>
+</ul>
+<h1 id="references"><a class="markdownIt-Anchor" href="#references"></a> References</h1>
+<ol>
+<li><a href="http://web.mit.edu/6.031/www/sp17/classes/21-locks/" target="_blank" rel="noopener">Reading 21: Locks and Synchronization | 6.031: Software Construction</a></li>
+</ol>
+</details></div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">upupming</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://upupming.site/2018/06/15/6.031-locks-and-synchronization/">https://upupming.site/2018/06/15/6.031-locks-and-synchronization/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://upupming.site">upupming 的博客</a>！</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/java/">java</a><a class="post-meta__tags" href="/tags/MIT-6-031/">MIT 6.031</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2018/06/18/java-design-patterns-1/"><i class="fa fa-chevron-left">  </i><span>Java 设计模式 (1)</span></a></div><div class="next-post pull-right"><a href="/2018/06/14/6.031-thread-safety/"><span>Notes for MIT 6.031 Thread Safety</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="gitalk-container"></div><script>var gitalk = new Gitalk({
+  clientID: '77bd7cc3fdbcd3e5945a',
+  clientSecret: '883971da140a8232d72918030f8c1a211a5befc1',
+  repo: 'upupming.github.io',
+  owner: 'upupming',
+  admin: 'upupming',
+  id: md5(decodeURI(location.pathname)),
+  language: 'zh-CN'
+})
+gitalk.render('gitalk-container')</script></div></div><footer class="footer-bg" style="background-image: url(/img/background.png)"><div class="layout" id="footer"><div class="copyright">&copy;2018 - 2020 By upupming</div><div class="framework-info"><span>驱动 - </span><a href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script src="/js/search/algolia.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css"><script src="/js/katex.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="algolia-search"><div class="search-dialog__title" id="algolia-search-title">Algolia</div><div id="algolia-input-panel"><div id="algolia-search-input"></div></div><hr><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-stats"></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>

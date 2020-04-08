@@ -1,0 +1,120 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="Hexo配置遇到的问题及解决"><meta name="keywords" content="hexo,github"><meta name="author" content="upupming"><meta name="copyright" content="upupming"><title>Hexo配置遇到的问题及解决 | upupming 的博客</title><link rel="shortcut icon" href="/my-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.min.css?version=1.6.1"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css?version=1.6.1"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.css"><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.js" defer></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css"><script src="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js"></script><script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script><link rel="manifest" href="/manifest.json"><link rel="manifest" href="/manifest.json"><meta name="theme-color" content="#1B9EF3"><meta name="msapplication-TileColor" content="#1B9EF3"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#1B9EF3"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle = window.adsbygoogle || []).push({
+  google_ad_client: 'ca-pub-2188191456032650',
+  enable_page_level_ads: 'true'
+});
+</script><link rel="dns-prefetch" href="https://hm.baidu.com"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?295ad5c5a196e4964e20f74260711177";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();</script><link rel="dns-prefetch" href="https://www.google-analytics.com"><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-114899088-1', 'auto');
+ga('send', 'pageview');</script><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: {"appId":"5WEDOKLFCL","apiKey":"26a57bfa5275b7c98a3b3ab7dae61915","indexName":"upupming-blog","hits":{"per_page":10},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容:${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  }
+} </script></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#hexo安装"><span class="toc-number">1.</span> <span class="toc-text"> Hexo安装</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#个性化"><span class="toc-number">2.</span> <span class="toc-text"> 个性化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#文章资源文件夹存放文章封面等图片"><span class="toc-number">3.</span> <span class="toc-text"> 文章资源文件夹存放文章封面等图片</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#创建搜索页面"><span class="toc-number">4.</span> <span class="toc-text"> 创建搜索页面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#安装gitalk评论插件"><span class="toc-number">5.</span> <span class="toc-text"> 安装gitalk评论插件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#自定义域名添加https支持cloudflare"><span class="toc-number">6.</span> <span class="toc-text"> 自定义域名，添加https支持（cloudflare）</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/img/doraemon.jpeg"></div><div class="author-info__name text-center">upupming</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">41</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">49</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">分类</span><span class="pull-right">26</span></a></div><hr><div class="author-info-links"><div class="author-info-links__title text-center">友情链接</div><a class="author-info-links__name text-center" href="https://molunerfinn.com/">MARKSZのBlog</a><a class="author-info-links__name text-center" href="https://github.com/ryanhanwu/How-To-Ask-Questions-The-Smart-Way/blob/master/README-zh_CN.md">提问的智慧</a><a class="author-info-links__name text-center" href="https://zh.wikipedia.org/">中文维基百科</a><a class="author-info-links__name text-center" href="https://zbqtesla.github.io">ZBQTesla的博客</a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(/img/background.png)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">upupming 的博客</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">主页</a><a class="site-page" href="/archives">归档</a><a class="site-page" href="/tags">标签</a><a class="site-page" href="/categories">分类</a><a class="site-page" href="https://mirror.upupming.site">Mirror</a><a class="site-page" href="https://music.wxhbts.com">音乐</a><a class="site-page" href="https://writing.upupming.site">Writing</a><a class="site-page" href="/about">关于</a><a class="site-page" href="/rss">RSS</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> 搜索</span></a></span></div><div id="post-info"><div id="post-title">Hexo配置遇到的问题及解决</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2018-02-28</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/折腾/">折腾</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/折腾/Hexo-博客/">Hexo 博客</a><div class="post-meta-wordcount"><span>字数总计: </span><span class="word-count">827</span><span class="post-meta__separator">|</span><span>阅读时长: 3 分钟</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><p>我的 hexo 博客 hello world，探索一些小问题。</p>
+<a id="more"></a>
+<h1 id="hexo安装"><a class="markdownIt-Anchor" href="#hexo安装"></a> Hexo安装</h1>
+<p>安装过程见<a href="https://hexo.io/zh-cn/docs/index.html#Install-Hexo" target="_blank" rel="noopener">Hexo官方文档</a>。</p>
+<p>我用的是skapp主题，参见<a href="https://github.com/Mrminfive/hexo-theme-skapp/blob/master/README-cn.md" target="_blank" rel="noopener">skapp的README文档</a>。</p>
+<h1 id="个性化"><a class="markdownIt-Anchor" href="#个性化"></a> 个性化</h1>
+<p>通过<a href="https://logomakr.com/" target="_blank" rel="noopener">Logo Maker</a>做好自己的Logo，放入<code>/themes/hexo-theme-skapp/source/img/</code>下，这样在后续运行<code>hexo d</code>的时候会在网站根目录生成文件夹<code>/img/</code>，其中包含了自己的Logo。在<code>_config.yml</code>加入绝对引用：</p>
+<figure class="highlight yml"><figcaption><span>_config.yml</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="comment"># 网页图标（显示在浏览器Tab上）</span></span><br><span class="line"><span class="attr">favicon_ico:</span> <span class="string">/img/flying-ming.png</span></span><br><span class="line"><span class="comment"># 网页Logo</span></span><br><span class="line"><span class="attr">logo:</span> <span class="string">/img/flying-ming.png</span></span><br></pre></td></tr></table></figure>
+<p>同样可以定义自己的头像、文章默认封面、主页背景、404背景、加载动态图：</p>
+<figure class="highlight yml"><figcaption><span>_config.yml</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="attr">qrcode:</span>  <span class="string">/img/doraemon.jpeg</span></span><br><span class="line"><span class="attr">default_cover:</span> <span class="string">/img/Light-Blue-Wallpaper.jpg</span></span><br><span class="line"><span class="attr">header_cover:</span> <span class="string">/img/Natural-mounty-pools.jpg</span></span><br><span class="line"><span class="attr">error_page_bg:</span> <span class="string">/img/Crying-Doraemon.jpeg</span></span><br><span class="line"><span class="attr">loader_img:</span> <span class="string">/img/loader.gif</span></span><br></pre></td></tr></table></figure>
+<p>注意必须用<strong>绝对路径</strong>（即最前面有一个<code>/</code>），如<code>qrcode</code>值若写成<code>img/doraemon.jpeg</code>会导致在归档界面时，头像的路径变成<code>/archives/img/doraemon.jpeg</code>，最终头像无法正确加载。</p>
+<h1 id="文章资源文件夹存放文章封面等图片"><a class="markdownIt-Anchor" href="#文章资源文件夹存放文章封面等图片"></a> 文章资源文件夹存放文章封面等图片</h1>
+<p>首先配置<code>_config.yml</code>启用创建文件资源夹，修改post名格式为以创建时间开头：</p>
+<figure class="highlight yml"><figcaption><span>_config.yml</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="attr">post_asset_folder:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">new_post_name:</span> <span class="string">:year-:month-:day-:title.md</span> <span class="comment"># File name of new posts</span></span><br></pre></td></tr></table></figure>
+<p>新建文章：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo new build-hexo</span><br></pre></td></tr></table></figure>
+<p>在<code>/source/_posts/2018-02-28-build-hexo/</code>中放入cover.png。</p>
+<p>在文章中以<strong>绝对路径</strong>（主页也可以正常显示图片）表示封面目录，如：</p>
+<figure class="highlight markdown"><figcaption><span>2018-02-28-build-hexo.md</span></figcaption><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">cover: /2018/02/28/build-hexo/cover.png</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+<p>若是文章内图片，无需在主页显示，可直接用相对路径：<br>
+例1：</p>
+<figure class="highlight html"><figcaption><span>2018-02-28-build-hexo.md</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt; !<span class="attr">--</span> 使用<span class="attr">html</span>语言，支持调整图片大小 <span class="attr">--</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"OAuth-App.png"</span> <span class="attr">alt</span>=<span class="string">"创建OAuth Application"</span> <span class="attr">height</span>=<span class="string">"400"</span> &gt;</span></span><br></pre></td></tr></table></figure>
+<p>例2：</p>
+<figure class="highlight markdown"><figcaption><span>2018-02-28-build-hexo.md</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="xml"><span class="tag">&lt; !<span class="attr">--</span> 使用<span class="attr">Markdown</span>语言，不支持调整图片大小 <span class="attr">--</span>&gt;</span></span></span><br><span class="line">![<span class="string">创建OAuth Application</span>](<span class="link">OAuth-App.png</span>)</span><br></pre></td></tr></table></figure>
+<h1 id="创建搜索页面"><a class="markdownIt-Anchor" href="#创建搜索页面"></a> 创建搜索页面</h1>
+<p>由于主题自带搜索功能，只需创建serach页面：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">hexo new page search</span><br></pre></td></tr></table></figure>
+<p>然后在<code>/source/search/index.md</code>中加入：</p>
+<figure class="highlight plain"><figcaption><span>lang=yml</span></figcaption><table><tr><td class="code"><pre><span class="line">layout: search</span><br></pre></td></tr></table></figure>
+<h1 id="安装gitalk评论插件"><a class="markdownIt-Anchor" href="#安装gitalk评论插件"></a> 安装gitalk评论插件</h1>
+<p>进入<a href="https://github.com/settings/applications/new" target="_blank" rel="noopener">创建OAuth Application</a>，创建如下：<br>
+<img src="OAuth-App.png" alt="创建OAuth Application" height="400"></p>
+<p>后记：如果要自定义域名（见下一步），要将Authorization callback URL更改为相应的域名（如：<a href="https://upupming.site/">https://upupming.site/</a> ）。</p>
+<p>编辑<code>_config.yml</code>：</p>
+<figure class="highlight yml"><figcaption><span>_config.yml</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="attr">gitTalk:</span></span><br><span class="line">  <span class="attr">clientId:</span> <span class="string">77bd7cc3fdbcd3e5945a</span></span><br><span class="line">  <span class="attr">clientSecret:</span> <span class="string">883971da140a8232d72918030f8c1a211a5befc1</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">upupming.github.io</span></span><br><span class="line">  <span class="attr">owner:</span> <span class="string">upupming</span></span><br><span class="line">  <span class="attr">admin:</span> </span><br><span class="line">    <span class="bullet">-</span> <span class="string">upupming</span></span><br></pre></td></tr></table></figure>
+<p>接着运行<code>hexo d</code>配置到github，当有人评论时，在仓库<code>upupming.github.io</code>中会出现新的issue，名为“Hexo配置遇到的问题及解决 | upupming的博客”。</p>
+<h1 id="自定义域名添加https支持cloudflare"><a class="markdownIt-Anchor" href="#自定义域名添加https支持cloudflare"></a> 自定义域名，添加https支持（cloudflare）</h1>
+<hr>2018.06.16 更新
+<p>请转到 <a href="../../../../2018/05/10/cloudflare-subdomain-SSL/">GitHub Pages 自定义域名已支持 https，不必再依赖 Cloudflare</a></p>
+<hr>
+<p>在<code>/source/</code>下加入文件<code>CNAME</code>（在下次<code>hexo d</code>时会生成在网站根目录）内容如下：</p>
+<figure class="highlight plain"><figcaption><span>CNAME</span></figcaption><table><tr><td class="code"><pre><span class="line">upupming.site</span><br></pre></td></tr></table></figure>
+<p>这样访问<code>upupming.github.io</code>时会自动跳转到<code>upupming.site</code>。</p>
+<p>为了添加https支持，需要将域名的解析系统从阿里云换成cloudflare。</p>
+<p>注册<a href="https://www.cloudflare.com/" target="_blank" rel="noopener">cloudflare</a>，添加域名<code>upupming.site</code>，登录阿里云，修改域名的NameService为cloudflare的域名解析服务：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">aida.ns.cloudflare.com</span><br><span class="line">kai.ns.cloudflare.com</span><br></pre></td></tr></table></figure>
+<p>待到生效后，设置Crypto中的SSL为Full<br>
+<img src="SSL-Full.png" height="200"></p>
+<p>再添加Page Rules：<br>
+<img src="Force-HTTPS.png" height="400"></p>
+<p>为域名<code>upupming.site</code>添加三条解析纪录：</p>
+<table>
+<thead>
+<tr>
+<th>记录类型</th>
+<th>主机记录</th>
+<th>记录值</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CNAME</td>
+<td>www</td>
+<td><a href="http://upupming.github.io" target="_blank" rel="noopener">upupming.github.io</a></td>
+<td>将www子域名跳转到顶级域名</td>
+</tr>
+<tr>
+<td>A</td>
+<td>@</td>
+<td>192.30.252.153</td>
+<td>将顶级域名解析到Github提供的ip</td>
+</tr>
+<tr>
+<td>A</td>
+<td>@</td>
+<td>192.30.252.154</td>
+<td>将顶级域名解析到Github提供的ip</td>
+</tr>
+</tbody>
+</table>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">upupming</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://upupming.site/2018/02/28/build-hexo/">https://upupming.site/2018/02/28/build-hexo/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://upupming.site">upupming 的博客</a>！</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/hexo/">hexo</a><a class="post-meta__tags" href="/tags/github/">github</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2018/03/05/blurring-disciplinary-boundaries/"><i class="fa fa-chevron-left">  </i><span>文章翻译：Blurring disciplinary boundaries</span></a></div></nav><div id="gitalk-container"></div><script>var gitalk = new Gitalk({
+  clientID: '77bd7cc3fdbcd3e5945a',
+  clientSecret: '883971da140a8232d72918030f8c1a211a5befc1',
+  repo: 'upupming.github.io',
+  owner: 'upupming',
+  admin: 'upupming',
+  id: md5(decodeURI(location.pathname)),
+  language: 'zh-CN'
+})
+gitalk.render('gitalk-container')</script></div></div><footer class="footer-bg" style="background-image: url(/img/background.png)"><div class="layout" id="footer"><div class="copyright">&copy;2018 - 2020 By upupming</div><div class="framework-info"><span>驱动 - </span><a href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script src="/js/search/algolia.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css"><script src="/js/katex.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="algolia-search"><div class="search-dialog__title" id="algolia-search-title">Algolia</div><div id="algolia-input-panel"><div id="algolia-search-input"></div></div><hr><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-stats"></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>

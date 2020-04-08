@@ -1,0 +1,217 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="微博表情数据爬取"><meta name="keywords" content="微博,爬虫"><meta name="author" content="upupming"><meta name="copyright" content="upupming"><title>微博表情数据爬取 | upupming 的博客</title><link rel="shortcut icon" href="/my-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.min.css?version=1.6.1"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css?version=1.6.1"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.css"><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.js" defer></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css"><script src="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js"></script><script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script><link rel="manifest" href="/manifest.json"><link rel="manifest" href="/manifest.json"><meta name="theme-color" content="#1B9EF3"><meta name="msapplication-TileColor" content="#1B9EF3"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#1B9EF3"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle = window.adsbygoogle || []).push({
+  google_ad_client: 'ca-pub-2188191456032650',
+  enable_page_level_ads: 'true'
+});
+</script><link rel="dns-prefetch" href="https://hm.baidu.com"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?295ad5c5a196e4964e20f74260711177";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();</script><link rel="dns-prefetch" href="https://www.google-analytics.com"><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-114899088-1', 'auto');
+ga('send', 'pageview');</script><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: {"appId":"5WEDOKLFCL","apiKey":"26a57bfa5275b7c98a3b3ab7dae61915","indexName":"upupming-blog","hits":{"per_page":10},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容:${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  }
+} </script></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本思路"><span class="toc-number">1.</span> <span class="toc-text"> 基本思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#表情数据库搭建"><span class="toc-number">2.</span> <span class="toc-text"> 表情数据库搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#unicode-表情"><span class="toc-number">2.1.</span> <span class="toc-text"> Unicode 表情</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mweibocn"><span class="toc-number">2.2.</span> <span class="toc-text"> m.weibo.cn 的 API</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#获取用户基本信息"><span class="toc-number">2.2.1.</span> <span class="toc-text"> 获取用户基本信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#获取用户微博"><span class="toc-number">2.2.2.</span> <span class="toc-text"> 获取用户微博</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#获取微博详细内容"><span class="toc-number">2.2.3.</span> <span class="toc-text"> 获取微博详细内容</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#图片表情"><span class="toc-number">2.3.</span> <span class="toc-text"> 图片表情</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#评论-粉丝和关注-转发爬取"><span class="toc-number">3.</span> <span class="toc-text"> 评论、粉丝和关注、转发爬取</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#转发-api"><span class="toc-number">3.1.</span> <span class="toc-text"> 转发 API</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#评论获取-api"><span class="toc-number">3.2.</span> <span class="toc-text"> 评论获取 API</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#外部链接"><span class="toc-number">4.</span> <span class="toc-text"> 外部链接</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/img/doraemon.jpeg"></div><div class="author-info__name text-center">upupming</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">41</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">49</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">分类</span><span class="pull-right">26</span></a></div><hr><div class="author-info-links"><div class="author-info-links__title text-center">友情链接</div><a class="author-info-links__name text-center" href="https://molunerfinn.com/">MARKSZのBlog</a><a class="author-info-links__name text-center" href="https://github.com/ryanhanwu/How-To-Ask-Questions-The-Smart-Way/blob/master/README-zh_CN.md">提问的智慧</a><a class="author-info-links__name text-center" href="https://zh.wikipedia.org/">中文维基百科</a><a class="author-info-links__name text-center" href="https://zbqtesla.github.io">ZBQTesla的博客</a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(/img/background.png)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">upupming 的博客</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">主页</a><a class="site-page" href="/archives">归档</a><a class="site-page" href="/tags">标签</a><a class="site-page" href="/categories">分类</a><a class="site-page" href="https://mirror.upupming.site">Mirror</a><a class="site-page" href="https://music.wxhbts.com">音乐</a><a class="site-page" href="https://writing.upupming.site">Writing</a><a class="site-page" href="/about">关于</a><a class="site-page" href="/rss">RSS</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> 搜索</span></a></span></div><div id="post-info"><div id="post-title">微博表情数据爬取</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2019-06-17</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/项目/">项目</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/项目/爬虫/">爬虫</a><div class="post-meta-wordcount"><span>字数总计: </span><span class="word-count">4.2k</span><span class="post-meta__separator">|</span><span>阅读时长: 14 分钟</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><p>由于百度人工智能比赛的需要，我们需要爬取新浪微博的微博数据，得到带表情的微博，将数据进行适当地处理，便于后续深度学习模型的训练使用。本文章用到的所有源代码请见 <a href="https://github.com/upupming/weiboAPI" target="_blank" rel="noopener">https://github.com/upupming/weiboAPI</a> 。注意本文是一个<strong>探索过程</strong>，并不是一个总结。</p>
+<a id="more"></a>
+<h2 id="基本思路"><a class="markdownIt-Anchor" href="#基本思路"></a> 基本思路</h2>
+<p>首先，我在 GitHub 上找到了 <a href="https://github.com/dataabc/weiboSpider" target="_blank" rel="noopener">dataabc/weiboSpider</a> 这个项目，并且立即 Star 和 Watch 了它，在我 Watch 之后看到开发者还在积极地给项目更新、回答 Issue，我感到很幸运。所以基本上打算在这个项目的基础上加以修改，符合我的需要。</p>
+<p>注意：微博一共有三个比较不同的网站：</p>
+<ol>
+<li>
+<p><a href="http://weibo.cn" target="_blank" rel="noopener">weibo.cn</a></p>
+<p>极简版的微博，没有现代化的 UI 界面，适合爬取。weiboSpider 就是基于这个 <a href="http://weibo.cn" target="_blank" rel="noopener">weibo.cn</a> 进行抓取的。</p>
+</li>
+<li>
+<p><a href="http://weibo.com" target="_blank" rel="noopener">weibo.com</a></p>
+<p>现代化的微博网页，<a href="https://zhuanlan.zhihu.com/p/35682031" target="_blank" rel="noopener">使用 Ajax</a> 进行页面内数据的加载。我也向开发者提议使用网页使用的 Ajax API 进行抓取，作者回复说对项目的改动比较大，后续可能会在其他项目中实现。</p>
+</li>
+<li>
+<p><a href="http://m.weibo.cn" target="_blank" rel="noopener">m.weibo.cn</a></p>
+<p>手机版的微博网页，也是用 Ajax 来加载页面数据的。</p>
+</li>
+</ol>
+<p>接下来我们只考虑 <a href="http://weibo.cn" target="_blank" rel="noopener">weibo.cn</a>，有了 weiboSpider，要爬取数据就简单很多了，我需要做的也不算特别多。但是有几点比较难以处理的事情先需要明确一下解决方案。</p>
+<p>微博的表情有的是用图片表示的（比如 <img alt="[微笑]" src="https://h5.sinaimg.cn/m/emoticon/icon/default/d_hehe-039d0a6a8a.png" style="width:1em; height:1em;">），有的则是用 Unicode 表示的（比如 😀），有的则是直接用『[…]』表示的（比如 [黑桃]️）。</p>
+<ol>
+<li>对于<strong>图片表情</strong>，weiboSpider 是直接把它们忽略掉，最终的爬取结果里面没有这些表情，我可以对它进行修改，用图片的 <code>alt</code> 属性表示表情，然后建立一个【表情名称 -&gt; 表情图片/网址】的字典。</li>
+<li>对于 <strong>Unicode 表情</strong>，无需做任何处理。</li>
+<li>对于<strong>文字表情</strong>，我们需要人工去判断这些表情与 Unicode 中的哪些表情对应。</li>
+</ol>
+<h2 id="表情数据库搭建"><a class="markdownIt-Anchor" href="#表情数据库搭建"></a> 表情数据库搭建</h2>
+<h3 id="unicode-表情"><a class="markdownIt-Anchor" href="#unicode-表情"></a> Unicode 表情</h3>
+<p>所有的 Unicode 参见 <a href="https://unicode.org/emoji/charts-12.0/full-emoji-list.html%EF%BC%8C%E7%AE%80%E5%8D%95%E8%B5%B7%E8%A7%81%EF%BC%8C%E6%88%91%E4%BB%AC%E7%9B%B4%E6%8E%A5%E4%BD%BF%E7%94%A8" target="_blank" rel="noopener">https://unicode.org/emoji/charts-12.0/full-emoji-list.html，简单起见，我们直接使用</a> GitHub 支持的所有 emoji，参见<a href="https://gist.github.com/roachhd/1f029bd4b50b8a524f3c#gistcomment-2585127" target="_blank" rel="noopener">这里</a>，使用 <a href="http://regexr.com" target="_blank" rel="noopener">regexr.com</a> 处理后得到下面的文本：</p>
+<details>
+<summary>unicode.txt</summary>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Copied from: https://gist.github.com/roachhd/1f029bd4b50b8a524f3c#gistcomment-2585127</span><br><span class="line"></span><br><span class="line">😄😆😊😃☺️😏😍😘😚😳😌😆😁😉😜😝😀😗😙😛😴😟😦😧😮😬😕😯😑😒😅😓😥😩😔😞😖😨😰😣😢😭😂😲😱😫😠😡😤😪😋😷😎😵👿😈😐😶😇👽💛💙💜❤️💚💔💓💗💕💞💘💖✨⭐️🌟💫💥💥💢❗️❓❕❔💤💨💦🎶🎵🔥💩💩💩👍👍👎👎👌👊👊✊✌️👋✋✋👐☝️👇👈👉🙌🙏👆👏💪🤘🖕🚶🏃🏃👫👪👬👭💃👯🙆🙅💁🙋👰🙎🙍🙇💑💆💇💅👦👧👩👨👶👵👴👱👲👳👷👮👼👸😺😸😻😽😼🙀😿😹😾👹👺🙈🙉🙊💂💀🐾👄💋💧👂👀👃👅💌👤👥💬💭</span><br><span class="line"></span><br><span class="line">Nature</span><br><span class="line">☀️☔️☁️❄️⛄️⚡️🌀🌁🌊🐱🐶🐭🐹🐰🐺🐸🐯🐨🐻🐷🐽🐮🐗🐵🐒🐴🐎🐫🐑🐘🐼🐍🐦🐤🐥🐣🐔🐧🐢🐛🐝🐜🐞🐌🐙🐠🐟🐳🐋🐬🐄🐏🐀🐃🐅🐇🐉🐐🐓🐕🐖🐁🐂🐲🐡🐊🐪🐆🐈🐩🐾💐🌸🌷🍀🌹🌻🌺🍁🍃🍂🌿🍄🌵🌴🌲🌳🌰🌱🌼🌾🐚🌐🌞🌝🌚🌑🌒🌓🌔🌕🌖🌗🌘🌜🌛🌔🌍🌎🌏🌋🌌⛅️</span><br><span class="line"></span><br><span class="line">Objects</span><br><span class="line">🎍💝🎎🎒🎓🎏🎆🎇🎐🎑🎃👻🎅🎄🎁🔔🔕🎋🎉🎊🎈🔮💿📀💾📷📹🎥💻📺📱☎️☎️📞📟📠💽📼🔉🔈🔇📢📣⌛️⏳⏰⌚️📻📡➿🔍🔎🔓🔒🔏🔐🔑💡🔦🔆🔅🔌🔋📲✉️📫📮🛀🛁🚿🚽🔧🔩🔨💺💰💴💵💷💶💳💸📧📥📤✉️📨📯📪📬📭📦🚪🚬💣🔫🔪💊💉📄📃📑📊📈📉📜📋📆📅📇📁📂✂️📌📎✒️✏️📏📐📕📗📘📙📓📔📒📚🔖📛🔬🔭📰🏈🏀⚽️⚾️🎾🎱🏉🎳⛳️🚵🚴🏇🏂🏊🏄🎿♠️♥️♣️♦️💎💍🏆🎼🎹🎻👾🎮🃏🎴🎲🎯🀄️🎬📝📝📖🎨🎤🎧🎺🎷🎸👞👡👠💄👢👕👕👔👚👗🎽👖👘👙🎀🎩👑👒👞🌂💼👜👝👛👓🎣☕️🍵🍶🍼🍺🍻🍸🍹🍷🍴🍕🍔🍟🍗🍖🍝🍛🍤🍱🍣🍥🍙🍘🍚🍜🍲🍢🍡🥚🍞🍩🍮🍦🍨🍧🎂🍰🍪🍫🍬🍭🍯🍎🍏🍊🍋🍒🍇🍉🍓🍑🍈🍌🍐🍍🍠🍆🍅🌽</span><br><span class="line"></span><br><span class="line">Places</span><br><span class="line">🏠🏡🏫🏢🏣🏥🏦🏪🏩🏨💒⛪️🏬🏤🌇🌆🏯🏰⛺️🏭🗼🗾🗻🌄🌅🌠🗽🌉🎠🌈🎡⛲️🎢🚢🚤⛵️⛵️🚣⚓️🚀✈️🚁🚂🚊🚞🚲🚡🚟🚠🚜🚙🚘🚗🚗🚕🚖🚛🚌🚍🚨🚓🚔🚒🚑🚐🚚🚋🚉🚆🚅🚄🚈🚝🚃🚎🎫⛽️🚦🚥⚠️🚧🔰🏧🎰🚏💈♨️🏁🎌🏮🗿🎪🎭📍🚩🇯🇵🇰🇷🇨🇳🇺🇸🇫🇷🇪🇸🇮🇹🇷🇺🇬🇧🇬🇧🇩🇪</span><br><span class="line"></span><br><span class="line">Symbols</span><br><span class="line">1️⃣2️⃣3️⃣4️⃣5️⃣6️⃣7️⃣8️⃣9️⃣🔟🔢0️⃣#️⃣🔣◀️⬇️▶️⬅️🔠🔡🔤↙️↘️➡️⬆️↖️↗️⏬⏫🔽⤵️⤴️↩️↪️↔️↕️🔼🔃🔄⏪⏩ℹ️🆗🔀🔁🔂🆕🔝🆙🆒🆓🆖🎦🈁📶🈹🈴🈺🈯️🈷️🈶🈵🈚️🈸🈳🈲🈂️🚻🚹🚺🚼🚭🅿️♿️🚇🛄🉑🚾🚰🚮㊙️㊗️Ⓜ️🛂🛅🛃🉐🆑🆘🆔🚫🔞📵🚯🚱🚳🚷🚸⛔️✳️❇️✴️💟🆚📳📴💹💱♈️♉️♊️♋️♌️♍️♎️♏️♐️♑️♒️♓️⛎🔯❎🅰️🅱️🆎🅾️💠♻️🔚🔙🔛🔜🕐🕜🕙🕥🕚🕦🕛🕧🕑🕝🕒🕞🕓🕟🕔🕠🕕🕡🕖🕢🕗🕣🕘🕤💲©️®️™️❌❗️‼️⁉️⭕️✖️➕➖➗💮💯✔️☑️🔘🔗➰〰️〽️🔱▪️▫️◾️◽️◼️◻️⬛️⬜️✅🔲🔳⚫️⚪️🔴🔵🔷🔶🔹🔸🔺🔻</span><br></pre></td></tr></table></figure>
+</details>
+<p>在发布微博之后，看到如下内容：</p>
+<p><img src="https://picgo-1256492673.cos.ap-chengdu.myqcloud.com/img/20190615170628.png" alt="发布后的 Unicode 表情"></p>
+<p>使用 weiboSpider 爬取得到的结果如下：</p>
+<details>
+<summary>爬取结果</summary>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">微博内容: </span><br><span class="line">1:[开心]😆[大笑]️[花痴][飞吻][脸红][闭眼]😆[傻笑][眨眼][鬼脸二][吐舌头]😀😗😙😛😴😟😦😧😮😬😕😯😑[斜眼]😅[紧张]😩[闭眼][难过][惊讶][害怕][崩溃][鼻涕][大哭][眼泪][星星眼][惊恐]😫[生气][愤怒]😤[瞌睡]😋[口罩]😎😵[妖怪]😈😐😶😇[外星人][黄心][蓝心][紫心][爱心]️[绿心][心碎][爱心发光][红心]💕💞[一箭穿心]💖[星光]⭐️[星星]💫💥💥[抵消]❗️❓[感叹号][问号][睡觉][喷气][水滴][音符][火焰][大便][大便][大便][强][强][贬低][贬低][好][胜利]️[手掌][手掌][手掌][翅膀][no]️[下][向左][向右][emoji][祈祷][上][强壮]🤘🖕[走路][跑][跑][约会]👪👬👭[卡门][健美操][瑜伽二][瑜伽一][emoji]🙋👰🙎🙍[emoji][恋爱][按摩][理发][美甲][男孩][女孩][阿姨][大叔][婴儿][奶奶][爷爷][外国人一][外国人二][外国人三][工人][列车员][天使][公主]😺😸😻😽😼🙀😿😹😾👹👺🙈🙉🙊[男士头像一]🐾[张嘴][小嘴]💧[耳朵][看看][鼻子]👅💌👤👥💬💭 Nature ️️[白云]️❄️[雪人]️[闪电]️[漩涡]🌁[海浪][猫咪][狗][老鼠][鼹鼠][狗][青蛙][老虎][考拉][熊]🐽[奶牛][野猪][猴子][猴子][马头][赛马][骆驼][绵羊][大象]🐼[蛇][小鸟][小鸡]🐥🐣[母鸡][企鹅]🐢[毛毛虫]🐝🐜🐞🐌[章鱼][热带鱼][鱼][鲸鱼]🐋[海豚]🐄🐏🐀🐃🐅🐇🐉🐐🐓🐕🐖🐁🐂🐲🐡🐊🐪🐆🐈🐩🐾[花束][樱花][郁金香][四叶草][玫瑰][向日葵][花朵][枫叶][绿叶][黄叶]🌿🍄[仙人掌][椰树]🌲🌳🌰🌱🌼[芦苇][贝壳]🌐🌞🌝🌚🌑🌒🌓🌔🌕🌖🌗🌘🌜🌛🌔🌍🌎🌏🌋🌌⛅️ Objects [emoji][心形礼物][结婚][emoji][制服][鲤鱼旗][烟火][烟花][风铃][风景][南瓜灯][幽灵][圣诞树][铃铛]🔕🎋[礼花]🎊[气球]🔮[光盘][光盘]💾[相机]📹[摄像机][显示器][电视][iphone][电话]️[电话]️📞📟[传真][光盘][磁带]🔉🔈🔇[喇叭][喇叭]⌛️⏳⏰⌚️[收音机][雷达][emoji][放大镜]🔎[开锁][锁住]🔏🔐[钥匙][灯泡]🔦🔆🔅🔌🔋[来电]✉️[信箱][邮筒][浴缸]🛁🚿[马桶]🔧🔩[拍卖][办公椅]💴💵💷💶💳💸📧📥📤✉️📨📯📪📬📭📦🚪[抽烟][炸弹][手枪]🔪[药丸][打针]📄📃📑📊📈📉📜📋📆📅📇📁📂[剪刀]️📌📎✒️✏️📏📐📕📗📘📙📓📔📒📚🔖📛🔬🔭📰[橄榄球][篮球][足球]️[棒球]️[网球][台球]🏉🎳[高尔夫]️🚵🚴🏇🏂[游泳][冲浪][滑雪][黑桃]️[红桃]️[梅花]️[方块]️[钻石][戒指][奖杯]🎼🎹🎻[病毒]🎮🃏🎴🎲[飞镖][红中]️[导演][记录][记录][看书][画画][卡拉ok][听歌][小号][萨克斯][吉他]👞[凉鞋][高跟鞋][口红][靴子][上衣][上衣][衬衫]👚[裙子]🎽👖[和服][比基尼][蝴蝶结][魔术][皇冠][草帽]👞[雨伞][公文包][手提包]👝👛👓🎣[咖啡]️[绿茶][米酒]🍼[啤酒][酒杯]🍹🍷[刀叉]🍕[汉堡][薯条]🍗🍖[意面][盖饭]🍤[emoji][寿司]🍥[饭团][饭团][米饭][面条][粥][丸子][丸子]🥚[面包]🍩🍮[甜筒]🍨[冰淇凌][草莓蛋糕]🍪🍫🍬🍭🍯[苹果]🍏[橙子]🍋🍒🍇[西瓜][草莓]🍑🍈🍌🍐🍍🍠[茄子][番茄]🌽 Places [家]🏡[学校][大楼][emoji][医院][银行][24营业][酒店][酒店][婚礼][教堂]️[公司]🏤[落日][黄昏][古迹][城堡][露营]️[工厂][铁塔]🗾[富士山][日出][海边落日]🌠[自由女神]🌉🎠[彩虹][摩天轮][喷泉]️[过山车][游轮][快艇][帆船]️[帆船]️🚣⚓️[火箭]️🚁🚂🚊🚞[自行车]🚡🚟🚠🚜[小汽车]🚘[小汽车][小汽车][出租车]🚖🚛[巴士]🚍🚨[警车]🚔[消防车][救护车]🚐[卡车]🚋[火车]🚆[快轨][轻轨]🚈🚝[巴士]🚎[票][加油机]️🚦[红绿灯][警告]️[障碍][emoji][atm][老虎机][emoji][理发店转灯][emoji]️[格子旗][日本国旗]🏮🗿🎪🎭📍🚩[日本][韩国][中国][美国][法国][西班牙][意大利][俄罗斯][美国][美国][德国] Symbols 1️⃣2️⃣3️⃣4️⃣5️⃣6️⃣7️⃣8️⃣9️⃣🔟🔢0️⃣#️⃣🔣[后退]️[下]️[前进]️[右]️🔠🔡🔤[左下]️[右下]️[左]️[上]️[左上]️[右上]️⏬⏫🔽⤵️⤴️↩️↪️↔️↕️🔼🔃🔄[快退][快进]ℹ️🔀🔁🔂[new][top][up][cool]🆓🆖[摄像][emoji][信号][割]🈴[emoji][指]️[月]️[有][满][无]️[申][空]🈲[emoji]️[厕所][男][女][emoji][禁烟][停车场]️[残疾人]️[铁路]🛄🉑[wc]🚰🚮[秘]️[祝]️Ⓜ️🛂🛅🛃[得]🆑🆘[id]🚫[未成年禁入]📵🚯🚱🚳🚷🚸⛔️[发光]️❇️[emoji]️[爱心][vs][爱心手机][关机][股票][货币兑换][白羊座]️[金牛座]️[双子座]️[巨蟹座]️[狮子座]️[处女座]️[天秤座]️[天蝎座]️[射手座]️[摩羯座]️[水瓶座]️[双鱼座]️[emoji][六角星]❎[a]️[b]️[ab][o]️💠♻️🔚🔙🔛🔜[一点钟]🕜[十点钟]🕥[十一点钟]🕦[十二点钟]🕧[二点钟]🕝[三点钟]🕞[四点钟]🕟[五点钟]🕠[六点钟]🕡[七点钟]🕢[八点钟]🕣[九点钟]🕤💲[c]️[r]️[tm]️[叉]❗️‼️⁉️[圈]️✖️➕➖➗💮💯✔️☑️🔘🔗➰〰️[emoji]️[emoji]▪️▫️◾️◽️◼️◻️⬛️⬜️✅[绿点][紫点]⚫️⚪️[红灯]🔵🔷🔶🔹🔸🔺🔻</span><br></pre></td></tr></table></figure>
+</details>
+<p>从实验结果看到，使用 Unicode 发布的表情，有一些保留原样还是『Unicode 表情』，有些则被转换成了『文字表情』，还有一些转换成了『[emoji]』这样的文字表情，也就是说 <a href="http://weibo.cn" target="_blank" rel="noopener">weibo.cn</a> 根本无法处理这些表情。</p>
+<p>因此我们分情况进行处理：</p>
+<ol>
+<li>
+<p>保留原样的 『Unicode 表情』</p>
+<p>不做任何处理</p>
+</li>
+<li>
+<p>转换为了『文字表情』的 Unicode 表情</p>
+<p>建立『Unicode 表情』-&gt;『文字描述』（unicode2Desc）和『文字描述』-&gt;『Unicode 表情』（desc2Unicode）两个哈希表（python 中的字典）。</p>
+</li>
+<li>
+<p>转换为了『[emoji]』的 Unicode 表情</p>
+<p>总共只有 19 Unicode 个表情是这种情况，因为这些表情不太常见，所以可以直接忽略。</p>
+</li>
+</ol>
+<p>经过反复思考，我觉得这样处理还是太过麻烦，因此决定：<strong>放弃使用 weiboSpider，自己写一个基于 Ajax API 的爬虫，爬取 <a href="http://weibo.com" target="_blank" rel="noopener">weibo.com</a> 的内容</strong>。因为 <a href="http://weibo.com" target="_blank" rel="noopener">weibo.com</a> 对 Unicode 表情处理的是很好的，不会用文字去展示。</p>
+<p><code>etree</code> 对 HTML 进行处理主要是要学会 <code>xpath</code> 搜索功能，在 Chrome 中有一个 <code>Copy XPath</code> 功能很有用，再结合 <a href="https://lxml.de/tutorial.html" target="_blank" rel="noopener"><code>lxml</code> 的文档</a>和<a href="https://way2tutorial.com/xml/xpath-tutorial.php#different_between_/_and_//_" target="_blank" rel="noopener">这个</a>看一下就能够理解了:</p>
+<p><img src="https://i.loli.net/2019/06/16/5d05a289d13a444512.png" alt="20190616095933"></p>
+<p>因此我构造出的 <code>XPath</code> 为 <code>//div[@node-type='feed_list_content_full']</code>。</p>
+<p>但是有一个小问题，在默认情况下，长微博是不展开的，并在末尾有一个『展开全文』：</p>
+<p><img src="https://i.loli.net/2019/06/16/5d05a4aa1206353779.png" alt="20190616100837"></p>
+<p>通过调试我发现未展开的时候，HTML 中并没有微博的全部内容，此时我打开 <code>Network</code> 页，选中 <code>XHR</code>，点击页面中的『展开全文』，可以看到多了一个网络请求：</p>
+<p><img src="https://i.loli.net/2019/06/16/5d05a5924ee4d84410.png" alt="20190616101229"></p>
+<p><img src="https://i.loli.net/2019/06/16/5d05a5a5a3b9b30004.png" alt="20190616101248"></p>
+<p>我们可以通过 Postman 来复现这个请求：</p>
+<p><img src="https://i.loli.net/2019/06/16/5d05a7033e69112556.png" alt="20190616101838"></p>
+<p>分析以下几个参数的意义：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ajwvr:6 不清楚含义，但是我见过的所有爬虫都设置为了 `6`</span><br><span class="line">mid:4383487819465288 微博 id</span><br><span class="line">is_settop: 这几个`is` 参数应该影响不大</span><br><span class="line">is_sethot:</span><br><span class="line">is_setfanstop:</span><br><span class="line">is_setyoudao:</span><br><span class="line">__rnd:1560650969754 添加随机数欺骗浏览器url改变了，防止缓存，对爬虫影响不大</span><br></pre></td></tr></table></figure>
+<p>所以这里最关键的就是 <code>mid</code> 这个参数了，我们怎么拿到这个参数呢？有一个最简单的想法是直接利用 <code>etree</code> 对得到的 HTML 进行搜索，对于有『展开全文』的微博，其外部都有一个类似 <code>action-data=&quot;mid=4374832440848723&quot;</code> 的属性。weiboSpider 的做法是根据微博中有没有 <code>&lt;a&gt;</code> 标签内的文本为『全文』来判断一条微博是否是长微博，是长微博的话，再次对服务器发起请求，获取这条长微博的所有内容。</p>
+<p>借鉴 Ajax 爬去的思想，我还是想看看有没有更加简单的 API。</p>
+<p>经过不断测试发现 <a href="http://weibo.com" target="_blank" rel="noopener">weibo.com</a> 比较麻烦，有多个 <code>page</code>，<code>page</code> 之内分为 2 个 <code>pagebar</code>，也就是说一页的内容是分两次加载的。但是 <a href="http://m.weibo.cn" target="_blank" rel="noopener">m.weibo.cn</a> 就没有这个分页问题，所有微博都是随着屏幕下滑逐渐加载的。所以 API 也更加简单。</p>
+<h3 id="mweibocn"><a class="markdownIt-Anchor" href="#mweibocn"></a> <a href="http://m.weibo.cn" target="_blank" rel="noopener">m.weibo.cn</a> 的 API</h3>
+<h4 id="获取用户基本信息"><a class="markdownIt-Anchor" href="#获取用户基本信息"></a> 获取用户基本信息</h4>
+<p><code>https://m.weibo.cn/api/container/getIndex?type=uid&amp;value={}</code></p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">type: uid</span><br><span class="line">value: 1669879400</span><br></pre></td></tr></table></figure>
+<p>返回结果：</p>
+<script src="https://cdn.jsdelivr.net/gh/upupming/weiboAPI@123d4015af294937c6cb1edb92f728d69d762b21/response.js"></script>
+<div id="userInfo"></div>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/renderjson@1.4.0/renderjson.js"></script>
+<script>
+    renderjson.set_show_to_level(2);
+    document.getElementById("userInfo").appendChild(
+        renderjson(userInfo)
+    );
+</script>
+<h4 id="获取用户微博"><a class="markdownIt-Anchor" href="#获取用户微博"></a> 获取用户微博</h4>
+<p><code>https://m.weibo.cn/api/container/getIndex?type=uid&amp;value={}&amp;containerid={}</code></p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">type: uid</span><br><span class="line">value: 1669879400</span><br><span class="line">containerid: 1076031669879400</span><br></pre></td></tr></table></figure>
+<p>可以看到这里只是多了一个 <code>containerid</code>，而就是获取用户信息时拿到的 <code>data-&gt;tabsInfo-&gt;tabs</code> 数组的第二个值，其 <code>title</code> 为 <code>微博</code>。也就是说我们可以在获取用户信息之后，拿到其微博的 containerid，从而继续调用 API。</p>
+<blockquote>
+<p>可以借鉴一下<a href="https://www.jianshu.com/p/5d1061f09a1f" target="_blank" rel="noopener">这篇文章</a>，containerid 其实是以 uid 结尾的，<code>m.weibo.cn/status/+id</code> 是微博详情页。</p>
+</blockquote>
+<p>返回结果：</p>
+<div id="cards1"></div>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/renderjson@1.4.0/renderjson.js"></script>
+<script>
+    renderjson.set_show_to_level(2);
+    document.getElementById("cards1").appendChild(
+        renderjson(cards1)
+    );
+</script>
+<p>但是要如何连续爬取第二页呢？根据<a href="https://www.jianshu.com/p/832d33a377f7" target="_blank" rel="noopener">这篇文章</a>，可以传入一个 <code>page</code> 参数，我们的请求 <code>url</code> 就变成了 <code>https://m.weibo.cn/api/container/getIndex?type=uid&amp;value={}&amp;containerid={}&amp;page={}</code>。</p>
+<p><s>并且我们可以根据返回结果中的 <code>cardlistInfo-&gt;total</code> 拿到总页数，一共是 1012 页。利用循环获取到所有页面的微博即可。</s> 最后发现返回的结果中并没有总页数，我感觉手机版的微博本身就是不需要总页数的（因为一直往下在滑刷新页面），所以这个 API 不返回总页数。最终我是直接根据返回结果，如果出现下面的结果就终止循环：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"ok"</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">"msg"</span>: <span class="string">"这里还没有内容"</span>,</span><br><span class="line">    <span class="attr">"data"</span>: &#123;</span><br><span class="line">        <span class="attr">"cards"</span>: []</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这是一个想法，但是我又想到了另外一个做法，就是：页数=微博条数/每页微博条数+1，更加简单。</p>
+<h4 id="获取微博详细内容"><a class="markdownIt-Anchor" href="#获取微博详细内容"></a> 获取微博详细内容</h4>
+<p>对于较长的微博，上面的获取方式并不会直接返回全部内容，而是带有『全文』的链接：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">😄😆😊😃☺️😏😍😘😚😳😌😆😁😉😜😝😀😗😙😛😴😟😦😧😮😬😕😯😑😒😅😓😥😩😔😞😖😨😰😣😢😭😂😲😱😫😠😡😤😪😋😷😎😵👿😈😐😶😇👽💛💙💜❤️💚💔💓💗💕💞 ...&lt;a href=&quot;/status/4383487819465288&quot;&gt;全文&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+<p>这个时候我们就不得不去获取这条微博的详细内容了，通过前往 <a href="https://m.weibo.cn/status/4383487819465288" target="_blank" rel="noopener">https://m.weibo.cn/status/4383487819465288</a> 抓包发现可以使用下面的 API：</p>
+<p><code>https://m.weibo.cn/statuses/extend?id={mid}</code></p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">mid: 4383487819465288</span><br></pre></td></tr></table></figure>
+<p>返回结果：</p>
+<div id="statuses1"></div>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/renderjson@1.4.0/renderjson.js"></script>
+<script>
+    renderjson.set_show_to_level(2);
+    document.getElementById("statuses1").appendChild(
+        renderjson(statuses1)
+    );
+</script>
+<p>具体的做法是对每一条微博通过 XPath 判断是否有『全文』链接，如果有的话，再次请求这条微博的获取详细内容。</p>
+<h3 id="图片表情"><a class="markdownIt-Anchor" href="#图片表情"></a> 图片表情</h3>
+<p>图片表情的处理方式是，建议一个『文字描述』到『图片URL』的 dict，同时还把这些图片 URL 抓取到本地一下，以备查看。</p>
+<p>由于图片表情在返回的博文中是以 HTML 格式表示的，我们需要用 <code>etree</code> 进行处理：</p>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line">html = etree.HTML(text)</span><br><span class="line"></span><br><span class="line">res = html.xpath(<span class="string">"//span/img/@alt"</span>)</span><br><span class="line">print(res)</span><br><span class="line"><span class="comment"># ['[爱你]', '[允悲]', '[悲伤]', '[吃惊]', '[偷笑]', '[疑问]', '[右哼哼]', '[互粉]', '[顶]', '[污]', '[害羞]', '[可怜]', '[失望]', '[生病]', '[憧憬]', '[黑线]', '[感冒]', '[亲亲]', '[并不简单]', '[晕]', '[吃瓜]', '[打 </span></span><br><span class="line"><span class="comment"># 脸]', '[可爱]', '[汗]', '[笑而不语]', '[馋嘴]', '[米妮爱你]', '[米妮开心]', '[米妮酷炫]', '[米妮紧张]', '[米</span></span><br><span class="line"><span class="comment"># 奇喜欢]', '[米奇飞吻]', '[钢铁侠]', '[美国队长]', '[雷神]', '[浩克]', '[黑寡妇]', '[鹰眼]', '[惊奇队长]', '[奥克耶]', '[蚁人]', '[灭霸]', '[蜘蛛侠]', '[洛基]', '[奇异博士]', '[冬兵]', '[黑豹]', '[哆啦A梦花心]', '[哆 </span></span><br><span class="line"><span class="comment"># 啦A梦害怕]', '[哆啦A梦吃惊]', '[哆啦A梦汗]', '[哆啦A梦微笑]', '[哆啦A梦笑]', '[哆啦A梦无奈]', '[哆啦A梦美味]', '[哆啦A梦开心]', '[哆啦A梦亲亲]', '[小黄人不屑]', '[小黄人高兴]', '[小黄人惊讶]', '[小黄人白眼]']</span></span><br></pre></td></tr></table></figure>
+<h2 id="评论-粉丝和关注-转发爬取"><a class="markdownIt-Anchor" href="#评论-粉丝和关注-转发爬取"></a> 评论、粉丝和关注、转发爬取</h2>
+<p>有了微博信息还不够，我们需要对评论进行爬取。因为评论短小、更适合应用表情。为了爬取能够循环下去，我们还需要对粉丝和关注所有进行爬取。</p>
+<p>转发微博的话也占了很大一部分，转发内容具有重复性，不是我们需要的，所以我是把原始内容发布者作为一个新的爬取对象进行爬取。我们可以维护一个 <code>crawling_user_ids</code> 数组存储当前所有正在被爬取的用户防止重复爬取。</p>
+<h3 id="转发-api"><a class="markdownIt-Anchor" href="#转发-api"></a> 转发 API</h3>
+<p>还是使用前面提到的『获取用户微博』的 API，如果是转发的微博的话，会有一个 <code>retweeted_status</code> 对象包含了几乎被转发微博的所有的信息，里面的 <code>retweeted_status-&gt;user-&gt;id</code> 就是被转发者的 <code>uid</code>。我们根据这个微博重新创建一个 <code>WBSpider</code> 对象，抓取被转发的用户。</p>
+<p>另外，有这样一个 API：</p>
+<p><code>https://m.weibo.cn/statuses/show?id={}</code></p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">id: HyZVegYAP</span><br></pre></td></tr></table></figure>
+<p>得到的结果如下：</p>
+<script src="https://cdn.jsdelivr.net/gh/upupming/weiboAPI/response.js"></script>
+<div id="retweet01"></div>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/renderjson@1.4.0/renderjson.js"></script>
+<script>
+    renderjson.set_show_to_level(2);
+    document.getElementById("retweet01").appendChild(
+        renderjson(retweet01)
+    );
+</script>
+<p>但是我们并不需要用到这个 API，因为我们不关注转发内容，只关注被转发者的 uid。</p>
+<h3 id="评论获取-api"><a class="markdownIt-Anchor" href="#评论获取-api"></a> 评论获取 API</h3>
+<p><code>https://m.weibo.cn/api/comments/show?id={}&amp;page={}</code></p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">id: 4383183661430868</span><br><span class="line">page: 1</span><br></pre></td></tr></table></figure>
+<p>得到的结果如下：</p>
+<script src="https://cdn.jsdelivr.net/gh/upupming/weiboAPI/response.js"></script>
+<div id="comments1"></div>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/renderjson@1.4.0/renderjson.js"></script>
+<script>
+    renderjson.set_show_to_level(2);
+    document.getElementById("comments1").appendChild(
+        renderjson(comments1)
+    );
+</script>
+<p>其中的 <code>total_number</code> 就是总的评论数量，<code>max</code> 是总页数。我们可以根据 <code>max</code> 来进行循环，获取到所有的评论信息。</p>
+<p>另外，我发现这个 API 会出问题，请求几页之后就不行了（后来发现是需要登录），我抓取到的评论 API 是这样的：</p>
+<p><code>https://m.weibo.cn/comments/hotflow?id=4383183661430868&amp;mid=4383183661430868&amp;max_id_type=0</code></p>
+<p>按照返回的：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">max_id: 314345666829623</span><br><span class="line">max_id_type: 0</span><br></pre></td></tr></table></figure>
+<p>作为第二次请求的参数进行循环请求即可，经过测试发现最后终止条件是这两者都为 0。</p>
+<p>另外，我们还需要利用多线程增加并行处理来加快爬取速度。通过维护『被抓取用户池』来并行抓取，详情可以参考我的代码。</p>
+<p>评论爬取这块还有一个坑，应该是微博自己做了反爬限制，所以直接用 python 的 <code>request</code> 会出现 302 FOUND 并把你重定向到微博的登录网址。我后来使用 <a href="http://chromedriver.chromium.org/downloads" target="_blank" rel="noopener"><code>chromedriver</code></a> 才发现微博的限制是这样来进行重定向的：</p>
+<p><img src="https://i.loli.net/2019/06/17/5d0798e85a76871186.png" alt="20190617214259"></p>
+<p>但是在 Chrome 直接输入就会返回正常的数据。我又尝试了 Chrome 的无痕浏览，发现也会被 302 重定向，因此我推测是没有登录的原因，因此我们可以写一个登录的步骤：</p>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">login</span><span class="params">(self)</span>:</span></span><br><span class="line">    print(<span class="string">'请进入 https://passport.weibo.cn/signin/login 后按 Enter 键继续'</span>)</span><br><span class="line">    os.system(<span class="string">"pause"</span>)</span><br><span class="line">    self.driver.find_element_by_id(<span class="string">'loginName'</span>).send_keys(settings.USER_NAME)</span><br><span class="line">    self.driver.find_element_by_id(<span class="string">'loginPassword'</span>).send_keys(settings.PASSWORD)</span><br><span class="line">    print(<span class="string">f'密码已经填好，请完成登录之后按 Enter 继续（可能需要人工拖动滑块验证）'</span>)</span><br><span class="line">    os.system(<span class="string">"pause"</span>)</span><br></pre></td></tr></table></figure>
+<p>所以最终的总结还是：虽然爬取 <a href="http://m.weibo.cn" target="_blank" rel="noopener">m.weibo.cn</a> 的微博正文不需要 Cookie，但是第一页之后的评论还是需要 Cookie 的，我以为是 request 自身的原因还将 request 换成了 chromedriver。</p>
+<p>最后，我们把评论人的 uid 也要加入『被抓取用户池』中进行抓取，注意并行度不能太高，否则会出现『请求过于频繁』，我们可以维护一个等待队列：</p>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">start</span><span class="params">(self)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> crawling_user_ids.count(self.user_id):</span><br><span class="line">        logging.warning(<span class="string">f'uid <span class="subst">&#123;self.user_id&#125;</span> 正在爬取，拒绝加入到爬取池'</span>)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    <span class="keyword">elif</span> crawled_user_ids.count(self.user_id):</span><br><span class="line">        logging.warning(<span class="string">f'uid <span class="subst">&#123;self.user_id&#125;</span> 已经爬取完毕，拒绝加入到爬取池'</span>)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    <span class="keyword">elif</span> waiting_user_ids.count(self.user_id):</span><br><span class="line">        logging.warning(<span class="string">f'uid <span class="subst">&#123;self.user_id&#125;</span> 正在等待被抓取，拒绝加入到爬取池'</span>)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    <span class="keyword">elif</span> len(crawling_user_ids) &lt; MAX_CRAWING_USERS:</span><br><span class="line">        crawling_user_ids.append(self.user_id)</span><br><span class="line">        logging.info(<span class="string">f'uid <span class="subst">&#123;self.user_id&#125;</span> 加入到爬取池'</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        waiting_user_ids.append(self.user_id)</span><br><span class="line">        logging.info(<span class="string">f'uid <span class="subst">&#123;self.user_id&#125;</span> 加入到等待池'</span>)</span><br><span class="line">        <span class="keyword">return</span></span><br></pre></td></tr></table></figure>
+<h2 id="外部链接"><a class="markdownIt-Anchor" href="#外部链接"></a> 外部链接</h2>
+<ol>
+<li>项目地址：<a href="https://github.com/upupming/weiboAPI" target="_blank" rel="noopener">https://github.com/upupming/weiboAPI</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/35682031" target="_blank" rel="noopener">Ajax 爬取</a></li>
+<li><a href="https://gist.github.com/momo0v0/805e4a005225e3808626656c7ff284e5" target="_blank" rel="noopener">Weibo API on gist</a></li>
+</ol>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">upupming</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://upupming.site/2019/06/17/weibo-emoji-dataset/">https://upupming.site/2019/06/17/weibo-emoji-dataset/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://upupming.site">upupming 的博客</a>！</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/微博/">微博</a><a class="post-meta__tags" href="/tags/爬虫/">爬虫</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2019/06/23/info-hide/"><i class="fa fa-chevron-left">  </i><span>信息隐藏基础总结</span></a></div><div class="next-post pull-right"><a href="/2019/05/18/hit-compilers-exam-2019/"><span>哈工大 2019 春编译原理考试总结</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="gitalk-container"></div><script>var gitalk = new Gitalk({
+  clientID: '77bd7cc3fdbcd3e5945a',
+  clientSecret: '883971da140a8232d72918030f8c1a211a5befc1',
+  repo: 'upupming.github.io',
+  owner: 'upupming',
+  admin: 'upupming',
+  id: md5(decodeURI(location.pathname)),
+  language: 'zh-CN'
+})
+gitalk.render('gitalk-container')</script></div></div><footer class="footer-bg" style="background-image: url(/img/background.png)"><div class="layout" id="footer"><div class="copyright">&copy;2018 - 2020 By upupming</div><div class="framework-info"><span>驱动 - </span><a href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script src="/js/search/algolia.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css"><script src="/js/katex.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="algolia-search"><div class="search-dialog__title" id="algolia-search-title">Algolia</div><div id="algolia-input-panel"><div id="algolia-search-input"></div></div><hr><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-stats"></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>

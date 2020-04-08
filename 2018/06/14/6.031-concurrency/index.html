@@ -1,0 +1,350 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="Notes for MIT 6.031 Concurrency"><meta name="keywords" content="java,MIT 6.031"><meta name="author" content="upupming"><meta name="copyright" content="upupming"><title>Notes for MIT 6.031 Concurrency | upupming 的博客</title><link rel="shortcut icon" href="/my-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.min.css?version=1.6.1"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css?version=1.6.1"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.css"><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.js" defer></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css"><script src="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js"></script><script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script><link rel="manifest" href="/manifest.json"><link rel="manifest" href="/manifest.json"><meta name="theme-color" content="#1B9EF3"><meta name="msapplication-TileColor" content="#1B9EF3"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#1B9EF3"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle = window.adsbygoogle || []).push({
+  google_ad_client: 'ca-pub-2188191456032650',
+  enable_page_level_ads: 'true'
+});
+</script><link rel="dns-prefetch" href="https://hm.baidu.com"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?295ad5c5a196e4964e20f74260711177";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();</script><link rel="dns-prefetch" href="https://www.google-analytics.com"><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-114899088-1', 'auto');
+ga('send', 'pageview');</script><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: {"appId":"5WEDOKLFCL","apiKey":"26a57bfa5275b7c98a3b3ab7dae61915","indexName":"upupming-blog","hits":{"per_page":10},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容:${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  }
+} </script></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#concurrency"><span class="toc-number">1.</span> <span class="toc-text"> Concurrency</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#two-modules-for-concurrent-programming"><span class="toc-number">2.</span> <span class="toc-text"> Two modules for concurrent programming</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#shared-memory"><span class="toc-number">2.1.</span> <span class="toc-text"> Shared memory</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#memory-passing"><span class="toc-number">2.2.</span> <span class="toc-text"> Memory passing</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#processes-threads-time-slicing"><span class="toc-number">3.</span> <span class="toc-text"> Processes, threads, time-slicing</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#process"><span class="toc-number">3.1.</span> <span class="toc-text"> Process</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#thread"><span class="toc-number">3.2.</span> <span class="toc-text"> Thread</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#time-slicing"><span class="toc-number">3.3.</span> <span class="toc-text"> Time-slicing</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#starting-a-thread-in-java"><span class="toc-number">4.</span> <span class="toc-text"> Starting a thread in Java</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#using-thread"><span class="toc-number">4.1.</span> <span class="toc-text"> Using Thread</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#shared-memory-example"><span class="toc-number">5.</span> <span class="toc-text"> Shared memory example</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#interleaving"><span class="toc-number">6.</span> <span class="toc-text"> Interleaving</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#race-condition"><span class="toc-number">7.</span> <span class="toc-text"> Race condition</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#tweaking-the-code-wont-help"><span class="toc-number">8.</span> <span class="toc-text"> Tweaking the code won’t help</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#reordering"><span class="toc-number">9.</span> <span class="toc-text"> Reordering</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#exercies"><span class="toc-number">9.1.</span> <span class="toc-text"> Exercies</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#interleaving-1"><span class="toc-number">9.1.1.</span> <span class="toc-text"> Interleaving 1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#interleaving-2"><span class="toc-number">9.1.2.</span> <span class="toc-text"> Interleaving 2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#race-conditions"><span class="toc-number">9.1.3.</span> <span class="toc-text"> Race conditions</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#message-passing-example"><span class="toc-number">10.</span> <span class="toc-text"> Message passing example</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#concurrency-is-hard-to-test-and-debug"><span class="toc-number">11.</span> <span class="toc-text"> Concurrency is hard to test and debug</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#summary"><span class="toc-number">12.</span> <span class="toc-text"> Summary</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#references"><span class="toc-number">13.</span> <span class="toc-text"> References</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/img/doraemon.jpeg"></div><div class="author-info__name text-center">upupming</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">41</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">49</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">分类</span><span class="pull-right">26</span></a></div><hr><div class="author-info-links"><div class="author-info-links__title text-center">友情链接</div><a class="author-info-links__name text-center" href="https://molunerfinn.com/">MARKSZのBlog</a><a class="author-info-links__name text-center" href="https://github.com/ryanhanwu/How-To-Ask-Questions-The-Smart-Way/blob/master/README-zh_CN.md">提问的智慧</a><a class="author-info-links__name text-center" href="https://zh.wikipedia.org/">中文维基百科</a><a class="author-info-links__name text-center" href="https://zbqtesla.github.io">ZBQTesla的博客</a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(/img/background.png)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">upupming 的博客</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">主页</a><a class="site-page" href="/archives">归档</a><a class="site-page" href="/tags">标签</a><a class="site-page" href="/categories">分类</a><a class="site-page" href="https://mirror.upupming.site">Mirror</a><a class="site-page" href="https://music.wxhbts.com">音乐</a><a class="site-page" href="https://writing.upupming.site">Writing</a><a class="site-page" href="/about">关于</a><a class="site-page" href="/rss">RSS</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> 搜索</span></a></span></div><div id="post-info"><div id="post-title">Notes for MIT 6.031 Concurrency</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2018-06-14</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/编程语言/">编程语言</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/编程语言/Java/">Java</a><div class="post-meta-wordcount"><span>字数总计: </span><span class="word-count">2.3k</span><span class="post-meta__separator">|</span><span>阅读时长: 14 分钟</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><p>This is an easy-to-understand note for [Reading 19: Concurrency][1].</p>
+<p>Exercises are very important, <strong>do not</strong> skip them. On the contrary, you can read this article in an exercises-driven way if you just want to review the key ideas.</p>
+<a id="more"></a>
+<h1 id="concurrency"><a class="markdownIt-Anchor" href="#concurrency"></a> Concurrency</h1>
+<p>Real-life examples:</p>
+<ul>
+<li>Multiple computers in a network</li>
+<li>Multiple applications running on one computer</li>
+<li>Multiple processors in a computer(today, often multiple processor cores on a single chip)</li>
+</ul>
+<p>In modern programming:</p>
+<ul>
+<li>Websites must handle multiple <strong>simultaneous users</strong>.</li>
+<li>Mobile apps need to do some of their processing <strong>on servers</strong>(“in the cloud”).</li>
+<li>Graphical user interfaces almost always require <strong>background work</strong> that does not interrupt the user. (For example, Eclipse compiles your Java code while you’re still editing it.)</li>
+</ul>
+<p><strong>Processor clock speeds</strong> are no longer increasing. Instead, we’re getting <strong>more cores</strong> with each new generation of chips.</p>
+<h1 id="two-modules-for-concurrent-programming"><a class="markdownIt-Anchor" href="#two-modules-for-concurrent-programming"></a> Two modules for concurrent programming</h1>
+<h2 id="shared-memory"><a class="markdownIt-Anchor" href="#shared-memory"></a> Shared memory</h2>
+<img src="shared-memory.png" height="100">
+<p>Examples:</p>
+<table>
+<thead>
+<tr>
+<th>A&amp;B</th>
+<th>Environment</th>
+<th>Sharing Objects</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>two processors(or processor cores)</td>
+<td>the same computer</td>
+<td>the same physical memory</td>
+</tr>
+<tr>
+<td>two programs</td>
+<td>the same computer</td>
+<td>a common filesystem</td>
+</tr>
+<tr>
+<td>two <em>threads</em></td>
+<td>the same Java program</td>
+<td>the same Java objects</td>
+</tr>
+</tbody>
+</table>
+<h2 id="memory-passing"><a class="markdownIt-Anchor" href="#memory-passing"></a> Memory passing</h2>
+<img src="message-passing.png" height="60">
+<p>Concurrent modules send off messages through a <strong>communication channel</strong>, and incoming messages to each module are <strong>queued up</strong> for handling. Examples include:</p>
+<table>
+<thead>
+<tr>
+<th>A&amp;B</th>
+<th>Environment</th>
+<th>Communication</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>two computers</td>
+<td>network</td>
+<td>network connections</td>
+</tr>
+<tr>
+<td>web browser and web server</td>
+<td>network</td>
+<td>A opens a connection; B sends the web page data to A’s asks</td>
+</tr>
+<tr>
+<td>instant messaging client and server</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>ls <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">∣</mi></mrow><annotation encoding="application/x-tex">\vert</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span></span></span></span> grep</td>
+<td>terminal</td>
+<td>pipe</td>
+</tr>
+</tbody>
+</table>
+<h1 id="processes-threads-time-slicing"><a class="markdownIt-Anchor" href="#processes-threads-time-slicing"></a> Processes, threads, time-slicing</h1>
+<p>If you have read [CSAPP][2], this section can be ignored.</p>
+<p>Modules A and B above can be: processes and threads.</p>
+<h2 id="process"><a class="markdownIt-Anchor" href="#process"></a> Process</h2>
+<p>A process is an instance of a running program that is isolated from other processes on the same machine. In particular, it has its own private section of the machine’s memory.</p>
+<h2 id="thread"><a class="markdownIt-Anchor" href="#thread"></a> Thread</h2>
+<p>A thread is a locus of control inside a running program. Think of it as a place in the program that is being run, plus the stack of method calls that led to that place (so the thread can go back up the stack when it reaches return statements).</p>
+<h2 id="time-slicing"><a class="markdownIt-Anchor" href="#time-slicing"></a> Time-slicing</h2>
+<img src="time-slicing.png" height="200">
+<p>How can I have many concurrent threads with only one or two processors in my computer? When there are more threads than processors, concurrency is simulated by time slicing, which means that the processor switches between threads. The figure above shows how three threads T1, T2, and T3 might be time-sliced on a machine that has only two actual processors. In the figure, time proceeds downward, so at first, one processor is running thread T1 and the other is running thread T2, and then the second processor switches to run thread T3. Thread T2 simply pauses, until its next time slice on the same processor or another processor.</p>
+<p>On most systems, time slicing happens <strong>unpredictably and nondeterministically</strong>, meaning that a thread may be paused or resumed at any time.</p>
+<h1 id="starting-a-thread-in-java"><a class="markdownIt-Anchor" href="#starting-a-thread-in-java"></a> Starting a thread in Java</h1>
+<h2 id="using-thread"><a class="markdownIt-Anchor" href="#using-thread"></a> Using <code>Thread</code></h2>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// ... in the main method:</span></span><br><span class="line"><span class="keyword">new</span> Thread(<span class="keyword">new</span> HelloRunnable()).start();</span><br><span class="line"></span><br><span class="line"><span class="comment">// elsewhere in the code</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloRunnable</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Hello from a thread!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Using anonymous class:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Hello from a thread!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;).start();</span><br></pre></td></tr></table></figure>
+<p>If you’re feeling clever, you can go one step further with Java’s [lambda expressions][3]:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">new</span> Thread(() -&gt; System.out.println(<span class="string">"Hello from a thread!"</span>)).start();</span><br></pre></td></tr></table></figure>
+<p><code>Runnable</code> is a <strong>functional interface</strong>, the interface that contains one and only one abstract method <code>run()</code>.</p>
+<p>The <em>Arrow operator</em> <code>-&gt;</code> divides the lambda expressions in two parts:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">() -&gt; System.out.println(<span class="string">"Hello from a thread!"</span>)</span><br></pre></td></tr></table></figure>
+<p>The left side specifies the <strong>parameters</strong> required by the expressions, which could also be empty if no parameters are required.</p>
+<p>The right side is the lambda body which specifies the actions of the <strong>lambda expression</strong>.</p>
+<p>It might be helpful to think about <code>-&gt;</code> as “becomes”.</p>
+<p>Another example:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">MyGreeting</span> </span>&#123;</span><br><span class="line">    <span class="function">String <span class="title">processName</span><span class="params">(String str)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> </span>&#123;</span><br><span class="line">    MyGreeting morningGreeting = (str) -&gt; <span class="string">"Good Morning "</span> + str + <span class="string">"!"</span>;</span><br><span class="line">    MyGreeting eveningGreeting = (str) -&gt; <span class="string">"Good Evening "</span> + str + <span class="string">"!"</span>;</span><br><span class="line">  </span><br><span class="line">      <span class="comment">// Output: Good Morning Luis! </span></span><br><span class="line">    System.out.println(morningGreeting.processName(<span class="string">"Luis"</span>));</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Output: Good Evening Jessica!</span></span><br><span class="line">    System.out.println(eveningGreeting.processName(<span class="string">"Jessica"</span>));    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>More: [parameter type, blocks, generic, etc][3].</p>
+<h1 id="shared-memory-example"><a class="markdownIt-Anchor" href="#shared-memory-example"></a> Shared memory example</h1>
+<p>The point of this example is to show that concurrent programming is hard because it can have <strong>subtle bugs</strong>.</p>
+<img src="shared-memory-bank-account.png" height="200">
+<p>Simplify the bank down to a single account, with a dollar balance stored in <code>balance</code> variable, and two operations <code>deposit</code> and <code>withdraw</code> that simply add or remove a dollar:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// suppose all the cash machines share a single bank account</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> balance = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">deposit</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    balance = balance + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">withdraw</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    balance = balance - <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Each transaction is just a one dollar deposit followed by a one-dollar withdrawal, so it should leave the balance in the account unchanged. Throughout the day, each cash machine in our network is processing a sequence of deposit/withdraw transactions:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// each ATM does a bunch of transactions that</span></span><br><span class="line"><span class="comment">// modify balance, but leave it unchanged afterward</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">cashMachine</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; TRANSACTIONS_PER_MACHINE; ++i) &#123;</span><br><span class="line">        deposit(); <span class="comment">// put a dollar in</span></span><br><span class="line">        withdraw(); <span class="comment">// take it back out</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>So at the end of the day, regardless of how many cash machines were running, or how many transactions we processed, we should expect the account balance to still be 0.</p>
+<p>But if we run this code, we discover frequently that the balance at the end of the day is not 0. If more than one cashMachine() call is running at the same time – say, on separate processors in the same computer – then balance may not be zero at the end of the day. Why not?</p>
+<h1 id="interleaving"><a class="markdownIt-Anchor" href="#interleaving"></a> Interleaving</h1>
+<p>Suppose two cash machines, A and B, are both working on a deposit at the same time. Here’s how the <code>deposit()</code> step typically breaks down into <strong>low-level processor instructions</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>A</th>
+<th>B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A get balance (balance=0)</td>
+<td></td>
+</tr>
+<tr>
+<td>A add 1</td>
+<td></td>
+</tr>
+<tr>
+<td>A write back the result (balance=1)</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>B get balance (balance=1)</td>
+</tr>
+<tr>
+<td></td>
+<td>B add 1</td>
+</tr>
+<tr>
+<td></td>
+<td>B write back the result (balance=2)</td>
+</tr>
+</tbody>
+</table>
+<p>This interleaving is fine. We end up with balance 2, so both A and B successfully put in a dollar.</p>
+<table>
+<thead>
+<tr>
+<th>A</th>
+<th>B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A get balance (balance=0)</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>B get balance (balance=0)</td>
+</tr>
+<tr>
+<td>A add 1</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>B add 1</td>
+</tr>
+<tr>
+<td>A write back the result (balance=1)</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>B write back the result (balance=1)</td>
+</tr>
+</tbody>
+</table>
+<p>This balance is now 1. A’s dollar was lost! A and B both read the balance at the same time, computed separate final balances, and then raced to store back the new balance, which failed to take the other’s deposit into account.</p>
+<h1 id="race-condition"><a class="markdownIt-Anchor" href="#race-condition"></a> Race condition</h1>
+<p>A <strong>race condition</strong> means that the correctness of the program(the satisfaction od <strong>postconditions and invariants</strong>) depends on the relative timing of events in concurrent computations A and B. When this happens, we say “A is in a race with B”.</p>
+<p>Some interleavings of events may be OK, in the sense that they are consistent with what a single, nonconcurrent process would produce; but other interleavings produce wrong answers, which violates postconditions or invariants.</p>
+<h1 id="tweaking-the-code-wont-help"><a class="markdownIt-Anchor" href="#tweaking-the-code-wont-help"></a> Tweaking the code won’t help</h1>
+<p>All these versions of the bank-account code exhibit the same race condition.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// version 1</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">deposit</span><span class="params">()</span>  </span>&#123; balance = balance + <span class="number">1</span>; &#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">withdraw</span><span class="params">()</span> </span>&#123; balance = balance - <span class="number">1</span>; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// version 2</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">deposit</span><span class="params">()</span>  </span>&#123; balance += <span class="number">1</span>; &#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">withdraw</span><span class="params">()</span> </span>&#123; balance -= <span class="number">1</span>; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// version 3</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">deposit</span><span class="params">()</span>  </span>&#123; ++balance; &#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">withdraw</span><span class="params">()</span> </span>&#123; --balance; &#125;</span><br></pre></td></tr></table></figure>
+<p>Even simple statements can translate into multiple steps by the virtual machine.</p>
+<p>The key lesson is that you <strong>can’t tell by looking at an expression</strong> whether it will be safe from race conditions.</p>
+<h1 id="reordering"><a class="markdownIt-Anchor" href="#reordering"></a> Reordering</h1>
+<p>Here’s an example. Note that it uses a loop that <strong>continuously checks for a concurrent condition</strong>; this is called <a href="https://en.wikipedia.org/wiki/Busy_waiting" target="_blank" rel="noopener"><strong>busy waiting</strong></a> and it is not a good pattern. In this case, the code is also broken:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">boolean</span> ready = <span class="keyword">false</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> answer = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// computeAnswer runs in one thread</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">computeAnswer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    answer = <span class="number">42</span>;</span><br><span class="line">    ready = <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// useAnswer runs in a different thread</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">useAnswer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (!ready) &#123;</span><br><span class="line">        Thread.yield();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (answer == <span class="number">0</span>) <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"answer wasn't ready!"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Looking at the code, <code>answer</code> is set before <code>ready</code> is set, so once <code>useAnswer</code> sees <code>ready</code> as true, then it seems reasonable that it can assume that the answer will be 42, right? Not so.</p>
+<p>The problem is that modern compilers and processors do a lot of things to make the code fast. One of those things is <strong>making temporary copies of variables</strong> like <code>answer</code> and <code>ready</code> in faster storage (registers or caches on a processor), and working with them temporarily before eventually storing them back to their official location in memory. The <strong>storeback may occur in a different order</strong> than the variables were manipulated in your code. Here’s what might be going on under the covers (but expressed in Java syntax to make it clear). The processor is effectively creating two temporary variables, <code>tmpr</code> and <code>tmpa</code>, to manipulate the fields <code>ready</code> and <code>answer</code>:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">computeAnswer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">boolean</span> tmpr = ready;</span><br><span class="line">    <span class="keyword">int</span> tmpa = answer;</span><br><span class="line"></span><br><span class="line">    tmpa = <span class="number">42</span>;</span><br><span class="line">    tmpr = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">    ready = tmpr;</span><br><span class="line">                   <span class="comment">// &lt;-- what happens if useAnswer() interleaves here?</span></span><br><span class="line">                   <span class="comment">// ready is set, but answer isn't.</span></span><br><span class="line">    answer = tmpa;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="exercies"><a class="markdownIt-Anchor" href="#exercies"></a> Exercies</h2>
+<h3 id="interleaving-1"><a class="markdownIt-Anchor" href="#interleaving-1"></a> Interleaving 1</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Moirai</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Thread clotho = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123; System.out.println(<span class="string">"spinning"</span>); &#125;;</span><br><span class="line">        &#125;);</span><br><span class="line">        clotho.start();</span><br><span class="line">        <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123; System.out.println(<span class="string">"measuring"</span>); &#125;;</span><br><span class="line">        &#125;).start();</span><br><span class="line">        <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123; System.out.println(<span class="string">"cutting"</span>); &#125;;</span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="comment">// bug! never started</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<details><summary>Possible running results</summary>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">spinning</span><br><span class="line">measuring</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">measuring</span><br><span class="line">spinning</span><br></pre></td></tr></table></figure>
+<p>The third thread is never started, so cutting will never be printed.</p>
+<p>The order of the other outputs depends on whether the first thread runs println before or after the second.</p>
+</details>
+<h3 id="interleaving-2"><a class="markdownIt-Anchor" href="#interleaving-2"></a> Interleaving 2</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Parcae</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Thread nona = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123; System.out.println(<span class="string">"spinning"</span>); &#125;;</span><br><span class="line">        &#125;);</span><br><span class="line">        nona.run(); <span class="comment">// bug! called run instead of start</span></span><br><span class="line">        Runnable decima = <span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123; System.out.println(<span class="string">"measuring"</span>); &#125;;</span><br><span class="line">        &#125;;</span><br><span class="line">        decima.run(); <span class="comment">// bug? maybe meant to create a Thread?</span></span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<details><summary>Running results</summary>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">spinning</span><br><span class="line">measuring</span><br></pre></td></tr></table></figure>
+<p>There is only one thread running in this program, and only one possible output.</p>
+</details>
+<h3 id="race-conditions"><a class="markdownIt-Anchor" href="#race-conditions"></a> Race conditions</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> x = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">methodA</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  x *= <span class="number">2</span>;</span><br><span class="line">  x *= <span class="number">3</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">methodB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  x *= <span class="number">5</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Now suppose methodA and methodB run concurrently, so that their instructions might interleave arbitrarily. Which of the following are possible final values of x?</p>
+<details><summary>Possible running results</summary>
+5  
+6  
+10  
+30
+</details>
+<h1 id="message-passing-example"><a class="markdownIt-Anchor" href="#message-passing-example"></a> Message passing example</h1>
+<img src="message-passing-bank-account.png" height="200">
+<p>Accounts are modules just like machine modules. Incoming requests form a queue waiting for handling.</p>
+<p>Message passing doesn’t eliminate the possibility of race conditions. Suppose <strong>each account</strong> supports <code>get-balance</code> and <code>withdraw</code> operations with corresponding messages.</p>
+<img src="message-passing-race-condition.png" height="200">
+<p>As shown above, two users at machines A and B, are both trying to withdraw a dollar if the account holds more than a dollar.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">get-balance()</span><br><span class="line">  <span class="keyword">if</span> balance &gt;= <span class="number">1</span></span><br><span class="line">    withdraw <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p><strong>Interleaving</strong>: the messages sent to the bank account rather than the instructions executed by A and B.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Interleaving of messages will fool A and B into thinking they can both withdraw a dollar, thereby overdrawing the account</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A sends a message and gets the reply: “balance &gt;= $1, it’s OK to withdraw 1 dollar”</td>
+</tr>
+<tr>
+<td>B sends a message and gets the reply: “balance &gt;= $1, it’s OK to withdraw 1 dollar”</td>
+</tr>
+<tr>
+<td>A start withdraw</td>
+</tr>
+<tr>
+<td>B start withdraw</td>
+</tr>
+<tr>
+<td>Oops, both A and B are fooled!</td>
+</tr>
+</tbody>
+</table>
+<h1 id="concurrency-is-hard-to-test-and-debug"><a class="markdownIt-Anchor" href="#concurrency-is-hard-to-test-and-debug"></a> Concurrency is hard to test and debug</h1>
+<p>It’s very hard to discover and localize race conditions using testing.</p>
+<ul>
+<li>
+<p>Poor reproducibility</p>
+</li>
+<li>
+<p>Bugs are <strong>heisenbugs</strong>(non-deterministic and hard to reproduce, as opposed to <strong>bohrbugs</strong>)</p>
+<p>It may even disappear when you try to look it with <code>println</code> or <code>debugger</code>!<br>
+Reason: Printing and debugging are 100-1000x slower than other operations so that they dynamically change the timing of operations, and the interleaving.</p>
+<p>For example, insert <code>println</code> in the <code>cashMachine()</code>:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">private static void cashMachine() &#123;</span><br><span class="line">  for (int i = 0; i &lt; TRANSACTIONS_PER_MACHINE; ++i) &#123;</span><br><span class="line">      deposit(); // put a dollar in</span><br><span class="line">      withdraw(); // take it back out</span><br><span class="line">      System.out.println(balance); // makes the bug disappear!</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>… and suddenly the balance is always 0, as desired.</p>
+<p>Over the next several readings, we’ll see principled ways to design concurrent programs so that they are safer from there kinds of bugs.</p>
+</li>
+</ul>
+<h1 id="summary"><a class="markdownIt-Anchor" href="#summary"></a> Summary</h1>
+<ul>
+<li>Concurrency: multiple computations running simultaneously</li>
+<li>Shared-memory &amp; message-passing paradigms</li>
+<li>Processes &amp; threads
+<ul>
+<li>Process is like a virtual computer; thread is like a virtual processor</li>
+</ul>
+</li>
+<li>Race conditions
+<ul>
+<li>When correctness of result (postconditions and invariants) depends on the relative timing of events</li>
+</ul>
+</li>
+</ul>
+<p>Recall <strong>three key properties</strong> of good software, we need to fix these problems:</p>
+<ul>
+<li>
+<p><strong>Safety from bugs</strong>: Concurrency bugs are some of the hardest bugs to find and fix, and repair <strong>careful design</strong> to avoid.</p>
+</li>
+<li>
+<p><strong>Easy to understand</strong>: Predicting how concurrent code might interleave with other concurrent code is very hard for programmers to do. It’s best to design your code in such a way that programmers <strong>don’t have to think about interleaving as all</strong>.</p>
+</li>
+<li>
+<p><strong>Ready for change</strong>: Not particularly relevant here.</p>
+</li>
+</ul>
+<h1 id="references"><a class="markdownIt-Anchor" href="#references"></a> References</h1>
+<ol>
+<li>[Reading 19: Concurrency | 6.031: Software Construction][1]</li>
+<li>[CSAPP][2]</li>
+<li>[How to start working with Lambda Expressions in Java][3]<br>
+[1]: <a href="http://web.mit.edu/6.031/www/sp17/classes/19-concurrency/" target="_blank" rel="noopener">http://web.mit.edu/6.031/www/sp17/classes/19-concurrency/</a><br>
+[2]: <a href="http://csapp.cs.cmu.edu/" target="_blank" rel="noopener">http://csapp.cs.cmu.edu/</a><br>
+[3]: <a href="https://medium.freecodecamp.org/learn-these-4-things-and-working-with-lambda-expressions-b0ab36e0fffc" target="_blank" rel="noopener">https://medium.freecodecamp.org/learn-these-4-things-and-working-with-lambda-expressions-b0ab36e0fffc</a></li>
+</ol>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">upupming</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://upupming.site/2018/06/14/6.031-concurrency/">https://upupming.site/2018/06/14/6.031-concurrency/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://upupming.site">upupming 的博客</a>！</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/java/">java</a><a class="post-meta__tags" href="/tags/MIT-6-031/">MIT 6.031</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2018/06/14/6.031-thread-safety/"><i class="fa fa-chevron-left">  </i><span>Notes for MIT 6.031 Thread Safety</span></a></div><div class="next-post pull-right"><a href="/2018/06/04/java-UML/"><span>Java UML 类图、Delegation</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="gitalk-container"></div><script>var gitalk = new Gitalk({
+  clientID: '77bd7cc3fdbcd3e5945a',
+  clientSecret: '883971da140a8232d72918030f8c1a211a5befc1',
+  repo: 'upupming.github.io',
+  owner: 'upupming',
+  admin: 'upupming',
+  id: md5(decodeURI(location.pathname)),
+  language: 'zh-CN'
+})
+gitalk.render('gitalk-container')</script></div></div><footer class="footer-bg" style="background-image: url(/img/background.png)"><div class="layout" id="footer"><div class="copyright">&copy;2018 - 2020 By upupming</div><div class="framework-info"><span>驱动 - </span><a href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script src="/js/search/algolia.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css"><script src="/js/katex.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="algolia-search"><div class="search-dialog__title" id="algolia-search-title">Algolia</div><div id="algolia-input-panel"><div id="algolia-search-input"></div></div><hr><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-stats"></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>
