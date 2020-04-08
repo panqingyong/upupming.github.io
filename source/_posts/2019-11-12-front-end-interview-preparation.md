@@ -7,9 +7,8 @@ categories:
 date: 2019-11-12 11:03:57
 ---
 
-我已经入职字节跳动实习啦~~，有对前端感兴趣的同学可以随时找我内推哟，邮箱（一般一天内回复，若未收到回复可以换个邮箱发送）：
+04.08 更新，已经离职，有需要内推的同学仍然可以联系我：
 
-- liyiming.cs@bytedance.com
 - upupming@gmail.com
 
 <details>
@@ -659,7 +658,7 @@ while(true) {
 
 在es6中，我们有一种新的关键字`class`来定义一个类；我们可以继承方法和属性，使用`extends`关键字继承；其实本质上，还是使用原型链的方式继承，只是给了更好理解的语法糖；Typescript在 `class` 的基础上添加了访问修饰符和接口 `interface` 。
 
-<!-- 
+<!--
 ### 图片下载
 
 已有 API:
@@ -706,14 +705,14 @@ attribute 是 DOM 元素在文档中作为 HTML 标签拥有的属性；property
 
 ### 背景属性
 
-background-color 规定要使用的背景颜色。  
-background-position 规定背景图像的位置。  
-background-size 规定背景图片的尺寸。  
-background-repeat 规定如何重复背景图像。  
-background-origin 规定背景图片的定位区域。  
-background-clip 规定背景的绘制区域。  
-background-attachment 规定背景图像是否固定或者随着页面的其余部分滚动。  
-background-image 规定要使用的背景图像。  
+background-color 规定要使用的背景颜色。
+background-position 规定背景图像的位置。
+background-size 规定背景图片的尺寸。
+background-repeat 规定如何重复背景图像。
+background-origin 规定背景图片的定位区域。
+background-clip 规定背景的绘制区域。
+background-attachment 规定背景图像是否固定或者随着页面的其余部分滚动。
+background-image 规定要使用的背景图像。
 inherit 规定应该从父元素继承 background 属性的设置。
 
 ### 盒模型
@@ -795,20 +794,20 @@ block元素可以包含block元素和inline元素；但inline元素只能包含i
 
 - display:block
 
-    block元素会独占一行，多个block元素会各自新起一行。默认情况下，block元素宽度自动填满其父元素宽度。  
-    block元素可以设置width,height属性，即使设置了宽度,仍然是独占一行。  
+    block元素会独占一行，多个block元素会各自新起一行。默认情况下，block元素宽度自动填满其父元素宽度。
+    block元素可以设置width,height属性，即使设置了宽度,仍然是独占一行。
     block元素可以设置margin和padding属性。
 
 - display:inline
 
-    inline元素不会独占一行，多个相邻的行内元素会**排列在同一行**里，直到一行**排列不下，才会新换一行**，其宽度随元素的内容而变化。  
-    inline元素设置width,height属性无效。  
-    inline元素的margin和padding属性，水平方向的padding-left, padding-right, margin-left, margin-right都产生边距效果；  
+    inline元素不会独占一行，多个相邻的行内元素会**排列在同一行**里，直到一行**排列不下，才会新换一行**，其宽度随元素的内容而变化。
+    inline元素设置width,height属性无效。
+    inline元素的margin和padding属性，水平方向的padding-left, padding-right, margin-left, margin-right都产生边距效果；
     但竖直方向的padding-top, padding-bottom, margin-top, margin-bottom不会产生边距效果。
 
 - display:inline-block
 
-    简单来说就是将对象呈现为inline对象，但是**对象的内容作为block对象**呈现。之后的内联对象会被排列在同一行内。  
+    简单来说就是将对象呈现为inline对象，但是**对象的内容作为block对象**呈现。之后的内联对象会被排列在同一行内。
     比如我们可以给一个link（a元素）inline-block属性值，使其既具有block的宽度高度特性又具有inline的同行特性。
 
 ### 居中
